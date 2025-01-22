@@ -2,8 +2,8 @@ export async function GET(request: Request): Promise<Response> {
   const scriptContent = `
       (function() {
         const script = document.currentScript;
-        const assistantId = script.getAttribute("data-assistant-id");
-        const apiUrl = script.getAttribute("data-api-url");
+        const assistantId = script.getAttribute("assistant-id");
+        const apiUrl = script.getAttribute("api-url");
   
         if (!assistantId || !apiUrl) {
           console.error("Missing required attributes: assistantId or apiUrl");

@@ -7,8 +7,8 @@ export default function Home() {
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <script
         src="http://localhost:3000/api/integrate-chatbot"
-        data-assistant-id="asst_uRHZ0uV6NNxm8TP7IPMdEaP1"
-        data-api-url="http://localhost:3000"
+        assistant-id="asst_uRHZ0uV6NNxm8TP7IPMdEaP1"
+        api-url="http://localhost:3000"
       ></script>
 
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
