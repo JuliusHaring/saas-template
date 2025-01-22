@@ -1,5 +1,4 @@
 import { currentUser, User } from "@clerk/nextjs/server";
-import { useClerk } from "@clerk/nextjs";
 
 export class UserNotFoundException extends Error {}
 
