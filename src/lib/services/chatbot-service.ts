@@ -4,6 +4,7 @@ import {
   createChatBot,
   createGDriveSource,
   CreateGDriveSource,
+  getChatBot,
 } from "@/lib/db/chatbot";
 import { CreateAssistantType, OpenAIService } from "./openai-service";
 
@@ -18,6 +19,10 @@ export class ChatBotService {
 
   public static get Instance() {
     return this._instance || (this._instance = new this());
+  }
+
+  public async getChatBot(assistantId: ChatBot["assistantId"]) {
+    return getChatBot(assistantId);
   }
 
   public async getChatBots(userId: ChatBot["userId"]): Promise<ChatBot[]> {
