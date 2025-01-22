@@ -165,8 +165,11 @@ export class OpenAIChatService {
     return messages[0];
   }
 
-  public deleteThread(sessionId: string): void {
-    this.threads.delete(sessionId);
+  public async deleteThread(sessionId: string) {
+    const thread = await this.getThread(sessionId);
+    await this.client.beta.threads.del(thread.id).then(() => {
+      this.threads.delete(sessionId);
+    });
   }
 
   private startCleanupRoutine(): void {

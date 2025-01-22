@@ -1,7 +1,6 @@
 "use server";
-import { PrismaClient, ChatBot, Prisma, GDriveSource } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { ChatBot, Prisma } from "@prisma/client";
+import { prisma } from ".";
 
 export type CreateChatBot = Omit<Prisma.ChatBotCreateInput, "userId" | "id">;
 
