@@ -1,5 +1,6 @@
 import { ChatBot } from "@prisma/client";
 import { OpenAI } from "openai";
+import { QuotaService } from "./quotas-service";
 
 export class AssistantNotFoundException extends Error {}
 
@@ -14,9 +15,11 @@ export class OpenAIService {
   private static _instance: OpenAIService;
 
   private client!: OpenAI;
+  private quotaService!: QuotaService;
 
   private constructor() {
     this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
+    this.quotaService = QuotaService.Instance;
   }
 
   public static get Instance() {
@@ -27,10 +30,22 @@ export class OpenAIService {
     userId: ChatBot["userId"],
     createAssistant: CreateAssistantType,
   ): Promise<OpenAI.Beta.Assistants.Assistant> {
+    const assistantCount = await this.countAssistants(userId);
+    this.quotaService.assessQuota("USER_ASSISTANT_COUNT", assistantCount + 1);
+
     return this.client.beta.assistants.create({
       model: "gpt-3.5-turbo-16k",
       metadata: { userId },
       ...createAssistant,
+    });
+  }
+
+  public async countAssistants(userId: ChatBot["assistantId"]) {
+    return this.client.beta.assistants.list().then((assistants) => {
+      return assistants.data.filter(
+        (assistant) =>
+          (assistant.metadata! as { userId: string }).userId === userId,
+      ).length;
     });
   }
 
