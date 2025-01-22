@@ -1,22 +1,18 @@
 import { OpenAIService } from "@/lib/services/openai-service";
 import { v4 as uuidv4 } from "uuid";
+import { BadRequest, handleHttpError } from "@/lib/utils/routes/http-errors";
 
 const openAIService = OpenAIService.Instance;
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<Response> {
   try {
     // Parse the request body
     const body = await request.json();
     const { assistantId, sessionId: providedSessionId, userMessage } = body;
 
-    if (!assistantId || !userMessage) {
-      return new Response(
-        JSON.stringify({
-          error: "Missing required fields: assistantId or userMessage",
-        }),
-        { status: 400, headers: { "Content-Type": "application/json" } },
-      );
-    }
+    // Validate input
+    if (!assistantId) throw BadRequest("Missing required field: assistantId");
+    if (!userMessage) throw BadRequest("Missing required field: userMessage");
 
     // Use provided sessionId or generate a new one
     const sessionId = providedSessionId || uuidv4();
@@ -36,13 +32,10 @@ export async function POST(request: Request) {
       }),
       {
         headers: { "Content-Type": "application/json" },
+        status: 200,
       },
     );
   } catch (error) {
-    console.error(error);
-    return new Response(JSON.stringify({ error: "Internal server error" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return handleHttpError(error); // Use the error handler for consistent responses
   }
 }
