@@ -46,13 +46,17 @@ export class OpenAIService {
     });
   }
 
-  public async countAssistants(userId: ChatBot["assistantId"]) {
+  public async getAssistants(userId: ChatBot["userId"]) {
     return this.client.beta.assistants.list().then((assistants) => {
       return assistants.data.filter(
         (assistant) =>
           (assistant.metadata! as { userId: string }).userId === userId,
-      ).length;
+      );
     });
+  }
+
+  public async countAssistants(userId: ChatBot["userId"]) {
+    return this.getAssistants(userId).then((arr) => arr.length);
   }
 
   public async getAssistant(
