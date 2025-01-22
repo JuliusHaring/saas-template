@@ -1,18 +1,48 @@
-import { ChatBotService } from "@/lib/services/chatbot-service";
 import { OpenAIService } from "@/lib/services/openai-service";
+import { v4 as uuidv4 } from "uuid";
 
-const chatbotService = ChatBotService.Instance;
+const openAIService = OpenAIService.Instance;
 
-export async function GET(request: Request) {
-  // const userId = await getUser();
-  const userId = "test";
+export async function POST(request: Request) {
+  try {
+    // Parse the request body
+    const body = await request.json();
+    const { assistantId, sessionId: providedSessionId, userMessage } = body;
 
-  const openAIService = OpenAIService.Instance;
-  const answer = await openAIService.chats.chatWithThread(
-    "asst_uRHZ0uV6NNxm8TP7IPMdEaP1",
-    "test_session",
-    "whats up?",
-  );
+    if (!assistantId || !userMessage) {
+      return new Response(
+        JSON.stringify({
+          error: "Missing required fields: assistantId or userMessage",
+        }),
+        { status: 400, headers: { "Content-Type": "application/json" } },
+      );
+    }
 
-  return Response.json(answer);
+    // Use provided sessionId or generate a new one
+    const sessionId = providedSessionId || uuidv4();
+
+    // Call OpenAI service to interact with the assistant
+    const answer = await openAIService.chats.chatWithThread(
+      assistantId,
+      sessionId,
+      userMessage,
+    );
+
+    // Return the assistant's response and sessionId
+    return new Response(
+      JSON.stringify({
+        answer,
+        sessionId, // Return sessionId so the client can reuse it
+      }),
+      {
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+  } catch (error) {
+    console.error(error);
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }
