@@ -2,15 +2,19 @@ import { ChatBot } from "@prisma/client";
 import {
   getChatBots,
   createChatBot,
-  CreateChatBot,
   createGDriveSource,
   CreateGDriveSource,
 } from "@/lib/db/chatbot";
+import { CreateAssistantType, OpenAIService } from "./openai-service";
 
 export class ChatBotService {
   private static _instance: ChatBotService;
 
-  private constructor() {}
+  private openAIService!: OpenAIService;
+
+  private constructor() {
+    this.openAIService = OpenAIService.Instance;
+  }
 
   public static get Instance() {
     return this._instance || (this._instance = new this());
@@ -22,13 +26,23 @@ export class ChatBotService {
 
   public async createChatBot(
     userId: ChatBot["userId"],
-    data: CreateChatBot,
+    assistantName: CreateAssistantType["name"],
+    createAssistant?: CreateAssistantType,
   ): Promise<ChatBot> {
-    return createChatBot(userId, data);
+    const createAssistantData: CreateAssistantType = Object.assign(
+      {},
+      createAssistant,
+      { name: assistantName },
+    );
+    const assistant = await this.openAIService.createAssistant(
+      userId,
+      createAssistantData,
+    );
+    return createChatBot(userId, assistant.id);
   }
 
   public async createGDriveSource(
-    chatBotId: ChatBot["id"],
+    chatBotId: ChatBot["assistantId"],
     data: CreateGDriveSource,
   ) {
     return createGDriveSource(chatBotId, data);

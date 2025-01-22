@@ -8,15 +8,15 @@ datasource db {
 }
 
 model ChatBot {
-  id            Int             @id @default(autoincrement())
+  assistantId            String             @id
   userId        String
   GDriveSource GDriveSource?
 }
 
 model GDriveSource {
-  id           Int        @id @default(autoincrement())
-  chatbotId    Int        @unique
-  ChatBot      ChatBot    @relation(fields: [chatbotId], references: [id])
+  id           String        @id @default(dbgenerated("gen_random_uuid()"))
+  chatbotId    String        @unique
+  ChatBot      ChatBot    @relation(fields: [chatbotId], references: [assistantId])
 
   apiKey        String
 }

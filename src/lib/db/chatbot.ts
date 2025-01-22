@@ -3,7 +3,7 @@ import { PrismaClient, ChatBot, Prisma, GDriveSource } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-export type CreateChatBot = Omit<Prisma.ChatBotCreateInput, "userId">;
+export type CreateChatBot = Omit<Prisma.ChatBotCreateInput, "userId" | "id">;
 
 export type CreateGDriveSource = Omit<
   Prisma.GDriveSourceCreateInput,
@@ -20,23 +20,23 @@ export async function getChatBots(userId: ChatBot["userId"]) {
 
 export async function createChatBot(
   userId: ChatBot["userId"],
-  createChatBot: CreateChatBot,
+  assistantId: ChatBot["assistantId"],
 ) {
-  const data: Prisma.ChatBotCreateInput = Object.assign({}, createChatBot, {
-    userId,
-  });
   return prisma.chatBot.create({
-    data,
+    data: {
+      assistantId,
+      userId,
+    },
   });
 }
 
 export async function createGDriveSource(
-  chatbotId: ChatBot["id"],
+  assistantId: ChatBot["assistantId"],
   gDriveSourceCreate: CreateGDriveSource,
 ) {
   const data: Prisma.GDriveSourceCreateInput = Object.assign(
     {
-      ChatBot: { connect: { id: chatbotId } },
+      ChatBot: { connect: { assistantId } },
     },
     gDriveSourceCreate,
   );
