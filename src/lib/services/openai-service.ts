@@ -21,10 +21,12 @@ export class OpenAIService {
 
   private client!: OpenAI;
   private quotaService!: QuotaService;
+  private promptService: PromptService;
 
   private constructor() {
     this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
     this.quotaService = QuotaService.Instance;
+    this.promptService = PromptService.Instance;
   }
 
   public static get Instance() {
@@ -37,6 +39,10 @@ export class OpenAIService {
   ): Promise<OpenAI.Beta.Assistants.Assistant> {
     const assistantCount = await this.countAssistants(userId);
     this.quotaService.assessQuota("USER_ASSISTANT_COUNT", assistantCount + 1);
+
+    createAssistant.instructions = this.promptService.generateAssistantPrompt(
+      createAssistant.instructions || "",
+    );
 
     return this.client.beta.assistants.create({
       model: "gpt-4o-mini",
