@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prestart": "prisma generate && npm run build",
+    "prestart": "prisma format && prisma generate && npm run build",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",

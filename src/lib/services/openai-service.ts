@@ -21,11 +21,13 @@ export class OpenAIService {
   private quotaService!: QuotaService;
 
   public chats: OpenAIChatService;
+  public embeddings: OpenAIEmbeddingService;
 
   private constructor() {
     this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
     this.quotaService = QuotaService.Instance;
-    this.chats = OpenAIChatService.Instance;
+    this.chats = OpenAIChatService.getInstance(this.client);
+    this.embeddings = OpenAIEmbeddingService.getInstance(this.client);
   }
 
   public static get Instance() {
@@ -77,19 +79,43 @@ export class OpenAIService {
   }
 }
 
+export class OpenAIEmbeddingService {
+  private static _instance: OpenAIEmbeddingService;
+  private client: OpenAI;
+
+  private constructor(client: OpenAI) {
+    this.client = client;
+  }
+
+  public static getInstance(client: OpenAI) {
+    return this._instance || (this._instance = new this(client));
+  }
+
+  public async embedText(
+    text: string | string[],
+  ): Promise<OpenAI.Embeddings.Embedding[]> {
+    return this.client.embeddings
+      .create({
+        input: text,
+        model: "text-embedding-ada-002",
+      })
+      .then((r) => r.data);
+  }
+}
+
 export class OpenAIChatService {
   private static _instance: OpenAIChatService;
   private client: OpenAI;
   private threads: Map<string, { threadId: string; expiresAt: number }>;
 
-  private constructor() {
+  private constructor(client: OpenAI) {
     this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
     this.threads = new Map();
     this.startCleanupRoutine(); // Periodic cleanup of expired threads
   }
 
-  public static get Instance() {
-    return this._instance || (this._instance = new this());
+  public static getInstance(client: OpenAI) {
+    return this._instance || (this._instance = new this(client));
   }
 
   public async getThread(

@@ -9,9 +9,12 @@ export type CreateGDriveSource = Omit<
   "ChatBot"
 >;
 
-export async function getChatBot(assistantId: ChatBot["assistantId"]) {
+export async function getChatBot(
+  userId: ChatBot["userId"],
+  assistantId: ChatBot["assistantId"],
+) {
   return prisma.chatBot.findFirstOrThrow({
-    where: { assistantId },
+    where: { assistantId, userId },
   });
 }
 

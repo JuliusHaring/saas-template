@@ -21,8 +21,11 @@ export class ChatBotService {
     return this._instance || (this._instance = new this());
   }
 
-  public async getChatBot(assistantId: ChatBot["assistantId"]) {
-    return getChatBot(assistantId);
+  public async getChatBot(
+    userId: ChatBot["userId"],
+    assistantId: ChatBot["assistantId"],
+  ) {
+    return getChatBot(userId, assistantId);
   }
 
   public async getChatBots(userId: ChatBot["userId"]): Promise<ChatBot[]> {
