@@ -1,9 +1,36 @@
 import { ChatBot, Prisma, Document } from "@prisma/client";
 import { prisma } from ".";
 
-export type CreateDocumentType = Omit<Prisma.DocumentCreateInput, "ChatBot"> & {
+type VectorAddedType = {
   vector: number[];
 };
+
+export type CreateDocumentType = Omit<Prisma.DocumentCreateInput, "ChatBot"> &
+  VectorAddedType;
+
+export type DocumentType = Document & VectorAddedType;
+
+export class DocumentNotFoundException extends Error {}
+
+export async function getVectorForDocument(
+  assistantId: ChatBot["assistantId"],
+  documentId: string,
+): Promise<number[]> {
+  const vectors: { vector: string }[] = await prisma.$queryRaw(Prisma.sql`
+    SELECT vector::text AS vector
+    FROM "Document"
+    WHERE "assistantId" = ${assistantId} AND id = ${documentId};
+  `);
+
+  if (vectors.length !== 1) {
+    throw new DocumentNotFoundException();
+  }
+
+  const vectorString = vectors[0].vector as unknown as string;
+  const vectorArray = vectorString.slice(1, -1).split(",").map(parseFloat);
+
+  return vectorArray;
+}
 
 export async function createDocument(
   assistantId: ChatBot["assistantId"],
@@ -28,6 +55,7 @@ export async function createDocument(
       SET vector = ${vectorString}::vector(1536)
       WHERE id = ${document.id};
     `);
+
       return document;
     },
     { timeout: 999999 },

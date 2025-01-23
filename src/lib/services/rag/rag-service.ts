@@ -91,4 +91,8 @@ export class RAGService {
 
     return documents;
   }
+
+  // public async findClosest(text: string): Promise<Document> {
+
+  // }
 }
