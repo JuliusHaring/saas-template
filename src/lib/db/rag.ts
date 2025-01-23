@@ -5,6 +5,8 @@ type VectorAddedType = {
   vector: number[];
 };
 
+type VectorFoundType = DocumentType & { distance: number };
+
 export type CreateDocumentType = Omit<Prisma.DocumentCreateInput, "ChatBot"> &
   VectorAddedType;
 
@@ -75,20 +77,17 @@ export async function deleteDocuments(assistantId: ChatBot["assistantId"]) {
 export async function findClosest(
   queryVector: number[],
   n: number = 5,
-): Promise<DocumentType[]> {
-  const vectorString = `[${queryVector.join(",")}]`;
+): Promise<VectorFoundType[]> {
+  const vectorString = `[${queryVector.join(",")}]`; // Convert query vector to PostgreSQL vector format
 
-  // Use pgvector's similarity search to find the closest document
-  const results: DocumentType[] = await prisma.$queryRaw<
-    DocumentType[]
-  >(Prisma.sql`
-    SELECT *, vector <-> ${vectorString}::vector(1536) AS distance
+  // Perform similarity search at the SQL level
+  const results = await prisma.$queryRaw<VectorFoundType[]>(Prisma.sql`
+    SELECT id, name, content, 'createdAt', 'assistantId', vector <-> ${vectorString}::vector(1536) AS distance
     FROM "Document"
     WHERE vector IS NOT NULL
-    ORDER BY distance ASC
+    ORDER BY distance DESC
     LIMIT ${n};
   `);
 
-  // Return the closest document or null if none found
   return results;
 }

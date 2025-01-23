@@ -81,14 +81,12 @@ export class RAGService {
     await this._deleteDocuments(assistantId);
 
     const documents = await Promise.all(
-      ragFiles
-        .slice(0, 2)
-        .map((ragFile) =>
-          this._createDocument(
-            assistantId,
-            this._convertRAGFileToCreateDocumentType(ragFile),
-          ),
+      ragFiles.map((ragFile) =>
+        this._createDocument(
+          assistantId,
+          this._convertRAGFileToCreateDocumentType(ragFile),
         ),
+      ),
     );
 
     return documents;
