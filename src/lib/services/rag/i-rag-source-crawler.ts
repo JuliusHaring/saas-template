@@ -1,4 +1,5 @@
 import { ChatBot } from "@prisma/client";
+import { TextService } from "../text-service";
 
 export class RAGFile {
   name: string;
@@ -11,5 +12,6 @@ export class RAGFile {
 }
 
 export interface RAGSourceCrawler {
+  textService: TextService;
   listFiles(userId: ChatBot["userId"], assistantId: string): Promise<RAGFile[]>;
 }

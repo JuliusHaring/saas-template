@@ -3,15 +3,19 @@ import { RAGFile, RAGSourceCrawler } from "./i-rag-source-crawler";
 import { getWebsiteSource } from "@/lib/db/source";
 import axios from "axios";
 import * as cheerio from "cheerio";
+import { TextService } from "../text-service";
 
 export class WebsiteSourceCrawler implements RAGSourceCrawler {
   private static _instance: WebsiteSourceCrawler;
+  textService: TextService;
 
   public static get Instance() {
     return this._instance || (this._instance = new this());
   }
 
-  private constructor() {}
+  private constructor() {
+    this.textService = TextService.Instance;
+  }
 
   async listFiles(
     userId: ChatBot["userId"],
@@ -71,7 +75,7 @@ export class WebsiteSourceCrawler implements RAGSourceCrawler {
       // Save the current page content as a file
       files.push({
         name: this.extractFileName(url),
-        content: response.data,
+        content: this.textService.convertHtmlToText(response.data),
       });
 
       // Recursively crawl the links
@@ -90,6 +94,6 @@ export class WebsiteSourceCrawler implements RAGSourceCrawler {
   }
 
   private extractFileName(url: string): string {
-    return url.replace(/[^a-zA-Z0-9]/g, "_") + ".html";
+    return url.replace(/[^a-zA-Z0-9]/g, "_");
   }
 }

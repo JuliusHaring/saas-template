@@ -93,13 +93,13 @@ export class OpenAIEmbeddingService {
 
   public async embedText(
     text: string | string[],
-  ): Promise<OpenAI.Embeddings.Embedding[]> {
+  ): Promise<OpenAI.Embeddings.Embedding["embedding"][]> {
     return this.client.embeddings
       .create({
         input: text,
         model: "text-embedding-ada-002",
       })
-      .then((r) => r.data);
+      .then((r) => r.data.map((d) => d.embedding));
   }
 }
 
