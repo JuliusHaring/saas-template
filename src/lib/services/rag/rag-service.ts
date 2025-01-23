@@ -23,7 +23,7 @@ export class RAGService {
   private embeddingService: OpenAIEmbeddingService;
 
   private constructor() {
-    this.embeddingService = OpenAIService.Instance.embeddings;
+    this.embeddingService = OpenAIEmbeddingService.Instance;
   }
 
   public static get Instance() {

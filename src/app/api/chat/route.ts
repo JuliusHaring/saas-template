@@ -1,8 +1,11 @@
-import { OpenAIService } from "@/lib/services/openai-service";
+import {
+  OpenAIChatService,
+  OpenAIService,
+} from "@/lib/services/openai-service";
 import { v4 as uuidv4 } from "uuid";
 import { BadRequest, handleHttpError } from "@/lib/utils/routes/http-errors";
 
-const openAIService = OpenAIService.Instance;
+const openAIChatService = OpenAIChatService.Instance;
 
 export async function POST(request: Request): Promise<Response> {
   try {
@@ -18,7 +21,7 @@ export async function POST(request: Request): Promise<Response> {
     const sessionId = providedSessionId || uuidv4();
 
     // Call OpenAI service to interact with the assistant
-    const answer = await openAIService.chats.chatWithThread(
+    const answer = await openAIChatService.chatWithThread(
       assistantId,
       sessionId,
       userMessage,

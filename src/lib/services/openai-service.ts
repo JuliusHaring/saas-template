@@ -2,6 +2,8 @@ import { ChatBot } from "@prisma/client";
 import { OpenAI } from "openai";
 import { QuotaService } from "./quotas-service";
 import { TextContentBlock } from "openai/resources/beta/threads/index.mjs";
+import { RAGService } from "./rag/rag-service";
+import { PromptService } from "./prompt-service";
 
 export class AssistantNotFoundException extends Error {}
 export class ThreadStatusError extends Error {}
@@ -20,14 +22,9 @@ export class OpenAIService {
   private client!: OpenAI;
   private quotaService!: QuotaService;
 
-  public chats: OpenAIChatService;
-  public embeddings: OpenAIEmbeddingService;
-
   private constructor() {
     this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
     this.quotaService = QuotaService.Instance;
-    this.chats = OpenAIChatService.getInstance(this.client);
-    this.embeddings = OpenAIEmbeddingService.getInstance(this.client);
   }
 
   public static get Instance() {
@@ -83,12 +80,12 @@ export class OpenAIEmbeddingService {
   private static _instance: OpenAIEmbeddingService;
   private client: OpenAI;
 
-  private constructor(client: OpenAI) {
-    this.client = client;
+  private constructor() {
+    this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
   }
 
-  public static getInstance(client: OpenAI) {
-    return this._instance || (this._instance = new this(client));
+  public static get Instance() {
+    return this._instance || (this._instance = new this());
   }
 
   public async embedText(
@@ -107,15 +104,19 @@ export class OpenAIChatService {
   private static _instance: OpenAIChatService;
   private client: OpenAI;
   private threads: Map<string, { threadId: string; expiresAt: number }>;
+  private ragService: RAGService;
+  private promptService: PromptService;
 
-  private constructor(client: OpenAI) {
+  private constructor() {
     this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
     this.threads = new Map();
-    this.startCleanupRoutine(); // Periodic cleanup of expired threads
+    this.startCleanupRoutine();
+    this.ragService = RAGService.Instance;
+    this.promptService = PromptService.Instance;
   }
 
-  public static getInstance(client: OpenAI) {
-    return this._instance || (this._instance = new this(client));
+  public static get Instance() {
+    return this._instance || (this._instance = new this());
   }
 
   public async getThread(
@@ -154,6 +155,8 @@ export class OpenAIChatService {
     sessionId: string,
     userMessage: string,
   ): Promise<string> {
+    const sources = await this.ragService.findClosest(userMessage);
+
     const thread = await this.getThread(sessionId);
 
     const message = await this.client.beta.threads.messages.create(thread.id, {
