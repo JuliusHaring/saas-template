@@ -1,11 +1,16 @@
 "use server";
-import { ChatBot, Prisma } from "@prisma/client";
+import { ChatBot, Prisma, WebsiteSourceOptions } from "@prisma/client";
 import { prisma } from ".";
 
 export type CreateChatBot = Omit<Prisma.ChatBotCreateInput, "userId" | "id">;
 
-export type CreateGDriveSource = Omit<
-  Prisma.GDriveSourceCreateInput,
+export type CreateGDriveSourceOptionsType = Omit<
+  Prisma.GDriveSourceOptionsCreateInput,
+  "ChatBot"
+>;
+
+export type CreateWebsiteSourceOptionsType = Omit<
+  Prisma.WebsiteSourceOptionsCreateInput,
   "ChatBot"
 >;
 
@@ -38,18 +43,48 @@ export async function createChatBot(
   });
 }
 
-export async function createGDriveSource(
+export async function createGDriveSourceOptions(
   assistantId: ChatBot["assistantId"],
-  gDriveSourceCreate: CreateGDriveSource,
+  gDriveSourceCreate: CreateGDriveSourceOptionsType,
 ) {
-  const data: Prisma.GDriveSourceCreateInput = Object.assign(
+  const data: Prisma.GDriveSourceOptionsCreateInput = Object.assign(
     {
       ChatBot: { connect: { assistantId } },
     },
     gDriveSourceCreate,
   );
 
-  return prisma.gDriveSource.create({
+  return prisma.gDriveSourceOptions.create({
     data,
+  });
+}
+
+export async function createWebsiteSourceOptions(
+  assistantId: ChatBot["assistantId"],
+  websiteSourceCreate: CreateWebsiteSourceOptionsType,
+) {
+  const data: Prisma.WebsiteSourceOptionsCreateInput = Object.assign(
+    {
+      ChatBot: { connect: { assistantId } },
+    },
+    websiteSourceCreate,
+  );
+
+  return prisma.websiteSourceOptions.create({
+    data,
+  });
+}
+
+export async function getWebsiteSourceOptions(
+  assistantId: WebsiteSourceOptions["assistantId"],
+  userId: ChatBot["assistantId"],
+) {
+  return prisma.websiteSourceOptions.findFirstOrThrow({
+    where: {
+      assistantId,
+      ChatBot: {
+        userId,
+      },
+    },
   });
 }

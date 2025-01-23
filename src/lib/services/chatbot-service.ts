@@ -1,11 +1,5 @@
 import { ChatBot } from "@prisma/client";
-import {
-  getChatBots,
-  createChatBot,
-  createGDriveSource,
-  CreateGDriveSource,
-  getChatBot,
-} from "@/lib/db/chatbot";
+import { getChatBots, createChatBot, getChatBot } from "@/lib/db/chatbot";
 import { CreateAssistantType, OpenAIService } from "./openai-service";
 
 export class ChatBotService {
@@ -47,12 +41,5 @@ export class ChatBotService {
       createAssistantData,
     );
     return createChatBot(userId, assistant.id);
-  }
-
-  public async createGDriveSource(
-    chatBotId: ChatBot["assistantId"],
-    data: CreateGDriveSource,
-  ) {
-    return createGDriveSource(chatBotId, data);
   }
 }

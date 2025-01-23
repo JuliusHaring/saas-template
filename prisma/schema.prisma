@@ -8,25 +8,25 @@ datasource db {
 }
 
 model ChatBot {
-  assistantId   String         @id
-  userId        String
-  GDriveSource  GDriveSource?
-  WebsiteSource WebsiteSource?
+  assistantId          String                @id
+  userId               String
+  GDriveSourceOptions  GDriveSourceOptions?
+  WebsiteSourceOptions WebsiteSourceOptions?
 }
 
-model GDriveSource {
-  id        String  @id @default(dbgenerated("gen_random_uuid()"))
-  chatbotId String  @unique
-  ChatBot   ChatBot @relation(fields: [chatbotId], references: [assistantId])
+model GDriveSourceOptions {
+  id          String  @id @default(dbgenerated("gen_random_uuid()"))
+  assistantId String  @unique
+  ChatBot     ChatBot @relation(fields: [assistantId], references: [assistantId])
 
   apiKey String
 }
 
-model WebsiteSource {
-  id        String  @id @default(dbgenerated("gen_random_uuid()"))
-  chatbotId String  @unique
-  ChatBot   ChatBot @relation(fields: [chatbotId], references: [assistantId])
+model WebsiteSourceOptions {
+  id          String  @id @default(dbgenerated("gen_random_uuid()"))
+  assistantId String  @unique
+  ChatBot     ChatBot @relation(fields: [assistantId], references: [assistantId])
 
-  url       String
-  url_exceptions  String[]
+  url            String
+  url_exceptions String[]
 }
