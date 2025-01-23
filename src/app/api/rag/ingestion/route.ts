@@ -1,8 +1,9 @@
 import { OpenAIService } from "@/lib/services/openai-service";
+import { RAGService } from "@/lib/services/rag/rag-service";
 import { WebsiteSourceCrawler } from "@/lib/services/rag/website-source-crawler";
 
 const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
-const embeddingService = OpenAIService.Instance.embeddings;
+const ragService = RAGService.Instance;
 
 export async function GET(request: Request): Promise<Response> {
   const userId = "test";
@@ -10,10 +11,7 @@ export async function GET(request: Request): Promise<Response> {
 
   const files = await websiteSourceCrawler.listFiles(userId, assistantId);
 
-  for (const file of files.slice(0, 2)) {
-    const embedding = await embeddingService.embedText(file.content);
-    const x = 1;
-  }
+  const documents = await ragService.ingestRAGFiles(assistantId, files);
 
-  return Response.json(files);
+  return Response.json(documents);
 }

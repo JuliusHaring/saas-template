@@ -35,12 +35,12 @@ model WebsiteSourceOptions {
 }
 
 model Document {
-  id        String  @id @default(dbgenerated("gen_random_uuid()"))
-  chatbotId String
-  ChatBot   ChatBot @relation(fields: [chatbotId], references: [assistantId])
+  id          String  @id @default(dbgenerated("gen_random_uuid()"))
+  assistantId String
+  ChatBot     ChatBot @relation(fields: [assistantId], references: [assistantId])
 
   name      String
   content   String
-  vector    Unsupported("vector(1536)")
-  createdAt DateTime                    @default(now())
+  vector    Unsupported("vector(1536)")?
+  createdAt DateTime                     @default(now())
 }
