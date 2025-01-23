@@ -10,6 +10,8 @@ import {
   createDocument,
   CreateDocumentType,
   deleteDocuments,
+  DocumentType,
+  findClosest,
 } from "@/lib/db/rag";
 import { OpenAIEmbeddingService, OpenAIService } from "../openai-service";
 import { RAGFile } from "./i-rag-source-crawler";
@@ -92,7 +94,11 @@ export class RAGService {
     return documents;
   }
 
-  // public async findClosest(text: string): Promise<Document> {
-
-  // }
+  public async findClosest(
+    text: string,
+    n: number = Number.MAX_SAFE_INTEGER,
+  ): Promise<DocumentType[]> {
+    const embeddings = await this.embeddingService.embedText(text);
+    return findClosest(embeddings[0], n);
+  }
 }

@@ -13,5 +13,9 @@ export class RAGFile {
 
 export interface RAGSourceCrawler {
   textService: TextService;
-  listFiles(userId: ChatBot["userId"], assistantId: string): Promise<RAGFile[]>;
+  listFiles(
+    userId: ChatBot["userId"],
+    assistantId: string,
+    n: number,
+  ): Promise<RAGFile[]>;
 }

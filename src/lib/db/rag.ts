@@ -71,3 +71,24 @@ export async function deleteDocuments(assistantId: ChatBot["assistantId"]) {
     },
   });
 }
+
+export async function findClosest(
+  queryVector: number[],
+  n: number = 5,
+): Promise<DocumentType[]> {
+  const vectorString = `[${queryVector.join(",")}]`;
+
+  // Use pgvector's similarity search to find the closest document
+  const results: DocumentType[] = await prisma.$queryRaw<
+    DocumentType[]
+  >(Prisma.sql`
+    SELECT *, vector <-> ${vectorString}::vector(1536) AS distance
+    FROM "Document"
+    WHERE vector IS NOT NULL
+    ORDER BY distance ASC
+    LIMIT ${n};
+  `);
+
+  // Return the closest document or null if none found
+  return results;
+}

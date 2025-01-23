@@ -9,9 +9,9 @@ export async function GET(request: Request): Promise<Response> {
   const userId = "test";
   const assistantId = "asst_6hG2S7KCwvihuJx0Xxg0Aic2";
 
-  const files = await websiteSourceCrawler.listFiles(userId, assistantId);
+  const files = await websiteSourceCrawler.listFiles(userId, assistantId, 5);
 
-  const documents = await ragService.ingestRAGFiles(assistantId, files);
+  const closest = await ragService.findClosest(files[files.length - 1].content);
 
-  return Response.json(documents);
+  return Response.json(closest);
 }

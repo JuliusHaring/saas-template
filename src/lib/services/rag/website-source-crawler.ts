@@ -20,6 +20,7 @@ export class WebsiteSourceCrawler implements RAGSourceCrawler {
   async listFiles(
     userId: ChatBot["userId"],
     assistantId: string,
+    n: number = Number.MAX_SAFE_INTEGER,
   ): Promise<RAGFile[]> {
     const websiteSource = await getWebsiteSource(userId, assistantId);
 
@@ -35,6 +36,7 @@ export class WebsiteSourceCrawler implements RAGSourceCrawler {
       visitedUrls,
       files,
       new URL(url).hostname,
+      n,
     );
 
     return files;
@@ -46,7 +48,9 @@ export class WebsiteSourceCrawler implements RAGSourceCrawler {
     visitedUrls: Set<string>,
     files: RAGFile[],
     baseHostname: string,
+    n: number,
   ) {
+    if (visitedUrls.size >= n) return;
     if (visitedUrls.has(url)) return;
     visitedUrls.add(url);
 
@@ -86,6 +90,7 @@ export class WebsiteSourceCrawler implements RAGSourceCrawler {
           visitedUrls,
           files,
           baseHostname,
+          n,
         );
       }
     } catch (error) {
