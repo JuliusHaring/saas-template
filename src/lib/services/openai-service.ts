@@ -157,11 +157,13 @@ export class OpenAIChatService {
   ): Promise<string> {
     const sources = await this.ragService.findClosest(userMessage);
 
+    const prompt = this.promptService.generateChatPrompt(sources, userMessage);
+
     const thread = await this.getThread(sessionId);
 
     const message = await this.client.beta.threads.messages.create(thread.id, {
       role: "user",
-      content: userMessage,
+      content: prompt,
     });
 
     const run = await this.client.beta.threads.runs.createAndPoll(thread.id, {
