@@ -1,4 +1,5 @@
-import { ClerkProvider, SignedIn, SignOutButton } from "@clerk/nextjs";
+import Navbar from "@/lib/components/organisms/Narbar";
+import { ClerkProvider } from "@clerk/nextjs";
 
 export default function Layout({
   children,
@@ -7,9 +8,7 @@ export default function Layout({
 }>) {
   return (
     <ClerkProvider>
-      <SignedIn>
-        <SignOutButton>Ausloggen</SignOutButton>
-      </SignedIn>
+      <Navbar />
       {children}
     </ClerkProvider>
   );
