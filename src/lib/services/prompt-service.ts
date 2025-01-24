@@ -2,7 +2,7 @@ import { DocumentType } from "@/lib/db/rag";
 
 export class PromptService {
   private static _instance: PromptService;
-  private constructor() { }
+  private constructor() {}
 
   public static get Instance() {
     return this._instance || (this._instance = new this());

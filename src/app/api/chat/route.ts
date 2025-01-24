@@ -1,10 +1,10 @@
-import {
-  OpenAIChatService
-} from "@/lib/services/openai-service";
+import { OpenAIChatService } from "@/lib/services/openai-service";
+import { Quota, QuotaService } from "@/lib/services/quotas-service";
 import { BadRequest, handleHttpError } from "@/lib/utils/routes/http-errors";
 import { v4 as uuidv4 } from "uuid";
 
 const openAIChatService = OpenAIChatService.Instance;
+const quotaService = QuotaService.Instance;
 
 export async function POST(request: Request): Promise<Response> {
   try {
@@ -24,6 +24,12 @@ export async function POST(request: Request): Promise<Response> {
       assistantId,
       sessionId,
       userMessage,
+    );
+
+    await quotaService.updateAssistantUsage(
+      assistantId,
+      Quota.MAX_CHAT_MESSAGES,
+      1,
     );
 
     // Return the assistant's response and sessionId

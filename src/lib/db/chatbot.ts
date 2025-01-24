@@ -14,6 +14,14 @@ export type CreateWebsiteSourceOptionsType = Omit<
   "ChatBot"
 >;
 
+export async function getUserIdOfChatbot(assistantId: ChatBot["assistantId"]) {
+  return prisma.chatBot
+    .findFirstOrThrow({
+      where: { assistantId },
+    })
+    .then((chatbot) => chatbot.userId);
+}
+
 export async function getChatBot(
   userId: ChatBot["userId"],
   assistantId: ChatBot["assistantId"],

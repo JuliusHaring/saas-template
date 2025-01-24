@@ -1,7 +1,7 @@
 import { SubscriptionTier } from "@/lib/db/stripe";
 import Stripe from "stripe";
 
-export class StripeProductInitException extends Error { }
+export class StripeProductInitException extends Error {}
 
 export class StripeService {
   private static _instance: StripeService;

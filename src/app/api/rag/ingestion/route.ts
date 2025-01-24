@@ -17,7 +17,7 @@ export async function POST(request: Request): Promise<Response> {
   const ingestedFiles = await ragService.ingestRAGFiles(assistantId, files);
 
   await quotaService.updateUserUsage(
-    userId!,
+    userId,
     Quota.MAX_FILES,
     ingestedFiles.length,
   );

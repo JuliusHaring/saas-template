@@ -1,4 +1,9 @@
-import { createChatBot, getChatBot, getChatBots } from "@/lib/db/chatbot";
+import {
+  createChatBot,
+  getChatBot,
+  getChatBots,
+  getUserIdOfChatbot,
+} from "@/lib/db/chatbot";
 import { ChatBot } from "@prisma/client";
 import { CreateAssistantType, OpenAIService } from "./openai-service";
 
@@ -13,6 +18,12 @@ export class ChatBotService {
 
   public static get Instance() {
     return this._instance || (this._instance = new this());
+  }
+
+  public async getUserIdOfChatbot(
+    assistantId: ChatBot["assistantId"],
+  ): Promise<ChatBot["userId"]> {
+    return getUserIdOfChatbot(assistantId);
   }
 
   public async getChatBot(

@@ -5,9 +5,9 @@ import { PromptService } from "./prompt-service";
 import { QuotaService } from "./quotas-service";
 import { RAGService } from "./rag/rag-service";
 
-export class AssistantNotFoundException extends Error { }
-export class ThreadStatusError extends Error { }
-export class MessageTypeError extends Error { }
+export class AssistantNotFoundException extends Error {}
+export class ThreadStatusError extends Error {}
+export class MessageTypeError extends Error {}
 
 export type CreateAssistantType = Omit<
   OpenAI.Beta.Assistants.AssistantCreateParams,
@@ -20,12 +20,10 @@ export class OpenAIService {
   private static _instance: OpenAIService;
 
   private client!: OpenAI;
-  private quotaService!: QuotaService;
   private promptService: PromptService;
 
   private constructor() {
     this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
-    this.quotaService = QuotaService.Instance;
     this.promptService = PromptService.Instance;
   }
 

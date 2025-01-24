@@ -1,11 +1,11 @@
 import { currentUser, User } from "@clerk/nextjs/server";
 
-export class UserNotFoundException extends Error { }
+export class UserNotFoundException extends Error {}
 
 export class UserService {
   private static _instance: UserService;
 
-  private constructor() { }
+  private constructor() {}
 
   public static get Instance() {
     return this._instance || (this._instance = new this());

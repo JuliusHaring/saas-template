@@ -4,14 +4,15 @@ import {
   getUserUsage,
   SubscriptionTier,
 } from "@/lib/db/stripe";
-import { Subscription } from "@prisma/client";
+import { ChatBot, Subscription } from "@prisma/client";
+import { ChatBotService } from "./chatbot-service";
 import { StripeService } from "./stripe-service";
 
-export class QuotaReachedException extends Error { }
+export class QuotaReachedException extends Error {}
 
 export enum Quota {
   MAX_FILES = "fileCount",
-  MAX_CHATS = "chatMessages",
+  MAX_CHAT_MESSAGES = "chatMessages",
 }
 
 export type TierQuotaMap = Map<Quota, number>;
@@ -20,9 +21,11 @@ export class QuotaService {
   private static _instance: QuotaService;
 
   private stripeService: StripeService;
+  private chatbotService: ChatBotService;
 
   private constructor() {
     this.stripeService = StripeService.Instance;
+    this.chatbotService = ChatBotService.Instance;
   }
 
   public static get Instance() {
@@ -69,5 +72,14 @@ export class QuotaService {
 
     const update = { [quota]: value + currentValue };
     return createOrUpdateUserUsage(userId, update);
+  }
+
+  async updateAssistantUsage(
+    assistantId: ChatBot["assistantId"],
+    quota: Quota,
+    value: number,
+  ) {
+    const userId = await this.chatbotService.getUserIdOfChatbot(assistantId);
+    return this.updateUserUsage(userId, quota, value);
   }
 }
