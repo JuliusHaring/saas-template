@@ -1,4 +1,4 @@
-import { ChatBot, Prisma, Document } from "@prisma/client";
+import { ChatBot, Document, Prisma } from "@prisma/client";
 import { prisma } from ".";
 
 type VectorAddedType = {
@@ -12,7 +12,7 @@ export type CreateDocumentType = Omit<Prisma.DocumentCreateInput, "ChatBot"> &
 
 export type DocumentType = Document & VectorAddedType;
 
-export class DocumentNotFoundException extends Error {}
+export class DocumentNotFoundException extends Error { }
 
 export async function getVectorForDocument(
   assistantId: ChatBot["assistantId"],

@@ -1,5 +1,5 @@
+import { createChatBot, getChatBot, getChatBots } from "@/lib/db/chatbot";
 import { ChatBot } from "@prisma/client";
-import { getChatBots, createChatBot, getChatBot } from "@/lib/db/chatbot";
 import { CreateAssistantType, OpenAIService } from "./openai-service";
 
 export class ChatBotService {

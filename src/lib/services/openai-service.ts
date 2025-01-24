@@ -1,13 +1,13 @@
 import { ChatBot } from "@prisma/client";
 import { OpenAI } from "openai";
-import { QuotaService } from "./quotas-service";
 import { TextContentBlock } from "openai/resources/beta/threads/index.mjs";
-import { RAGService } from "./rag/rag-service";
 import { PromptService } from "./prompt-service";
+import { QuotaService } from "./quotas-service";
+import { RAGService } from "./rag/rag-service";
 
-export class AssistantNotFoundException extends Error {}
-export class ThreadStatusError extends Error {}
-export class MessageTypeError extends Error {}
+export class AssistantNotFoundException extends Error { }
+export class ThreadStatusError extends Error { }
+export class MessageTypeError extends Error { }
 
 export type CreateAssistantType = Omit<
   OpenAI.Beta.Assistants.AssistantCreateParams,
@@ -38,7 +38,6 @@ export class OpenAIService {
     createAssistant: CreateAssistantType,
   ): Promise<OpenAI.Beta.Assistants.Assistant> {
     const assistantCount = await this.countAssistants(userId);
-    this.quotaService.assessQuota("USER_ASSISTANT_COUNT", assistantCount + 1);
 
     createAssistant.instructions = this.promptService.generateAssistantPrompt(
       createAssistant.instructions || "",

@@ -1,10 +1,10 @@
-import { getStyle, createOrUpdateStyle } from "@/lib/db/styles";
+import { createOrUpdateStyle, getStyle } from "@/lib/db/styles";
 import { ChatBot, Style } from "@prisma/client";
 
 class StylesService {
   private static _instance: StylesService;
 
-  private constructor() {}
+  private constructor() { }
 
   public static getInstance(): StylesService {
     if (!this._instance) {

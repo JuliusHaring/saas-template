@@ -1,8 +1,8 @@
 import {
-  Subscription,
-  SubscriptionTier as PrismaSubscriptionTier,
-  Usage,
   Prisma,
+  SubscriptionTier as PrismaSubscriptionTier,
+  Subscription,
+  Usage,
 } from "@prisma/client";
 import { prisma } from ".";
 

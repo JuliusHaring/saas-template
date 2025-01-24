@@ -1,8 +1,7 @@
-import { OpenAIService } from "@/lib/services/openai-service";
-import { QuotaService, Quota } from "@/lib/services/quotas-service";
+import { Quota, QuotaService } from "@/lib/services/quotas-service";
 import { RAGService } from "@/lib/services/rag/rag-service";
 import { WebsiteSourceCrawler } from "@/lib/services/rag/website-source-crawler";
-import { auth } from "@clerk/nextjs/server";
+import { getUserId } from "@/lib/utils/routes/auth";
 
 const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
 const ragService = RAGService.Instance;
@@ -10,7 +9,7 @@ const quotaService = QuotaService.Instance;
 
 export async function POST(request: Request): Promise<Response> {
   const body = await request.json();
-  const { userId } = await auth();
+  const userId = await getUserId();
   const { assistantId } = body;
 
   const files = await websiteSourceCrawler.listFiles(userId!, assistantId, 5);

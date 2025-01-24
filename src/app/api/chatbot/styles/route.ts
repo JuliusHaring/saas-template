@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
 import { stylesService } from "@/lib/services/styles-service";
-import { auth } from "@clerk/nextjs/server";
+import { getUserId } from "@/lib/utils/routes/auth";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -19,7 +19,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
+  const userId = await getUserId();
   const { assistantId, css } = await request.json();
 
   if (!assistantId || !css) {
@@ -29,6 +29,6 @@ export async function POST(request: Request) {
     );
   }
 
-  const updatedStyle = await stylesService.saveStyle(userId!, assistantId, css);
+  const updatedStyle = await stylesService.saveStyle(userId, assistantId, css);
   return NextResponse.json(updatedStyle);
 }

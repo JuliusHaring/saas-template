@@ -1,4 +1,3 @@
-import { ChatBot, WebsiteSourceOptions } from "@prisma/client";
 import {
   createGDriveSourceOptions,
   CreateGDriveSourceOptionsType,
@@ -13,7 +12,8 @@ import {
   DocumentType,
   findClosest,
 } from "@/lib/db/rag";
-import { OpenAIEmbeddingService, OpenAIService } from "../openai-service";
+import { ChatBot, WebsiteSourceOptions } from "@prisma/client";
+import { OpenAIEmbeddingService } from "../openai-service";
 import { RAGFile } from "./i-rag-source-crawler";
 
 type CreateDocumentSubsetType = Pick<CreateDocumentType, "name" | "content">;

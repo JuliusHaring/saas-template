@@ -1,9 +1,9 @@
-import { ChatBot } from "@prisma/client";
-import { RAGFile, RAGSourceCrawler } from "./i-rag-source-crawler";
 import { getWebsiteSource } from "@/lib/db/source";
+import { ChatBot } from "@prisma/client";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { TextService } from "../text-service";
+import { RAGFile, RAGSourceCrawler } from "./i-rag-source-crawler";
 
 export class WebsiteSourceCrawler implements RAGSourceCrawler {
   private static _instance: WebsiteSourceCrawler;

@@ -7,7 +7,7 @@ import {
 import { Subscription } from "@prisma/client";
 import { StripeService } from "./stripe-service";
 
-export class QuotaReachedException extends Error {}
+export class QuotaReachedException extends Error { }
 
 export enum Quota {
   MAX_FILES = "fileCount",

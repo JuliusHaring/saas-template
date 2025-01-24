@@ -1,9 +1,8 @@
 import {
-  OpenAIChatService,
-  OpenAIService,
+  OpenAIChatService
 } from "@/lib/services/openai-service";
-import { v4 as uuidv4 } from "uuid";
 import { BadRequest, handleHttpError } from "@/lib/utils/routes/http-errors";
+import { v4 as uuidv4 } from "uuid";
 
 const openAIChatService = OpenAIChatService.Instance;
 
