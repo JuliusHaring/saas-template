@@ -15,6 +15,7 @@ model ChatBot {
   GDriveSourceOptions  GDriveSourceOptions?
   WebsiteSourceOptions WebsiteSourceOptions?
   Document             Document[]
+  Style                Style?
 }
 
 model GDriveSourceOptions {
@@ -43,4 +44,12 @@ model Document {
   content   String
   vector    Unsupported("vector(1536)")?
   createdAt DateTime                     @default(now())
+}
+
+model Style {
+  id          String  @id @default(dbgenerated("gen_random_uuid()"))
+  assistantId String  @unique
+  ChatBot     ChatBot @relation(fields: [assistantId], references: [assistantId])
+
+  css String
 }

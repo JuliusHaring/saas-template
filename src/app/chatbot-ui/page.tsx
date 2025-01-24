@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 
 export default function ChatbotUI() {
@@ -10,12 +9,33 @@ export default function ChatbotUI() {
   const [assistantId, setAssistantId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Extract assistantId from the query string
     const params = new URLSearchParams(window.location.search);
     const id = params.get("assistantId");
     if (id) setAssistantId(id);
     else console.error("Missing assistantId in the query string");
   }, []);
+
+  useEffect(() => {
+    const loadStyles = async () => {
+      if (!assistantId) return;
+
+      try {
+        const response = await fetch(
+          `/api/chatbot/styles?assistantId=${assistantId}`,
+        );
+        if (response.ok) {
+          const { css } = await response.json();
+          const styleTag = document.createElement("style");
+          styleTag.innerHTML = css;
+          document.head.appendChild(styleTag);
+        }
+      } catch (error) {
+        console.error("Failed to load styles:", error);
+      }
+    };
+
+    loadStyles();
+  }, [assistantId]);
 
   const sendMessage = async () => {
     if (!userInput || !assistantId) return;
