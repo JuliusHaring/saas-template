@@ -11,4 +11,16 @@ export class StripeService {
   public static get Instance() {
     return this._instance || (this._instance = new this());
   }
+
+  constructEvent(
+    body: string,
+    signature: string,
+    webhookSecret: string,
+  ): Stripe.Event {
+    return this.stripe.webhooks.constructEvent(body, signature, webhookSecret);
+  }
+
+  handleSubscription(subscription: Stripe.Subscription) {
+    throw new Error("Method not implemented.");
+  }
 }
