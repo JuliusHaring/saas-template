@@ -1,3 +1,10 @@
+import {
+  Quota,
+  QuotaReachedException,
+  QuotaService,
+} from "@/lib/services/quotas-service";
+import { ChatBot, Subscription } from "@prisma/client";
+
 export class HttpError extends Error {
   statusCode: number;
 
@@ -14,6 +21,9 @@ export const BadRequest = (message = "Bad Request") =>
 
 export const Unauthorized = (message = "Unauthorized") =>
   new HttpError(401, message);
+
+export const QuotaReached = (message = "Quota Reached") =>
+  new HttpError(402, message);
 
 export const Forbidden = (message = "Forbidden") => new HttpError(403, message);
 
@@ -41,3 +51,34 @@ export const handleHttpError = (error: unknown): Response => {
     headers: { "Content-Type": "application/json" },
   });
 };
+
+export async function checkAssistantQuotaReachedError(
+  assistantId: ChatBot["assistantId"],
+  quota: Quota,
+) {
+  const quotaService = QuotaService.Instance;
+
+  await _checkQuota(
+    quotaService.getAssistantQuotaRemainder(assistantId, quota, true),
+  );
+}
+
+export async function checkUserQuotaReachedError(
+  userId: ChatBot["userId"],
+  quota: Quota,
+) {
+  const quotaService = QuotaService.Instance;
+
+  await _checkQuota(quotaService.getUserQuotaRemainder(userId, quota, true));
+}
+
+async function _checkQuota(numberFunc: Promise<number>) {
+  try {
+    await numberFunc;
+  } catch (e) {
+    if (e instanceof QuotaReachedException) {
+      throw QuotaReached(e.message);
+    }
+    throw BadRequest(`Error while reading the user quota.`);
+  }
+}

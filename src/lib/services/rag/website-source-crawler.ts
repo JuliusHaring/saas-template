@@ -5,7 +5,7 @@ import * as cheerio from "cheerio";
 import { TextService } from "../text-service";
 import { RAGFile, RAGSourceCrawler } from "./i-rag-source-crawler";
 
-export class WebsiteSourceCrawler implements RAGSourceCrawler {
+export class WebsiteSourceCrawler extends RAGSourceCrawler {
   private static _instance: WebsiteSourceCrawler;
   textService: TextService;
 
@@ -14,10 +14,11 @@ export class WebsiteSourceCrawler implements RAGSourceCrawler {
   }
 
   private constructor() {
+    super();
     this.textService = TextService.Instance;
   }
 
-  async listFiles(
+  async _listFiles(
     userId: ChatBot["userId"],
     assistantId: string,
     n: number = Number.MAX_SAFE_INTEGER,

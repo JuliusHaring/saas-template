@@ -8,7 +8,11 @@ import { ChatBot, Subscription } from "@prisma/client";
 import { ChatBotService } from "./chatbot-service";
 import { StripeService } from "./stripe-service";
 
-export class QuotaReachedException extends Error {}
+export class QuotaReachedException extends Error {
+  constructor(quota: Quota) {
+    super(`Quota reached: ${quota}`);
+  }
+}
 
 export enum Quota {
   MAX_FILES = "fileCount",
@@ -33,11 +37,11 @@ export class QuotaService {
   }
 
   private async _getTierQuotas(tier: SubscriptionTier): Promise<TierQuotaMap> {
-    const price = await this.stripeService.getPrice(tier);
+    const product = await this.stripeService.getProductByTier(tier);
     const quotaMap: TierQuotaMap = new Map();
 
     for (const quota of Object.values(Quota)) {
-      const value = price.metadata[quota];
+      const value = product.metadata[quota];
       if (value !== undefined) {
         quotaMap.set(quota, parseInt(value, 10));
       } else {
@@ -53,6 +57,25 @@ export class QuotaService {
   public async getUserQuotas(userId: Subscription["userId"]) {
     const userSubscription = await getUserSubscription(userId);
     return this._getTierQuotas(userSubscription.tier);
+  }
+
+  public async getUserQuotaRemainder(
+    userId: Subscription["userId"],
+    quota: Quota,
+    raise: boolean = false,
+  ): Promise<number> {
+    const userQuotas = await this.getUserQuotas(userId);
+    const userQuotaValue = userQuotas.get(quota)!;
+
+    const userUsage = await getUserUsage(userId);
+    const userUsageValue = userUsage[quota];
+    const res = userQuotaValue - userUsageValue;
+
+    if (raise && res <= 0) {
+      throw new QuotaReachedException(quota);
+    }
+
+    return res;
   }
 
   public async updateUserUsage(
@@ -72,6 +95,15 @@ export class QuotaService {
 
     const update = { [quota]: value + currentValue };
     return createOrUpdateUserUsage(userId, update);
+  }
+
+  async getAssistantQuotaRemainder(
+    assistantId: ChatBot["assistantId"],
+    quota: Quota,
+    raise: boolean = false,
+  ) {
+    const userId = await this.chatbotService.getUserIdOfChatbot(assistantId);
+    return this.getUserQuotaRemainder(userId, quota, raise);
   }
 
   async updateAssistantUsage(

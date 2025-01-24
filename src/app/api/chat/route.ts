@@ -1,6 +1,14 @@
 import { OpenAIChatService } from "@/lib/services/openai-service";
-import { Quota, QuotaService } from "@/lib/services/quotas-service";
-import { BadRequest, handleHttpError } from "@/lib/utils/routes/http-errors";
+import {
+  Quota,
+  QuotaReachedException,
+  QuotaService,
+} from "@/lib/services/quotas-service";
+import {
+  BadRequest,
+  checkAssistantQuotaReachedError,
+  handleHttpError,
+} from "@/lib/utils/routes/http-errors";
 import { v4 as uuidv4 } from "uuid";
 
 const openAIChatService = OpenAIChatService.Instance;
@@ -15,6 +23,8 @@ export async function POST(request: Request): Promise<Response> {
     // Validate input
     if (!assistantId) throw BadRequest("Missing required field: assistantId");
     if (!userMessage) throw BadRequest("Missing required field: userMessage");
+
+    await checkAssistantQuotaReachedError(assistantId, Quota.MAX_CHAT_MESSAGES);
 
     // Use provided sessionId or generate a new one
     const sessionId = providedSessionId || uuidv4();

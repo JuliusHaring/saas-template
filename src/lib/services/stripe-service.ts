@@ -42,7 +42,7 @@ export class StripeService {
     return this._instance;
   }
 
-  private _getProductByTier(tier: SubscriptionTier): Stripe.Product {
+  getProductByTier(tier: SubscriptionTier): Stripe.Product {
     switch (tier) {
       case "BASIC":
         return this.productBasic;
@@ -53,10 +53,10 @@ export class StripeService {
     }
   }
 
-  async getPrice(tier: SubscriptionTier) {
-    const price = this._getProductByTier(tier).default_price as Stripe.Price;
-    return this.stripe.prices.retrieve(price.id);
-  }
+  // async getPrice(tier: SubscriptionTier) {
+  //   const priceId = this._getProductByTier(tier).default_price as Stripe.Price["id"];
+  //   return this.stripe.prices.retrieve(priceId);
+  // }
 
   constructEvent(
     body: string,

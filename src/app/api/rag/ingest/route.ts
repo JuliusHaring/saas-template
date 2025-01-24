@@ -12,7 +12,10 @@ export async function POST(request: Request): Promise<Response> {
   const userId = await getUserId();
   const { assistantId } = body;
 
-  const files = await websiteSourceCrawler.listFiles(userId!, assistantId, 5);
+  let n = await quotaService.getUserQuotaRemainder(userId, Quota.MAX_FILES);
+  n = Math.max(0, n);
+
+  const files = await websiteSourceCrawler.listFiles(userId!, assistantId, n);
 
   const ingestedFiles = await ragService.ingestRAGFiles(assistantId, files);
 
