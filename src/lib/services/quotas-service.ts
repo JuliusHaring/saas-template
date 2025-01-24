@@ -1,12 +1,17 @@
-import { getUserSubscription, SubscriptionTier } from "@/lib/db/stripe";
+import {
+  createOrUpdateUserUsage,
+  getUserSubscription,
+  getUserUsage,
+  SubscriptionTier,
+} from "@/lib/db/stripe";
 import { Subscription } from "@prisma/client";
 import { StripeService } from "./stripe-service";
 
 export class QuotaReachedException extends Error {}
 
 export enum Quota {
-  MAX_FILES = "maxFiles",
-  MAX_CHATS = "maxChats",
+  MAX_FILES = "fileCount",
+  MAX_CHATS = "chatMessages",
 }
 
 export type TierQuotaMap = Map<Quota, number>;
@@ -45,5 +50,24 @@ export class QuotaService {
   public async getUserQuotas(userId: Subscription["userId"]) {
     const userSubscription = await getUserSubscription(userId);
     return this._getTierQuotas(userSubscription.tier);
+  }
+
+  public async updateUserUsage(
+    userId: Subscription["userId"],
+    quota: Quota,
+    value: number,
+  ) {
+    let currentValue = 0;
+    try {
+      const currentUsage = await getUserUsage(userId);
+      currentValue = currentUsage[quota];
+    } catch (e) {
+      console.log(
+        `Found no Usage for user ${userId}, this will subsequently be created`,
+      );
+    }
+
+    const update = { [quota]: value + currentValue };
+    return createOrUpdateUserUsage(userId, update);
   }
 }
