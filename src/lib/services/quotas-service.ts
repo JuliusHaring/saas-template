@@ -1,4 +1,5 @@
-import { SubscriptionTier } from "@/lib/db/stripe";
+import { getUserSubscription, SubscriptionTier } from "@/lib/db/stripe";
+import { Subscription } from "@prisma/client";
 import { StripeService } from "./stripe-service";
 
 export class QuotaReachedException extends Error {}
@@ -23,7 +24,7 @@ export class QuotaService {
     return this._instance || (this._instance = new this());
   }
 
-  public async getTierQuotas(tier: SubscriptionTier): Promise<TierQuotaMap> {
+  private async _getTierQuotas(tier: SubscriptionTier): Promise<TierQuotaMap> {
     const price = await this.stripeService.getPrice(tier);
     const quotaMap: TierQuotaMap = new Map();
 
@@ -39,5 +40,10 @@ export class QuotaService {
     }
 
     return quotaMap;
+  }
+
+  public async getUserQuotas(userId: Subscription["userId"]) {
+    const userSubscription = await getUserSubscription(userId);
+    return this._getTierQuotas(userSubscription.tier);
   }
 }
