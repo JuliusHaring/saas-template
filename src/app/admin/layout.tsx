@@ -1,11 +1,4 @@
-import {
-  ClerkProvider,
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-  UserButton,
-} from "@clerk/nextjs";
+import { ClerkProvider, SignedIn, SignOutButton } from "@clerk/nextjs";
 
 export default function Layout({
   children,
@@ -14,11 +7,8 @@ export default function Layout({
 }>) {
   return (
     <ClerkProvider>
-      <SignedOut>
-        <SignInButton></SignInButton>
-      </SignedOut>
       <SignedIn>
-        <SignOutButton></SignOutButton>
+        <SignOutButton>Ausloggen</SignOutButton>
       </SignedIn>
       {children}
     </ClerkProvider>
