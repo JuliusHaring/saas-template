@@ -97,11 +97,12 @@ function ChatBotCreate({
 }
 
 function ChatBotGrid({ chatbots }: { chatbots: ChatBotType[] }) {
-  const getSourcesCount = (chatbot: ChatBotType) => {
-    let counter = 0;
-    if (chatbot.GDriveSourceOptions) counter++;
-    if (chatbot.WebsiteSourceOptions) counter++;
-    return counter;
+  const getSourcesList = (chatbot: ChatBotType) => {
+    let counter = "";
+    if (chatbot.GDriveSourceOptions) counter += "GDrive ";
+    if (chatbot.WebsiteSourceOptions)
+      `Webseite: ${chatbot.WebsiteSourceOptions.url}`;
+    return counter.length > 0 ? counter : "Keine";
   };
 
   const responsiveColsClass =
@@ -125,7 +126,7 @@ function ChatBotGrid({ chatbots }: { chatbots: ChatBotType[] }) {
             footer={<Button>Bearbeiten</Button>}
           >
             <p>Dokumente: {chatbot.Documents.length}</p>
-            <p>Quellen: {getSourcesCount(chatbot)}</p>
+            <p>Quellen: {getSourcesList(chatbot)}</p>
           </Card>
         ))}
     </div>
