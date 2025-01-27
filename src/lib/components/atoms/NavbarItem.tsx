@@ -11,7 +11,7 @@ export default function NavbarItem({
 }) {
   return (
     <Link {...linkProps}>
-      <div className="flex items-center gap-2 p-3 hover:bg-blue-400 hover:font-semibold active:bg-blue-500">
+      <div className="flex items-center gap-2 p-3 hover:bg-blue-400 hover:font-semibold hover:shadow hover:shadow-blue-600 active:bg-blue-500 -sm">
         {Icon && <Icon className="h-6 w-6" />}
         {children}
       </div>
