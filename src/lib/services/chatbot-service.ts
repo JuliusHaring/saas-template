@@ -1,11 +1,18 @@
 import {
+  ChatBotType,
   createChatBot,
+  CreateChatBotType,
   getChatBot,
   getChatBots,
   getUserIdOfChatbot,
 } from "@/lib/db/chatbot";
 import { ChatBot } from "@prisma/client";
 import { CreateAssistantType, OpenAIService } from "./openai-service";
+
+export type CreateChatbotBeforeAssistantType = Omit<
+  CreateChatBotType,
+  "assistantId"
+>;
 
 export class ChatBotService {
   private static _instance: ChatBotService;
@@ -39,23 +46,16 @@ export class ChatBotService {
 
   public async createChatBot(
     userId: ChatBot["userId"],
-    assistantName: CreateAssistantType["name"],
-    createAssistant?: CreateAssistantType,
-  ): Promise<ChatBot> {
-    const createAssistantData: CreateAssistantType = Object.assign(
-      {},
-      createAssistant,
-      { name: assistantName },
-    );
+    createAssistant?: CreateChatbotBeforeAssistantType,
+  ): Promise<ChatBotType> {
     const assistant = await this.openAIService.createAssistant(
       userId,
-      createAssistantData,
+      createAssistant || {},
     );
-    return createChatBot(
-      userId,
-      assistant.id,
-      assistantName!,
-      assistant.instructions,
-    );
+    return createChatBot(userId, {
+      name: assistant.name!,
+      instructions: createAssistant?.instructions,
+      assistantId: assistant.id,
+    });
   }
 }

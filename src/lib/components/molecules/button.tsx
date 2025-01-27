@@ -3,12 +3,14 @@ export default function Button({
   variant = "primary",
   size = "md",
   isDisabled = false,
+  type = "button",
   onClick,
 }: {
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "danger";
   size?: "sm" | "md" | "lg";
   isDisabled?: boolean;
+  type?: "button" | "submit" | "reset";
   onClick?: () => void;
 }) {
   const baseClasses =
@@ -33,7 +35,10 @@ export default function Button({
 
   return (
     <button
-      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${isDisabled ? disabledClasses : ""}`}
+      type={type}
+      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${
+        isDisabled ? disabledClasses : ""
+      }`}
       disabled={isDisabled}
       onClick={onClick}
     >

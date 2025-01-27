@@ -8,13 +8,9 @@ const chatbotService = ChatBotService.Instance;
 export async function POST(request: Request) {
   try {
     const userId = await getUserId();
-    const { assistantId, createArgs } = await request.json();
+    const { ...createArgs } = await request.json();
 
-    const chatBot = await chatbotService.createChatBot(
-      userId,
-      assistantId,
-      createArgs,
-    );
+    const chatBot = await chatbotService.createChatBot(userId, createArgs);
     return NextResponse.json(chatBot);
   } catch (error) {
     return handleHttpError(error);
