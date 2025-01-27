@@ -14,7 +14,7 @@ model ChatBot {
   userId               String                @unique
   GDriveSourceOptions  GDriveSourceOptions?
   WebsiteSourceOptions WebsiteSourceOptions?
-  Document             Document[]
+  Documents            Document[]
   Style                Style?
 }
 

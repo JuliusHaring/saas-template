@@ -5,7 +5,7 @@ import { prisma } from ".";
 export type ChatBotType = Prisma.ChatBotGetPayload<{
   include: {
     Style: true;
-    Document: true;
+    Documents: true;
     GDriveSourceOptions: true;
     WebsiteSourceOptions: true;
   };
@@ -49,7 +49,7 @@ export async function getChatBots(
       Style: true,
       GDriveSourceOptions: true,
       WebsiteSourceOptions: true,
-      Document: true,
+      Documents: true,
     },
   });
 }

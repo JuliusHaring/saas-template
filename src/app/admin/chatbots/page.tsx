@@ -1,6 +1,6 @@
 "use client";
+import Card from "@/lib/components/organisms/Card";
 import { ChatBotType } from "@/lib/db/chatbot";
-import { ChatBot } from "@prisma/client";
 import { useEffect, useState } from "react";
 
 export default function Chatbots() {
@@ -23,9 +23,13 @@ export default function Chatbots() {
   return (
     <>
       {chatbots.map((chatbot) => (
-        <div key={chatbot.assistantId}>
-          {chatbot.assistantId} | {chatbot.userId}
-        </div>
+        <Card
+          key={chatbot.assistantId}
+          header={chatbot.assistantId}
+          footer={chatbot.Documents.length}
+        >
+          {chatbot.userId}
+        </Card>
       ))}
     </>
   );
