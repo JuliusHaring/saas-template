@@ -51,6 +51,11 @@ export class ChatBotService {
       userId,
       createAssistantData,
     );
-    return createChatBot(userId, assistant.id);
+    return createChatBot(
+      userId,
+      assistant.id,
+      assistantName!,
+      assistant.instructions,
+    );
   }
 }

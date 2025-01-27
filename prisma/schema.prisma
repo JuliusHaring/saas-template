@@ -16,6 +16,9 @@ model ChatBot {
   WebsiteSourceOptions WebsiteSourceOptions?
   Documents            Document[]
   Style                Style?
+
+  instructions String?
+  name         String
 }
 
 model GDriveSourceOptions {

@@ -13,6 +13,7 @@ export default function Chatbots() {
         const chatbotsResponse = await fetch("/api/chatbot");
         const _chatbots: ChatBotType[] = await chatbotsResponse.json();
         setChatbots(_chatbots);
+        console.log(_chatbots);
       } catch (error) {
         console.error("Error fetching chatbots:", error);
       }

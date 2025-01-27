@@ -57,11 +57,15 @@ export async function getChatBots(
 export async function createChatBot(
   userId: ChatBot["userId"],
   assistantId: ChatBot["assistantId"],
+  name: ChatBot["name"],
+  instructions?: ChatBot["instructions"],
 ) {
   return prisma.chatBot.create({
     data: {
       assistantId,
       userId,
+      name,
+      instructions,
     },
   });
 }
