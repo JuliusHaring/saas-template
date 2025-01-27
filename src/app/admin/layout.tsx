@@ -11,9 +11,7 @@ export default function Layout({
       <div className="">
         <Navbar />
       </div>
-      <div className="ml-[12em] pl-[1em]">
-      {children}
-      </div>
+      <div className="ml-[12em] p-[1em]">{children}</div>
     </ClerkProvider>
   );
 }
