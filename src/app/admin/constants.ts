@@ -1,4 +1,4 @@
-import { AtSymbolIcon, Battery100Icon } from "@heroicons/react/24/solid";
+import { CpuChipIcon } from "@heroicons/react/24/outline";
 
 export type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 export interface SidenavContent {
@@ -11,11 +11,6 @@ export const NAVBAR_CONTENT: SidenavContent[] = [
   {
     title: "ChatBots",
     href: "/admin/chatbots",
-    icon: AtSymbolIcon,
-  },
-  {
-    title: "Other Stuff",
-    href: "/admin/",
-    icon: Battery100Icon,
+    icon: CpuChipIcon,
   },
 ];
