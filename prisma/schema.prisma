@@ -11,7 +11,7 @@ datasource db {
 
 model ChatBot {
   assistantId          String                @id
-  userId               String                @unique
+  userId               String
   GDriveSourceOptions  GDriveSourceOptions?
   WebsiteSourceOptions WebsiteSourceOptions?
   Documents            Document[]
