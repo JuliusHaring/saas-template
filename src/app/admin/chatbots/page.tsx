@@ -4,7 +4,8 @@ import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
 import { ChatBotType, CreateChatBotType } from "@/lib/db/chatbot";
 import { CreateChatbotBeforeAssistantType } from "@/lib/services/chatbot-service";
-import { ChatBot } from "@prisma/client";
+import { getImportScript } from "@/lib/utils/import-script";
+import { CodeBracketSquareIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 
 export default function Chatbots() {
@@ -122,13 +123,36 @@ function ChatBotGrid({ chatbots }: { chatbots: ChatBotType[] }) {
         .map((chatbot) => (
           <Card
             key={chatbot.assistantId}
-            header={chatbot.name}
+            header={chatBotHeader(chatbot)}
             footer={<Button>Bearbeiten</Button>}
           >
             <p>Dokumente: {chatbot.Documents.length}</p>
             <p>Quellen: {getSourcesList(chatbot)}</p>
           </Card>
         ))}
+    </div>
+  );
+}
+
+export function chatBotHeader(chatbot: ChatBotType) {
+  const handleCopyToClipboard = () => {
+    const script = getImportScript(chatbot);
+    navigator.clipboard.writeText(script).then(
+      () => {
+        alert("Script copied to clipboard!");
+      },
+      (error) => {
+        console.error("Failed to copy script:", error);
+      },
+    );
+  };
+
+  return (
+    <div className="flex items-center justify-between">
+      <span className="font-semibold">{chatbot.name}</span>
+      <Button onClick={handleCopyToClipboard} className="flex items-center">
+        <CodeBracketSquareIcon className="h-5 w-5 text-white" />
+      </Button>
     </div>
   );
 }

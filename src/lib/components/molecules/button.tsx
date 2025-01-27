@@ -5,6 +5,7 @@ export default function Button({
   isDisabled = false,
   type = "button",
   onClick,
+  className,
 }: {
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "danger";
@@ -12,6 +13,7 @@ export default function Button({
   isDisabled?: boolean;
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
+  className?: string;
 }) {
   const baseClasses =
     "inline-flex items-center justify-center font-semibold rounded-lg focus:outline-none transition-all";
@@ -38,7 +40,7 @@ export default function Button({
       type={type}
       className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${
         isDisabled ? disabledClasses : ""
-      }`}
+      } ${className}`}
       disabled={isDisabled}
       onClick={onClick}
     >
