@@ -88,7 +88,7 @@ export class QuotaService {
       const currentUsage = await getUserUsage(userId);
       currentValue = currentUsage[quota];
     } catch (e) {
-      console.log(
+      console.error(
         `Found no Usage for user ${userId}, this will subsequently be created`,
       );
     }

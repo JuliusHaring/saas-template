@@ -13,7 +13,6 @@ export default function Chatbots() {
         const chatbotsResponse = await fetch("/api/chatbot");
         const _chatbots: ChatBotType[] = await chatbotsResponse.json();
         setChatbots(_chatbots);
-        console.log(_chatbots);
       } catch (error) {
         console.error("Error fetching chatbots:", error);
       }
@@ -21,6 +20,13 @@ export default function Chatbots() {
 
     getChatBots();
   }, []);
+
+  const getSourcesCount = (chatbot: ChatBotType) => {
+    let counter = 0;
+    if (chatbot.GDriveSourceOptions) counter++;
+    if (chatbot.WebsiteSourceOptions) counter++;
+    return counter;
+  };
 
   const responsiveColsClass =
     {
@@ -34,10 +40,11 @@ export default function Chatbots() {
       {chatbots.map((chatbot) => (
         <Card
           key={chatbot.assistantId}
-          header={chatbot.assistantId}
+          header={chatbot.name}
           footer={<Button>Bearbeiten</Button>}
         >
-          {chatbot.userId}
+          <p>Dokumente: {chatbot.Documents.length}</p>
+          <p>Quellen: {getSourcesCount(chatbot)}</p>
         </Card>
       ))}
     </div>
