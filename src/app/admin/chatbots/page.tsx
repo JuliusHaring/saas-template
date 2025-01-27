@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
 import { ChatBotType } from "@/lib/db/chatbot";
 import { useEffect, useState } from "react";
@@ -26,7 +27,7 @@ export default function Chatbots() {
         <Card
           key={chatbot.assistantId}
           header={chatbot.assistantId}
-          footer={chatbot.Documents.length}
+          footer={<Button>Open</Button>}
         >
           {chatbot.userId}
         </Card>
