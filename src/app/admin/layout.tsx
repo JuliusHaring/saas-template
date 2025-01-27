@@ -8,8 +8,12 @@ export default function Layout({
 }>) {
   return (
     <ClerkProvider>
-      <Navbar />
+      <div className="">
+        <Navbar />
+      </div>
+      <div className="ml-[12em] pl-[1em]">
       {children}
+      </div>
     </ClerkProvider>
   );
 }

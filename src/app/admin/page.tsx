@@ -1,3 +1,3 @@
 export default function Admin() {
-  return <>Test</>;
+  return <p>This is the main content</p>;
 }
