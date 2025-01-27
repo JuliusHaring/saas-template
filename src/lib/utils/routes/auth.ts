@@ -1,10 +1,10 @@
-import { UserNotFoundException } from "@/lib/services/user-service";
 import { auth } from "@clerk/nextjs/server";
+import { Forbidden } from "./http-errors";
 
 export async function getUserId() {
   return auth().then((authValue) => {
     if (authValue.userId === null) {
-      throw new UserNotFoundException();
+      throw Forbidden();
     }
     return authValue.userId;
   });

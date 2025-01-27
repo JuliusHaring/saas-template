@@ -1,11 +1,28 @@
 import { ChatBotService } from "@/lib/services/chatbot-service";
 import { getUserId } from "@/lib/utils/routes/auth";
+import { handleHttpError } from "@/lib/utils/routes/http-errors";
+import { NextResponse } from "next/server";
 
 const chatbotService = ChatBotService.Instance;
 
 export async function POST(request: Request) {
-  const userId = await getUserId();
-  const { assistantId, createArgs } = await request.json();
+  try {
+    const userId = await getUserId();
+    const { assistantId, createArgs } = await request.json();
 
-  return chatbotService.createChatBot(userId, assistantId, createArgs);
+    const chatBot = await chatbotService.createChatBot(
+      userId,
+      assistantId,
+      createArgs,
+    );
+    return NextResponse.json(chatBot);
+  } catch (error) {
+    return handleHttpError(error);
+  }
+}
+
+export async function GET(request: Request) {
+  const userId = await getUserId();
+  const chatBots = await chatbotService.getChatBots(userId);
+  return NextResponse.json(chatBots);
 }

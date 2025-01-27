@@ -10,7 +10,7 @@ export interface SidenavContent {
 export const NAVBAR_CONTENT: SidenavContent[] = [
   {
     title: "ChatBots",
-    href: "/admin/",
+    href: "/admin/chatbots",
     icon: AtSymbolIcon,
   },
   {
