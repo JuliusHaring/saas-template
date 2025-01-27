@@ -2,7 +2,14 @@
 import { ChatBot, Prisma, WebsiteSourceOptions } from "@prisma/client";
 import { prisma } from ".";
 
-export type CreateChatBot = Omit<Prisma.ChatBotCreateInput, "userId" | "id">;
+export type ChatBotType = Prisma.ChatBotGetPayload<{
+  include: {
+    Style: true;
+    Document: true;
+    GDriveSourceOptions: true;
+    WebsiteSourceOptions: true;
+  };
+}>;
 
 export type CreateGDriveSourceOptionsType = Omit<
   Prisma.GDriveSourceOptionsCreateInput,
@@ -31,10 +38,18 @@ export async function getChatBot(
   });
 }
 
-export async function getChatBots(userId: ChatBot["userId"]) {
+export async function getChatBots(
+  userId: ChatBot["userId"],
+): Promise<ChatBotType[]> {
   return prisma.chatBot.findMany({
     where: {
       userId: userId,
+    },
+    include: {
+      Style: true,
+      GDriveSourceOptions: true,
+      WebsiteSourceOptions: true,
+      Document: true,
     },
   });
 }

@@ -9,8 +9,8 @@ export default function Layout({
 }>) {
   return (
     <ClerkProvider>
-        <Navbar />
-        <Header/>
+      <Navbar />
+      <Header />
       <div className="ml-[12em] p-[1em]">{children}</div>
     </ClerkProvider>
   );
