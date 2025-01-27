@@ -6,7 +6,7 @@ export default function Home() {
       Todo: fill me
       <script
         src="http://localhost:3000/api/chatbot/integrate"
-        assistant-id="asst_6hG2S7KCwvihuJx0Xxg0Aic2"
+        assistant-id="asst_4F8fM1uMAZcigPKIhpBcosdL"
         api-url="http://localhost:3000"
       ></script>
     </div>

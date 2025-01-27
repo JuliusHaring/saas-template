@@ -7,12 +7,25 @@ export default function ChatbotUI() {
   );
   const [userInput, setUserInput] = useState("");
   const [assistantId, setAssistantId] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
+    // Get assistantId from the URL query string
     const params = new URLSearchParams(window.location.search);
     const id = params.get("assistantId");
-    if (id) setAssistantId(id);
-    else console.error("Missing assistantId in the query string");
+    if (id) {
+      setAssistantId(id);
+
+      // Retrieve the session ID from localStorage if it exists
+      const storedSessionId = localStorage.getItem(`session_${id}`);
+      if (storedSessionId) {
+        setSessionId(storedSessionId);
+      } else {
+        console.log("No session ID found; a new session will be created.");
+      }
+    } else {
+      console.error("Missing assistantId in the query string");
+    }
   }, []);
 
   useEffect(() => {
@@ -48,14 +61,21 @@ export default function ChatbotUI() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ assistantId, userMessage }),
+        body: JSON.stringify({ assistantId, userMessage, sessionId }),
       });
 
       if (!response.ok) {
         throw new Error("Failed to fetch response from the assistant");
       }
 
-      const { answer } = await response.json();
+      const { answer, sessionId: newSessionId } = await response.json();
+
+      // Update session ID if a new one is provided
+      if (newSessionId && newSessionId !== sessionId) {
+        setSessionId(newSessionId);
+        localStorage.setItem(`session_${assistantId}`, newSessionId);
+      }
+
       setMessages((prev) => [...prev, { role: "Assistant", text: answer }]);
     } catch (error) {
       console.error("Error communicating with the assistant:", error);
