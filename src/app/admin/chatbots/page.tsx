@@ -5,7 +5,7 @@ import Card from "@/lib/components/organisms/Card";
 import { ChatBotType, CreateChatBotType } from "@/lib/db/chatbot";
 import { CreateChatbotBeforeAssistantType } from "@/lib/services/chatbot-service";
 import { getImportScript } from "@/lib/utils/import-script";
-import { CodeBracketSquareIcon } from "@heroicons/react/24/outline";
+import { CodeBracketSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 
 export default function Chatbots() {
@@ -28,6 +28,24 @@ export default function Chatbots() {
 
     getChatBots();
   }, []);
+
+  const handleDelete = async (chatbot: ChatBotType) => {
+    try {
+      const response = await fetch(`/api/chatbot/${chatbot.assistantId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete the chatbot");
+      }
+
+      setChatbots((prevChatbots) =>
+        prevChatbots.filter((c) => c.assistantId !== chatbot.assistantId),
+      );
+    } catch (error) {
+      console.error("Error deleting chatbot:", error);
+    }
+  };
 
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +73,7 @@ export default function Chatbots() {
         onSubmit={handleFormSubmit}
       />
       <div className="mt-4"></div>
-      <ChatBotGrid chatbots={chatbots} />
+      <ChatBotGrid chatbots={chatbots} handleDelete={handleDelete} />
     </div>
   );
 }
@@ -97,13 +115,19 @@ function ChatBotCreate({
   );
 }
 
-function ChatBotGrid({ chatbots }: { chatbots: ChatBotType[] }) {
+function ChatBotGrid({
+  chatbots,
+  handleDelete,
+}: {
+  chatbots: ChatBotType[];
+  handleDelete: (chatbot: ChatBotType) => void;
+}) {
   const getSourcesList = (chatbot: ChatBotType) => {
-    let counter = "";
-    if (chatbot.GDriveSourceOptions) counter += "GDrive ";
+    let sources = [];
+    if (chatbot.GDriveSourceOptions) sources.push("GDrive");
     if (chatbot.WebsiteSourceOptions)
-      `Webseite: ${chatbot.WebsiteSourceOptions.url}`;
-    return counter.length > 0 ? counter : "Keine";
+      sources.push(`Webseite: ${chatbot.WebsiteSourceOptions.url}`);
+    return sources.length > 0 ? sources.join(", ") : "Keine";
   };
 
   const responsiveColsClass =
@@ -123,8 +147,13 @@ function ChatBotGrid({ chatbots }: { chatbots: ChatBotType[] }) {
         .map((chatbot) => (
           <Card
             key={chatbot.assistantId}
-            header={chatBotHeader(chatbot)}
-            footer={<Button>Bearbeiten</Button>}
+            header={chatBotCardHeader(chatbot)}
+            footer={
+              <ChatBotCardFooter
+                chatbot={chatbot}
+                handleDelete={() => handleDelete(chatbot)} // Pass specific chatbot
+              />
+            }
           >
             <p>Dokumente: {chatbot.Documents.length}</p>
             <p>Quellen: {getSourcesList(chatbot)}</p>
@@ -134,7 +163,7 @@ function ChatBotGrid({ chatbots }: { chatbots: ChatBotType[] }) {
   );
 }
 
-export function chatBotHeader(chatbot: ChatBotType) {
+function chatBotCardHeader(chatbot: ChatBotType) {
   const handleCopyToClipboard = () => {
     const script = getImportScript(chatbot);
     navigator.clipboard.writeText(script).then(
@@ -152,6 +181,27 @@ export function chatBotHeader(chatbot: ChatBotType) {
       <span className="font-semibold">{chatbot.name}</span>
       <Button onClick={handleCopyToClipboard} className="flex items-center">
         <CodeBracketSquareIcon className="h-5 w-5 text-white" />
+      </Button>
+    </div>
+  );
+}
+
+function ChatBotCardFooter({
+  chatbot,
+  handleDelete,
+}: {
+  chatbot: ChatBotType;
+  handleDelete: () => void;
+}) {
+  return (
+    <div className="flex items-center justify-between">
+      <span className="font-semibold">{chatbot.name}</span>
+      <Button
+        variant="danger"
+        onClick={handleDelete}
+        className="flex items-center"
+      >
+        <TrashIcon className="h-5 w-5 text-white" />
       </Button>
     </div>
   );

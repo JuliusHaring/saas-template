@@ -2,6 +2,7 @@ import {
   ChatBotType,
   createChatBot,
   CreateChatBotType,
+  deleteChatBot,
   getChatBot,
   getChatBots,
   getUserIdOfChatbot,
@@ -57,5 +58,13 @@ export class ChatBotService {
       instructions: createAssistant?.instructions,
       assistantId: assistant.id,
     });
+  }
+
+  public async deleteChatBot(
+    userId: ChatBot["userId"],
+    assistantId: ChatBot["assistantId"],
+  ) {
+    const assistant = await this.openAIService.deleteAssistant(assistantId);
+    return deleteChatBot(userId, assistant.id);
   }
 }

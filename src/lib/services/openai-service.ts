@@ -48,6 +48,10 @@ export class OpenAIService {
     });
   }
 
+  public async deleteAssistant(assistantId: ChatBot["assistantId"]) {
+    return this.client.beta.assistants.del(assistantId);
+  }
+
   public async getAssistants(userId: ChatBot["userId"]) {
     return this.client.beta.assistants.list().then((assistants) => {
       return assistants.data.filter(

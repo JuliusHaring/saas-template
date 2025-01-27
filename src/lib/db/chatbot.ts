@@ -65,6 +65,16 @@ export async function createChatBot(
   });
 }
 
+export async function deleteChatBot(
+  userId: ChatBot["userId"],
+  assistantId: ChatBot["assistantId"],
+): Promise<ChatBotType> {
+  return prisma.chatBot.delete({
+    where: { userId, assistantId },
+    include: chatBotInclude,
+  });
+}
+
 export async function createGDriveSourceOptions(
   assistantId: ChatBot["assistantId"],
   gDriveSourceCreate: CreateGDriveSourceOptionsType,
