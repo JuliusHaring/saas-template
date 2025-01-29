@@ -2,6 +2,14 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const isProtectedRoute = createRouteMatcher(["/admin(.*)"]);
 
+async function getEmail(userId: string, req: Request): Promise<string> {
+  const response = await fetch(new URL(`/api/user/get-email`, req.url), {
+    method: "POST",
+    body: JSON.stringify({ userId }),
+  });
+  return response.json().then((res) => res.email);
+}
+
 export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {
     await auth.protect();
@@ -12,16 +20,22 @@ export default clerkMiddleware(async (auth, req) => {
     }
 
     // Call API route to check subscription (Edge-safe)
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const response = await fetch(`${baseUrl}/api/stripe/subscription/check`, {
-      method: "POST",
-      body: JSON.stringify({ userId }),
-    });
+    const response = await fetch(
+      new URL(`/api/stripe/subscription/check`, req.url),
+      {
+        method: "POST",
+        body: JSON.stringify({ userId }),
+      },
+    );
 
     const { hasSubscription } = await response.json();
 
+    const email = await getEmail(userId, req);
+
     if (!hasSubscription) {
-      return Response.redirect(new URL("/", req.url));
+      return Response.redirect(
+        new URL(`/stripe/pricing-table/${email}`, req.url),
+      );
     }
   }
 });
