@@ -1,4 +1,4 @@
-import { ChatBot, Prisma, WebsiteSourceOptions } from "@prisma/client";
+import { ChatBot, Prisma, User, WebsiteSourceOptions } from "@prisma/client";
 import { prisma } from ".";
 
 export const chatBotInclude = {
@@ -8,7 +8,7 @@ export const chatBotInclude = {
   Documents: true,
 };
 
-export type CreateChatBotType = Omit<Prisma.ChatBotCreateInput, "userId">;
+export type CreateChatBotType = Omit<Prisma.ChatBotCreateInput, "User">;
 
 export type ChatBotType = Prisma.ChatBotGetPayload<{
   include: typeof chatBotInclude;
@@ -33,7 +33,7 @@ export async function getUserIdOfChatbot(assistantId: ChatBot["assistantId"]) {
 }
 
 export async function getChatBot(
-  userId: ChatBot["userId"],
+  userId: User["userId"],
   assistantId: ChatBot["assistantId"],
 ) {
   return prisma.chatBot.findFirstOrThrow({
@@ -42,7 +42,7 @@ export async function getChatBot(
 }
 
 export async function getChatBots(
-  userId: ChatBot["userId"],
+  userId: User["userId"],
 ): Promise<ChatBotType[]> {
   return prisma.chatBot.findMany({
     where: {
@@ -53,7 +53,7 @@ export async function getChatBots(
 }
 
 export async function createChatBot(
-  userId: ChatBot["userId"],
+  userId: User["userId"],
   createChatBot: CreateChatBotType,
 ): Promise<ChatBotType> {
   return prisma.chatBot.create({
@@ -66,7 +66,7 @@ export async function createChatBot(
 }
 
 export async function deleteChatBot(
-  userId: ChatBot["userId"],
+  userId: User["userId"],
   assistantId: ChatBot["assistantId"],
 ): Promise<ChatBotType> {
   return prisma.chatBot.delete({

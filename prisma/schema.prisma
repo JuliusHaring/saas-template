@@ -9,9 +9,47 @@ datasource db {
   extensions = [vector]
 }
 
+model User {
+  userId           String  @id @unique
+  stripeCustomerId String?
+
+  subscription Subscription? @relation(fields: [userId], references: [userId], map: "User_Subscription_fkey")
+  usage        Usage?        @relation(fields: [userId], references: [userId], map: "User_Usage_fkey")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  ChatBot   ChatBot[]
+}
+
+enum SubscriptionTier {
+  BASIC
+  PRO
+  ENTERPRISE
+}
+
+model Subscription {
+  userId    String           @id @unique
+  tier      SubscriptionTier
+  createdAt DateTime         @default(now())
+  expiresAt DateTime?
+  User      User?
+}
+
+model Usage {
+  userId       String   @id @unique
+  chatMessages Int      @default(0)
+  fileCount    Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  User         User?
+}
+
 model ChatBot {
+  userId String
+
+  User User @relation(fields: [userId], references: [userId], map: "ChatBot_User_fkey")
+
   assistantId          String                @id
-  userId               String
   GDriveSourceOptions  GDriveSourceOptions?
   WebsiteSourceOptions WebsiteSourceOptions?
   Documents            Document[]
@@ -58,25 +96,4 @@ model Style {
   ChatBot     ChatBot @relation(fields: [assistantId], references: [assistantId])
 
   css String
-}
-
-enum SubscriptionTier {
-  BASIC // Basic tier
-  PRO // Pro tier
-  ENTERPRISE // Enterprise tier
-}
-
-model Subscription {
-  userId    String           @id @unique
-  tier      SubscriptionTier
-  createdAt DateTime         @default(now())
-  expiresAt DateTime?
-}
-
-model Usage {
-  userId       String   @id @unique
-  chatMessages Int      @default(0)
-  fileCount    Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
 }

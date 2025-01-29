@@ -3,7 +3,7 @@ import {
   QuotaReachedException,
   QuotaService,
 } from "@/lib/services/quotas-service";
-import { ChatBot, Subscription } from "@prisma/client";
+import { ChatBot, User } from "@prisma/client";
 
 export class HttpError extends Error {
   statusCode: number;
@@ -64,7 +64,7 @@ export async function checkAssistantQuotaReachedError(
 }
 
 export async function checkUserQuotaReachedError(
-  userId: ChatBot["userId"],
+  userId: User["userId"],
   quota: Quota,
 ) {
   const quotaService = QuotaService.Instance;

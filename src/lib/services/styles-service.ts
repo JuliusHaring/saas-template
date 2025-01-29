@@ -1,5 +1,5 @@
 import { createOrUpdateStyle, getStyle } from "@/lib/db/styles";
-import { ChatBot, Style } from "@prisma/client";
+import { Style, User } from "@prisma/client";
 
 class StylesService {
   private static _instance: StylesService;
@@ -18,7 +18,7 @@ class StylesService {
   }
 
   async saveStyle(
-    userId: ChatBot["userId"],
+    userId: User["userId"],
     assistantId: Style["assistantId"],
     css: Style["css"],
   ) {

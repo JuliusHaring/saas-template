@@ -1,4 +1,4 @@
-import { ChatBot, Style } from "@prisma/client";
+import { Style, User } from "@prisma/client";
 import { prisma } from ".";
 
 export const getStyle = async (assistantId: Style["assistantId"]) => {
@@ -8,7 +8,7 @@ export const getStyle = async (assistantId: Style["assistantId"]) => {
 };
 
 export const createOrUpdateStyle = async (
-  userId: ChatBot["userId"],
+  userId: User["userId"],
   assistantId: Style["assistantId"],
   css: Style["css"],
 ) => {

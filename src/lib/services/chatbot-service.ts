@@ -7,8 +7,8 @@ import {
   getChatBots,
   getUserIdOfChatbot,
 } from "@/lib/db/chatbot";
-import { ChatBot } from "@prisma/client";
-import { CreateAssistantType, OpenAIService } from "./openai-service";
+import { ChatBot, User } from "@prisma/client";
+import { OpenAIService } from "./openai-service";
 
 export type CreateChatbotBeforeAssistantType = Omit<
   CreateChatBotType,
@@ -30,23 +30,23 @@ export class ChatBotService {
 
   public async getUserIdOfChatbot(
     assistantId: ChatBot["assistantId"],
-  ): Promise<ChatBot["userId"]> {
+  ): Promise<User["userId"]> {
     return getUserIdOfChatbot(assistantId);
   }
 
   public async getChatBot(
-    userId: ChatBot["userId"],
+    userId: User["userId"],
     assistantId: ChatBot["assistantId"],
   ) {
     return getChatBot(userId, assistantId);
   }
 
-  public async getChatBots(userId: ChatBot["userId"]): Promise<ChatBot[]> {
+  public async getChatBots(userId: User["userId"]): Promise<ChatBot[]> {
     return getChatBots(userId);
   }
 
   public async createChatBot(
-    userId: ChatBot["userId"],
+    userId: User["userId"],
     createAssistant?: CreateChatbotBeforeAssistantType,
   ): Promise<ChatBotType> {
     const assistant = await this.openAIService.createAssistant(
@@ -61,7 +61,7 @@ export class ChatBotService {
   }
 
   public async deleteChatBot(
-    userId: ChatBot["userId"],
+    userId: User["userId"],
     assistantId: ChatBot["assistantId"],
   ) {
     const assistant = await this.openAIService.deleteAssistant(assistantId);

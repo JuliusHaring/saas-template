@@ -1,8 +1,7 @@
-import { ChatBot } from "@prisma/client";
+import { ChatBot, User } from "@prisma/client";
 import { OpenAI } from "openai";
 import { TextContentBlock } from "openai/resources/beta/threads/index.mjs";
 import { PromptService } from "./prompt-service";
-import { QuotaService } from "./quotas-service";
 import { RAGService } from "./rag/rag-service";
 
 export class AssistantNotFoundException extends Error {}
@@ -32,7 +31,7 @@ export class OpenAIService {
   }
 
   public async createAssistant(
-    userId: ChatBot["userId"],
+    userId: User["userId"],
     createAssistant: CreateAssistantType,
   ): Promise<OpenAI.Beta.Assistants.Assistant> {
     const assistantCount = await this.countAssistants(userId);
@@ -52,7 +51,7 @@ export class OpenAIService {
     return this.client.beta.assistants.del(assistantId);
   }
 
-  public async getAssistants(userId: ChatBot["userId"]) {
+  public async getAssistants(userId: User["userId"]) {
     return this.client.beta.assistants.list().then((assistants) => {
       return assistants.data.filter(
         (assistant) =>
@@ -61,7 +60,7 @@ export class OpenAIService {
     });
   }
 
-  public async countAssistants(userId: ChatBot["userId"]) {
+  public async countAssistants(userId: User["userId"]) {
     return this.getAssistants(userId).then((arr) => arr.length);
   }
 

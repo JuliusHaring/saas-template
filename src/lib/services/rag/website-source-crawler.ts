@@ -1,5 +1,5 @@
 import { getWebsiteSource } from "@/lib/db/source";
-import { ChatBot } from "@prisma/client";
+import { User } from "@prisma/client";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { TextService } from "../text-service";
@@ -19,7 +19,7 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
   }
 
   async _listFiles(
-    userId: ChatBot["userId"],
+    userId: User["userId"],
     assistantId: string,
     n: number = Number.MAX_SAFE_INTEGER,
   ): Promise<RAGFile[]> {

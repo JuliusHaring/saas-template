@@ -1,4 +1,4 @@
-import { ChatBot } from "@prisma/client";
+import { User } from "@prisma/client";
 import { TextService } from "../text-service";
 
 export class RAGFile {
@@ -21,13 +21,13 @@ export abstract class RAGSourceCrawler {
   }
 
   abstract _listFiles(
-    userId: ChatBot["userId"],
+    userId: User["userId"],
     assistantId: string,
     n: number,
   ): Promise<RAGFile[]>;
 
   public async listFiles(
-    userId: ChatBot["userId"],
+    userId: User["userId"],
     assistantId: string,
     n: number,
   ) {

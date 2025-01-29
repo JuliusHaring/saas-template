@@ -4,7 +4,7 @@ import {
   getUserUsage,
   SubscriptionTier,
 } from "@/lib/db/stripe";
-import { ChatBot, Subscription } from "@prisma/client";
+import { ChatBot, User } from "@prisma/client";
 import { ChatBotService } from "./chatbot-service";
 import { StripeService } from "./stripe-service";
 
@@ -54,13 +54,13 @@ export class QuotaService {
     return quotaMap;
   }
 
-  public async getUserQuotas(userId: Subscription["userId"]) {
+  public async getUserQuotas(userId: User["userId"]) {
     const userSubscription = await getUserSubscription(userId);
     return this._getTierQuotas(userSubscription.tier);
   }
 
   public async getUserQuotaRemainder(
-    userId: Subscription["userId"],
+    userId: User["userId"],
     quota: Quota,
     raise: boolean = false,
   ): Promise<number> {
@@ -79,7 +79,7 @@ export class QuotaService {
   }
 
   public async updateUserUsage(
-    userId: Subscription["userId"],
+    userId: User["userId"],
     quota: Quota,
     value: number,
   ) {

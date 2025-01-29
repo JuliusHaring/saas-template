@@ -1,9 +1,9 @@
-import { ChatBot, WebsiteSourceOptions } from "@prisma/client";
+import { User, WebsiteSourceOptions } from "@prisma/client";
 import { prisma } from ".";
 import { getChatBot } from "./chatbot";
 
 export async function getWebsiteSource(
-  userId: ChatBot["userId"],
+  userId: User["userId"],
   assistantId: WebsiteSourceOptions["assistantId"],
 ) {
   await getChatBot(userId, assistantId);
