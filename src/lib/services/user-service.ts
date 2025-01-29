@@ -9,13 +9,15 @@ export class UserService {
     return this._instance || (this._instance = new this());
   }
 
-  async createOrUpdateUser(id: User["id"]) {
+  async createOrUpdateUser(id: User["id"], email: User["email"]) {
     return prisma.user.upsert({
       where: { id },
-      update: {},
+      update: {
+        email,
+      },
       create: {
         id,
-        stripeCustomerId: null,
+        email,
       },
     });
   }

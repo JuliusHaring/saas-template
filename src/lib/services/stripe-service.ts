@@ -1,7 +1,13 @@
-import { SubscriptionTier } from "@/lib/db/stripe";
+import {
+  createOrUpdateSubscription,
+  deleteSubscription,
+  SubscriptionTier,
+} from "@/lib/db/stripe";
 import Stripe from "stripe";
 
 export class StripeProductInitException extends Error {}
+export class SubscriptionTierNotFoundException extends Error {}
+export class StripeCustomerEmailMissingException extends Error {}
 
 export class StripeService {
   private static _instance: StripeService;
@@ -53,6 +59,25 @@ export class StripeService {
     }
   }
 
+  async getTierBySubscription(
+    subscription: Stripe.Subscription,
+  ): Promise<SubscriptionTier> {
+    const price = subscription.items.data[0]?.price;
+    const product = await this.stripe.products.retrieve(
+      price.product as string,
+    );
+    switch (product.id) {
+      case this.productBasic.id:
+        return "BASIC";
+      case this.productPremium.id:
+        return "PRO";
+      case this.productEnterprise.id:
+        return "ENTERPRISE";
+    }
+
+    throw new SubscriptionTierNotFoundException();
+  }
+
   // async getPrice(tier: SubscriptionTier) {
   //   const priceId = this._getProductByTier(tier).default_price as Stripe.Price["id"];
   //   return this.stripe.prices.retrieve(priceId);
@@ -66,7 +91,35 @@ export class StripeService {
     return this.stripe.webhooks.constructEvent(body, signature, webhookSecret);
   }
 
-  handleSubscription(subscription: Stripe.Subscription) {
-    throw new Error("Method not implemented.");
+  private async _getCustomerForSubscription(
+    subscription: Stripe.Subscription,
+  ): Promise<Stripe.Customer> {
+    const customerId: string = subscription.customer as string;
+    return (await this.stripe.customers.retrieve(
+      customerId,
+    )) as Stripe.Customer;
+  }
+
+  private async _getEmailForSubscription(
+    subscription: Stripe.Subscription,
+  ): Promise<string> {
+    const customer = await this._getCustomerForSubscription(subscription);
+
+    if (typeof customer.email === "undefined" || !customer.email) {
+      throw new StripeCustomerEmailMissingException();
+    }
+    return customer.email;
+  }
+
+  async createOrUpdateSubscription(subscription: Stripe.Subscription) {
+    const email = await this._getEmailForSubscription(subscription);
+    const subscriptionTier = await this.getTierBySubscription(subscription);
+
+    await createOrUpdateSubscription(email, subscription, subscriptionTier);
+  }
+
+  async deleteSubscription(subscription: Stripe.Subscription) {
+    const email = await this._getEmailForSubscription(subscription);
+    await deleteSubscription(email);
   }
 }

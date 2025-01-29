@@ -32,8 +32,13 @@ export async function POST(request: Request): Promise<NextResponse> {
     switch (event.type) {
       case "customer.subscription.created":
       case "customer.subscription.updated": {
-        const subscription = event.data.object as Stripe.Subscription;
-        await stripeService.handleSubscription(subscription);
+        const subscription = event.data.object;
+        await stripeService.createOrUpdateSubscription(subscription);
+        break;
+      }
+      case "customer.subscription.deleted": {
+        const subscription = event.data.object;
+        await stripeService.deleteSubscription(subscription);
         break;
       }
       default:

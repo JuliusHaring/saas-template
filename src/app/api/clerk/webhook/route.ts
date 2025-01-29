@@ -8,8 +8,12 @@ export async function POST(req: NextRequest) {
   try {
     const payload = (await req.json()) as WebhookEvent;
 
-    if (payload.type === "user.created") {
-      userService.createOrUpdateUser(payload.data.id);
+    if (payload.type === "user.created" || payload.type === "user.updated") {
+      const email_id = payload.data.primary_email_address_id;
+      const email = payload.data.email_addresses.find(
+        (addr) => addr.id === email_id,
+      )!.email_address;
+      await userService.createOrUpdateUser(payload.data.id, email!);
 
       return NextResponse.json({ success: true });
     }

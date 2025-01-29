@@ -10,11 +10,14 @@ datasource db {
 }
 
 model User {
-  id           String  @id @unique
+  id               String  @id @unique
+  email            String
   stripeCustomerId String?
 
-  subscription Subscription? @relation(fields: [id], references: [userId], map: "User_Subscription_fkey")
-  usage        Usage?        @relation(fields: [id], references: [userId], map: "User_Usage_fkey")
+  subscriptionId String?       @unique
+  Subscription   Subscription? @relation(fields: [subscriptionId], references: [userId])
+  usageId        String?       @unique
+  Usage          Usage?        @relation(fields: [usageId], references: [userId])
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -45,9 +48,8 @@ model Usage {
 }
 
 model ChatBot {
-  userId String
-
-  User User @relation(fields: [userId], references: [id], map: "ChatBot_User_fkey")
+  userId String @unique
+  User   User   @relation(fields: [userId], references: [id])
 
   assistantId          String                @id
   GDriveSourceOptions  GDriveSourceOptions?
