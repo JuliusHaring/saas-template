@@ -1,7 +1,7 @@
 import { ChatBotType } from "../db/chatbot";
+import { baseUrl } from "./base-url";
 
 export function getImportScript(chatbot: ChatBotType) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
   return `
   <script
     src="${baseUrl}/api/chatbot/integrate" 

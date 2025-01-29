@@ -4,8 +4,10 @@ import {
   hasActiveSubscription,
   SubscriptionTier,
 } from "@/lib/db/stripe";
-import { User } from "@prisma/client";
+import { Subscription, User } from "@prisma/client";
 import Stripe from "stripe";
+import { GetUserType } from "../db/user";
+import { baseUrl } from "../utils/base-url";
 
 export class StripeProductInitException extends Error {}
 export class SubscriptionTierNotFoundException extends Error {}
@@ -127,5 +129,12 @@ export class StripeService {
 
   async hasActiveSubscription(userId: User["id"]): Promise<boolean> {
     return hasActiveSubscription(userId);
+  }
+
+  async createBillingSession(user: GetUserType) {
+    return this.stripe.billingPortal.sessions.create({
+      customer: user.Subscription!.customerId,
+      return_url: `${baseUrl}/admin`,
+    });
   }
 }

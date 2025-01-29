@@ -10,9 +10,8 @@ datasource db {
 }
 
 model User {
-  id               String  @id @unique
-  email            String
-  stripeCustomerId String?
+  id    String @id @unique
+  email String
 
   subscriptionId String?       @unique
   Subscription   Subscription? @relation(fields: [subscriptionId], references: [userId])
@@ -31,11 +30,13 @@ enum SubscriptionTier {
 }
 
 model Subscription {
-  userId    String           @id @unique
-  tier      SubscriptionTier
-  createdAt DateTime         @default(now())
-  expiresAt DateTime?
-  User      User?
+  userId         String           @unique
+  subscriptionId String           @id @unique
+  customerId     String
+  tier           SubscriptionTier
+  createdAt      DateTime         @default(now())
+  expiresAt      DateTime?
+  User           User?
 }
 
 model Usage {

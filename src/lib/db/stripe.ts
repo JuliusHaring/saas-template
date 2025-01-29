@@ -41,9 +41,12 @@ export async function createOrUpdateSubscription(
   });
 
   await prisma.subscription.upsert({
-    where: { userId: user.id },
+    where: { subscriptionId: subscription.id },
     create: {
       userId: user.id,
+      User: { connect: { id: user.id } },
+      subscriptionId: subscription.id,
+      customerId: subscription.customer as string,
       tier: subscriptionTier,
       createdAt: new Date(subscription.created * 1000), // Convert from Unix timestamp
       expiresAt: subscription.current_period_end
