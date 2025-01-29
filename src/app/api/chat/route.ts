@@ -1,9 +1,5 @@
 import { OpenAIChatService } from "@/lib/services/openai-service";
-import {
-  Quota,
-  QuotaReachedException,
-  QuotaService,
-} from "@/lib/services/quotas-service";
+import { Quota, QuotaService } from "@/lib/services/quotas-service";
 import {
   BadRequest,
   checkAssistantQuotaReachedError,

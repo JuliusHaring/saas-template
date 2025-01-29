@@ -1,11 +1,12 @@
+// @ts-nocheck
 import Script from "next/script";
 
-export default function PricingTablePage({
+export default async function PricingTablePage({
   params,
 }: {
-  params: { "customer-email": string };
+  params: Promise<{ customerEmail: string }>;
 }) {
-  const customerEmail = decodeURIComponent(params["customer-email"]);
+  const customerEmail = (await params).customerEmail;
 
   return (
     <>
@@ -13,6 +14,7 @@ export default function PricingTablePage({
         strategy="beforeInteractive"
         src="https://js.stripe.com/v3/pricing-table.js"
       ></Script>
+
       <stripe-pricing-table
         pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
         publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}

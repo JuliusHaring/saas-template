@@ -1,6 +1,6 @@
 import { IconType } from "@/app/admin/constants";
 import Link, { LinkProps } from "next/link";
-import React, { ReactNode } from "react";
+import React from "react";
 
 interface NavbarItemProps extends LinkProps {
   icon?: IconType;

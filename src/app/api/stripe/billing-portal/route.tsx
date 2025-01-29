@@ -1,11 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { StripeService } from "@/lib/services/stripe-service";
 import { getUserId } from "@/lib/utils/routes/auth";
 import { UserService } from "@/lib/services/user-service";
 
 const userService = UserService.Instance;
 
-export async function POST(req: NextRequest) {
+export async function POST() {
   try {
     const userId = await getUserId();
 

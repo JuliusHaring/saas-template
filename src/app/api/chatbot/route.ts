@@ -17,7 +17,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function GET(request: Request) {
+export async function GET() {
   const userId = await getUserId();
   const chatBots = await chatbotService.getChatBots(userId);
   return NextResponse.json(chatBots);

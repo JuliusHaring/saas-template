@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 const quotaService = QuotaService.Instance;
 
-export async function GET(request: Request) {
+export async function GET() {
   const userId = await getUserId();
 
   const map = await quotaService.getUserQuotas(userId);

@@ -90,6 +90,7 @@ export class QuotaService {
     } catch (e) {
       console.error(
         `Found no Usage for user ${userId}, this will subsequently be created`,
+        e,
       );
     }
 

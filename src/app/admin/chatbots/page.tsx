@@ -123,7 +123,7 @@ function ChatBotGrid({
   handleDelete: (chatbot: ChatBotType) => void;
 }) {
   const getSourcesList = (chatbot: ChatBotType) => {
-    let sources = [];
+    const sources = [];
     if (chatbot.GDriveSourceOptions) sources.push("GDrive");
     if (chatbot.WebsiteSourceOptions)
       sources.push(`Webseite: ${chatbot.WebsiteSourceOptions.url}`);

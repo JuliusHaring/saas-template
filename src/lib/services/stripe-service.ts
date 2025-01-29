@@ -4,7 +4,7 @@ import {
   hasActiveSubscription,
   SubscriptionTier,
 } from "@/lib/db/stripe";
-import { Subscription, User } from "@prisma/client";
+import { User } from "@prisma/client";
 import Stripe from "stripe";
 import { GetUserType } from "../db/user";
 import { baseUrl } from "../utils/base-url";

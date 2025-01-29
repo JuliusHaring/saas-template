@@ -20,8 +20,8 @@ export async function POST(request: Request): Promise<NextResponse> {
   try {
     const body = await request.text(); // Parse raw body as text
     event = stripeService.constructEvent(body, signature, webhookSecret);
-  } catch (err: any) {
-    console.error("Error verifying webhook signature:", err.message);
+  } catch (err) {
+    console.error("Error verifying webhook signature:", (err as Error).message);
     return NextResponse.json(
       { error: "Webhook signature verification failed" },
       { status: 400 },

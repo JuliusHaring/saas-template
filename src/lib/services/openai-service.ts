@@ -34,8 +34,6 @@ export class OpenAIService {
     userId: User["id"],
     createAssistant: CreateAssistantType,
   ): Promise<OpenAI.Beta.Assistants.Assistant> {
-    const assistantCount = await this.countAssistants(userId);
-
     createAssistant.instructions = this.promptService.generateAssistantPrompt(
       createAssistant.instructions || "",
     );
@@ -70,6 +68,7 @@ export class OpenAIService {
     try {
       return this.client.beta.assistants.retrieve(assistantId);
     } catch (e) {
+      console.error(e);
       throw new AssistantNotFoundException();
     }
   }
@@ -167,7 +166,7 @@ export class OpenAIChatService {
 
     const thread = await this.getThread(sessionId);
 
-    const message = await this.client.beta.threads.messages.create(thread.id, {
+    await this.client.beta.threads.messages.create(thread.id, {
       role: "user",
       content: prompt,
     });
@@ -181,7 +180,7 @@ export class OpenAIChatService {
     const timeout = 60 * 1000;
     const startTime = Date.now();
 
-    while (["queued", "in_progress"].includes(run.status)) {
+    while (["queued", "in_progress"].includes(runStatus)) {
       if (Date.now() - startTime > timeout) {
         throw new Error("Run polling timed out.");
       }
