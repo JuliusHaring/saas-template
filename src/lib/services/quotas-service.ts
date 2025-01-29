@@ -54,13 +54,13 @@ export class QuotaService {
     return quotaMap;
   }
 
-  public async getUserQuotas(userId: User["userId"]) {
+  public async getUserQuotas(userId: User["id"]) {
     const userSubscription = await getUserSubscription(userId);
     return this._getTierQuotas(userSubscription.tier);
   }
 
   public async getUserQuotaRemainder(
-    userId: User["userId"],
+    userId: User["id"],
     quota: Quota,
     raise: boolean = false,
   ): Promise<number> {
@@ -79,7 +79,7 @@ export class QuotaService {
   }
 
   public async updateUserUsage(
-    userId: User["userId"],
+    userId: User["id"],
     quota: Quota,
     value: number,
   ) {

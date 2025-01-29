@@ -21,16 +21,12 @@ export abstract class RAGSourceCrawler {
   }
 
   abstract _listFiles(
-    userId: User["userId"],
+    userId: User["id"],
     assistantId: string,
     n: number,
   ): Promise<RAGFile[]>;
 
-  public async listFiles(
-    userId: User["userId"],
-    assistantId: string,
-    n: number,
-  ) {
+  public async listFiles(userId: User["id"], assistantId: string, n: number) {
     const rawFiles = await this._listFiles(userId, assistantId, n);
 
     // Split files into smaller chunks if needed

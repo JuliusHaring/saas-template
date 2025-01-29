@@ -19,7 +19,7 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
   }
 
   async _listFiles(
-    userId: User["userId"],
+    userId: User["id"],
     assistantId: string,
     n: number = Number.MAX_SAFE_INTEGER,
   ): Promise<RAGFile[]> {

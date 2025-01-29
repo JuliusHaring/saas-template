@@ -8,7 +8,7 @@ export const getStyle = async (assistantId: Style["assistantId"]) => {
 };
 
 export const createOrUpdateStyle = async (
-  userId: User["userId"],
+  userId: User["id"],
   assistantId: Style["assistantId"],
   css: Style["css"],
 ) => {

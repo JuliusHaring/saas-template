@@ -18,7 +18,7 @@ class StylesService {
   }
 
   async saveStyle(
-    userId: User["userId"],
+    userId: User["id"],
     assistantId: Style["assistantId"],
     css: Style["css"],
   ) {

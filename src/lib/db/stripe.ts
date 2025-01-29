@@ -7,7 +7,7 @@ import { prisma } from ".";
 
 export type SubscriptionTier = PrismaSubscriptionTier;
 
-export async function getUserSubscription(userId: User["userId"]) {
+export async function getUserSubscription(userId: User["id"]) {
   return prisma.subscription.findFirstOrThrow({
     where: {
       userId,
@@ -15,12 +15,12 @@ export async function getUserSubscription(userId: User["userId"]) {
   });
 }
 
-export async function getUserUsage(userId: User["userId"]) {
+export async function getUserUsage(userId: User["id"]) {
   return prisma.usage.findFirstOrThrow({ where: { userId } });
 }
 
 export async function createOrUpdateUserUsage(
-  userId: User["userId"],
+  userId: User["id"],
   update: Omit<Prisma.UsageCreateInput, "userId">,
 ) {
   return await prisma.usage.upsert({

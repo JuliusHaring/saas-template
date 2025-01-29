@@ -64,7 +64,7 @@ export async function checkAssistantQuotaReachedError(
 }
 
 export async function checkUserQuotaReachedError(
-  userId: User["userId"],
+  userId: User["id"],
   quota: Quota,
 ) {
   const quotaService = QuotaService.Instance;

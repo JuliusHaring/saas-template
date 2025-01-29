@@ -31,7 +31,7 @@ export class OpenAIService {
   }
 
   public async createAssistant(
-    userId: User["userId"],
+    userId: User["id"],
     createAssistant: CreateAssistantType,
   ): Promise<OpenAI.Beta.Assistants.Assistant> {
     const assistantCount = await this.countAssistants(userId);
@@ -51,7 +51,7 @@ export class OpenAIService {
     return this.client.beta.assistants.del(assistantId);
   }
 
-  public async getAssistants(userId: User["userId"]) {
+  public async getAssistants(userId: User["id"]) {
     return this.client.beta.assistants.list().then((assistants) => {
       return assistants.data.filter(
         (assistant) =>
@@ -60,7 +60,7 @@ export class OpenAIService {
     });
   }
 
-  public async countAssistants(userId: User["userId"]) {
+  public async countAssistants(userId: User["id"]) {
     return this.getAssistants(userId).then((arr) => arr.length);
   }
 

@@ -33,7 +33,7 @@ export async function getUserIdOfChatbot(assistantId: ChatBot["assistantId"]) {
 }
 
 export async function getChatBot(
-  userId: User["userId"],
+  userId: User["id"],
   assistantId: ChatBot["assistantId"],
 ) {
   return prisma.chatBot.findFirstOrThrow({
@@ -41,9 +41,7 @@ export async function getChatBot(
   });
 }
 
-export async function getChatBots(
-  userId: User["userId"],
-): Promise<ChatBotType[]> {
+export async function getChatBots(userId: User["id"]): Promise<ChatBotType[]> {
   return prisma.chatBot.findMany({
     where: {
       userId: userId,
@@ -53,7 +51,7 @@ export async function getChatBots(
 }
 
 export async function createChatBot(
-  userId: User["userId"],
+  userId: User["id"],
   createChatBot: CreateChatBotType,
 ): Promise<ChatBotType> {
   return prisma.chatBot.create({
@@ -66,7 +64,7 @@ export async function createChatBot(
 }
 
 export async function deleteChatBot(
-  userId: User["userId"],
+  userId: User["id"],
   assistantId: ChatBot["assistantId"],
 ): Promise<ChatBotType> {
   return prisma.chatBot.delete({

@@ -3,7 +3,7 @@ import { prisma } from ".";
 import { getChatBot } from "./chatbot";
 
 export async function getWebsiteSource(
-  userId: User["userId"],
+  userId: User["id"],
   assistantId: WebsiteSourceOptions["assistantId"],
 ) {
   await getChatBot(userId, assistantId);

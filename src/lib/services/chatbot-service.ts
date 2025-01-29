@@ -30,23 +30,23 @@ export class ChatBotService {
 
   public async getUserIdOfChatbot(
     assistantId: ChatBot["assistantId"],
-  ): Promise<User["userId"]> {
+  ): Promise<User["id"]> {
     return getUserIdOfChatbot(assistantId);
   }
 
   public async getChatBot(
-    userId: User["userId"],
+    userId: User["id"],
     assistantId: ChatBot["assistantId"],
   ) {
     return getChatBot(userId, assistantId);
   }
 
-  public async getChatBots(userId: User["userId"]): Promise<ChatBot[]> {
+  public async getChatBots(userId: User["id"]): Promise<ChatBot[]> {
     return getChatBots(userId);
   }
 
   public async createChatBot(
-    userId: User["userId"],
+    userId: User["id"],
     createAssistant?: CreateChatbotBeforeAssistantType,
   ): Promise<ChatBotType> {
     const assistant = await this.openAIService.createAssistant(
@@ -61,7 +61,7 @@ export class ChatBotService {
   }
 
   public async deleteChatBot(
-    userId: User["userId"],
+    userId: User["id"],
     assistantId: ChatBot["assistantId"],
   ) {
     const assistant = await this.openAIService.deleteAssistant(assistantId);
