@@ -1,8 +1,10 @@
 import {
   createOrUpdateSubscription,
   deleteSubscription,
+  hasActiveSubscription,
   SubscriptionTier,
 } from "@/lib/db/stripe";
+import { User } from "@prisma/client";
 import Stripe from "stripe";
 
 export class StripeProductInitException extends Error {}
@@ -121,5 +123,9 @@ export class StripeService {
   async deleteSubscription(subscription: Stripe.Subscription) {
     const email = await this._getEmailForSubscription(subscription);
     await deleteSubscription(email);
+  }
+
+  async hasActiveSubscription(userId: User["id"]): Promise<boolean> {
+    return hasActiveSubscription(userId);
   }
 }

@@ -70,3 +70,17 @@ export async function deleteSubscription(email: string) {
     },
   });
 }
+
+export async function hasActiveSubscription(userId: User["id"]) {
+  const subscription = await prisma.subscription.findFirst({
+    where: { userId },
+  });
+
+  if (!subscription || typeof subscription === "undefined") {
+    return false;
+  }
+
+  return subscription.expiresAt
+    ? subscription.expiresAt.getTime() > Date.now()
+    : true;
+}
