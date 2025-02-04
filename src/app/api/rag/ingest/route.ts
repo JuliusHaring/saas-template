@@ -2,6 +2,7 @@ import { Quota, QuotaService } from "@/lib/services/quotas-service";
 import { IRAGService } from "@/lib/services/rag/i-rag-service";
 import { PostGresRAGService } from "@/lib/services/rag/postgres-rag-service";
 import { WebsiteSourceCrawler } from "@/lib/services/crawling/website-source-crawler";
+import { getUserId } from "@/lib/utils/routes/auth";
 
 const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
 const ragService: IRAGService = PostGresRAGService.Instance;
@@ -9,13 +10,11 @@ const quotaService = QuotaService.Instance;
 
 export async function POST(request: Request): Promise<Response> {
   const body = await request.json();
-  // const userId = await getUserId();
+  const userId = await getUserId();
   const { assistantId } = body;
-  const userId = "user_2sJ0FW5ihrjBvSXpMZkw5f5uzyG";
 
-  //let n = await quotaService.getUserQuotaRemainder(userId, Quota.MAX_FILES);
-  //n = Math.max(0, n);
-  const n = 1;
+  let n = await quotaService.getUserQuotaRemainder(userId, Quota.MAX_FILES);
+  n = Math.max(0, n);
 
   const files = await websiteSourceCrawler.listFiles(userId!, assistantId, n);
 
