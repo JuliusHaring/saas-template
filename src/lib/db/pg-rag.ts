@@ -1,16 +1,18 @@
 import { ChatBot, Document, Prisma } from "@prisma/client";
 import { prisma } from ".";
+import {
+  EmbeddingType,
+  RAGInsertType,
+  RAGQueryResultType,
+} from "../services/rag/types";
 
-type VectorAddedType = {
-  vector: number[];
-};
+export type DocumentType = Document & { distance: number };
 
 type VectorFoundType = DocumentType & { distance: number };
 
-export type CreateDocumentType = Omit<Prisma.DocumentCreateInput, "ChatBot"> &
-  VectorAddedType;
-
-export type DocumentType = Document & VectorAddedType;
+export type CreateDocumentType = Omit<Prisma.DocumentCreateInput, "ChatBot"> & {
+  embedding: EmbeddingType;
+};
 
 export class DocumentNotFoundException extends Error {}
 
@@ -34,13 +36,12 @@ export async function getVectorForDocument(
   return vectorArray;
 }
 
-export async function createDocument(
+export async function insertFile(
   assistantId: ChatBot["assistantId"],
-  createDocument: CreateDocumentType, // Includes vector
+  ragFile: RAGInsertType,
 ) {
-  const { vector, ...rest } = createDocument; // Extract vector from the input object
+  const { embedding, ...rest } = ragFile;
 
-  // Create the document without the vector column
   const data: Prisma.DocumentCreateInput = Object.assign({}, rest, {
     ChatBot: { connect: { assistantId } },
   });
@@ -51,7 +52,7 @@ export async function createDocument(
         data,
       });
 
-      const vectorString = `[${vector.join(",")}]`; // Convert vector to PostgreSQL array format
+      const vectorString = `[${embedding.join(",")}]`; // Convert vector to PostgreSQL array format
       await t.$queryRaw(Prisma.sql`
       UPDATE "Document"
       SET vector = ${vectorString}::vector(1536)
@@ -75,9 +76,9 @@ export async function deleteDocuments(assistantId: ChatBot["assistantId"]) {
 }
 
 export async function findClosest(
-  queryVector: number[],
+  queryVector: EmbeddingType,
   n: number = 5,
-): Promise<VectorFoundType[]> {
+): Promise<RAGQueryResultType[]> {
   const vectorString = `[${queryVector.join(",")}]`; // Convert query vector to PostgreSQL vector format
 
   // Perform similarity search at the SQL level
@@ -89,5 +90,9 @@ export async function findClosest(
     LIMIT ${n};
   `);
 
-  return results;
+  return results.map((r) => ({
+    name: r.name,
+    embedding: vectorString.split(",").map((v) => parseFloat(v)),
+    content: r.content,
+  }));
 }

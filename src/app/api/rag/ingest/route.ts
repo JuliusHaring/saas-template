@@ -1,29 +1,34 @@
 import { Quota, QuotaService } from "@/lib/services/quotas-service";
-import { RAGService } from "@/lib/services/rag/rag-service";
+import { PineconeRAGService } from "@/lib/services/rag/pinecone-rag-service";
 import { WebsiteSourceCrawler } from "@/lib/services/rag/website-source-crawler";
 import { getUserId } from "@/lib/utils/routes/auth";
 
 const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
-const ragService = RAGService.Instance;
+const ragService = PineconeRAGService.Instance;
 const quotaService = QuotaService.Instance;
 
 export async function POST(request: Request): Promise<Response> {
   const body = await request.json();
-  const userId = await getUserId();
+  // const userId = await getUserId();
+  const userId = "user_2sJ0FW5ihrjBvSXpMZkw5f5uzyG";
   const { assistantId } = body;
 
-  let n = await quotaService.getUserQuotaRemainder(userId, Quota.MAX_FILES);
-  n = Math.max(0, n);
+  // let n = await quotaService.getUserQuotaRemainder(userId, Quota.MAX_FILES);
+  // n = Math.max(0, n);
+
+  const n = 3;
 
   const files = await websiteSourceCrawler.listFiles(userId!, assistantId, n);
 
-  const ingestedFiles = await ragService.ingestRAGFiles(assistantId, files);
+  const ingestedFiles = await ragService.insertFiles(assistantId, files);
 
-  await quotaService.updateUserUsage(
-    userId,
-    Quota.MAX_FILES,
-    ingestedFiles.length,
-  );
+  if (ingestedFiles.count > 0) {
+    await quotaService.updateUserUsage(
+      userId,
+      Quota.MAX_FILES,
+      ingestedFiles.count,
+    );
+  }
 
   return Response.json(ingestedFiles);
 }

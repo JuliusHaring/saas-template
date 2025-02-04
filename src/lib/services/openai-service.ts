@@ -2,7 +2,8 @@ import { ChatBot, User } from "@prisma/client";
 import { OpenAI } from "openai";
 import { TextContentBlock } from "openai/resources/beta/threads/index.mjs";
 import { PromptService } from "./prompt-service";
-import { RAGService } from "./rag/rag-service";
+import { IRAGService } from "./rag/i-rag-service";
+import { PostGresRAGService } from "./rag/postgres-rag-service";
 
 export class AssistantNotFoundException extends Error {}
 export class ThreadStatusError extends Error {}
@@ -81,42 +82,18 @@ export class OpenAIService {
   }
 }
 
-export class OpenAIEmbeddingService {
-  private static _instance: OpenAIEmbeddingService;
-  private client: OpenAI;
-
-  private constructor() {
-    this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
-  }
-
-  public static get Instance() {
-    return this._instance || (this._instance = new this());
-  }
-
-  public async embedText(
-    text: string | string[],
-  ): Promise<OpenAI.Embeddings.Embedding["embedding"][]> {
-    return this.client.embeddings
-      .create({
-        input: text,
-        model: "text-embedding-ada-002",
-      })
-      .then((r) => r.data.map((d) => d.embedding));
-  }
-}
-
 export class OpenAIChatService {
   private static _instance: OpenAIChatService;
   private client: OpenAI;
   private threads: Map<string, { threadId: string; expiresAt: number }>;
-  private ragService: RAGService;
+  private ragService: IRAGService;
   private promptService: PromptService;
 
   private constructor() {
     this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
     this.threads = new Map();
     this.startCleanupRoutine();
-    this.ragService = RAGService.Instance;
+    this.ragService = PostGresRAGService.Instance;
     this.promptService = PromptService.Instance;
   }
 

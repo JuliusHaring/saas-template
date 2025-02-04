@@ -1,4 +1,5 @@
-import { DocumentType } from "@/lib/db/rag";
+import { DocumentType } from "@/lib/db/pg-rag";
+import { RAGQueryResultType } from "./rag/types";
 
 export class PromptService {
   private static _instance: PromptService;
@@ -8,7 +9,10 @@ export class PromptService {
     return this._instance || (this._instance = new this());
   }
 
-  generateChatPrompt(sources: DocumentType[], userMessage: string): string {
+  generateChatPrompt(
+    sources: RAGQueryResultType[],
+    userMessage: string,
+  ): string {
     const prompt = `
   USER_MESSAGE: ${userMessage}
   -------------------
