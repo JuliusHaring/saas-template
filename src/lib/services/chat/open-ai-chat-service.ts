@@ -1,120 +1,107 @@
 import { ChatBot } from "@prisma/client";
 import { IChatService } from "./i-chat-service";
-import OpenAI from "openai";
-import { TextContentBlock } from "openai/resources/beta/threads/messages.mjs";
-
-export class AssistantNotFoundException extends Error {}
-export class ThreadStatusError extends Error {}
-export class MessageTypeError extends Error {}
+import { OpenAI } from "openai";
+import { ChatResponseType } from "./types";
 
 export class OpenAIChatService extends IChatService {
   private static _instance: OpenAIChatService;
-  private client: OpenAI;
-  private threads: Map<string, { threadId: string; expiresAt: number }>;
+  private openai: OpenAI;
+  private readonly maxHistoryLength = 5;
 
   private constructor() {
     super();
-    this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
-    this.threads = new Map();
-    this.startCleanupRoutine();
+    this.openai = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
   }
 
   public static get Instance() {
     return this._instance || (this._instance = new this());
   }
 
+  /**
+   * Trims chat history to avoid excessive token usage.
+   */
+  private trimChatHistory(
+    history: { role: "user" | "assistant"; content: string }[],
+  ): {
+    role: "user" | "assistant";
+    content: string;
+  }[] {
+    if (history.length > this.maxHistoryLength) {
+      return history.slice(-this.maxHistoryLength);
+    }
+    return history;
+  }
+
+  /**
+   * Summarizes older chat messages into a single condensed message.
+   */
+  private async summarizeOldMessages(
+    history: { role: "user" | "assistant"; content: string }[],
+  ): Promise<string> {
+    const summaryPrompt: OpenAI.ChatCompletionMessageParam[] = [
+      {
+        role: "assistant",
+        content:
+          "Summarize the following conversation while preserving key context:",
+      },
+      ...history.slice(0, history.length - this.maxHistoryLength),
+    ];
+
+    const summaryResponse = await this.openai.chat.completions.create({
+      model: "gpt-4-turbo",
+      messages: summaryPrompt,
+    });
+
+    return summaryResponse.choices[0].message.content || "";
+  }
+
+  /**
+   * Handles user chat with a dynamically set system prompt.
+   */
   async _chatWithThread(
-    assistantId: ChatBot["assistantId"],
     sessionId: string,
     promptMessage: string,
-  ): Promise<string> {
-    const thread = await this.getThread(sessionId);
+    chatHistory: { role: "user" | "assistant"; content: string }[],
+    systemPrompt: string,
+  ): Promise<ChatResponseType> {
+    try {
+      let trimmedHistory = this.trimChatHistory(chatHistory);
+      let summarizedHistory = "";
 
-    await this.client.beta.threads.messages.create(thread.id, {
-      role: "user",
-      content: promptMessage,
-    });
-
-    const run = await this.client.beta.threads.runs.createAndPoll(thread.id, {
-      assistant_id: assistantId,
-    });
-
-    let runStatus = run.status;
-    const pollInterval = 200;
-    const timeout = 60 * 1000;
-    const startTime = Date.now();
-
-    while (["queued", "in_progress"].includes(runStatus)) {
-      if (Date.now() - startTime > timeout) {
-        throw new Error("Run polling timed out.");
+      if (chatHistory.length > this.maxHistoryLength) {
+        summarizedHistory = await this.summarizeOldMessages(chatHistory);
       }
 
-      await new Promise((resolve) => setTimeout(resolve, pollInterval));
-      const updatedRun = await this.client.beta.threads.runs.retrieve(
-        thread.id,
-        run.id,
-      );
-      runStatus = updatedRun.status;
+      const messages: OpenAI.ChatCompletionMessageParam[] = [
+        { role: "system", content: systemPrompt },
+        ...(summarizedHistory
+          ? [
+              {
+                role: "assistant",
+                content: summarizedHistory,
+              } as OpenAI.ChatCompletionMessageParam,
+            ]
+          : []),
+        ...trimmedHistory,
+        { role: "user", content: promptMessage },
+      ];
+
+      const response = await this.openai.chat.completions.create({
+        model: "gpt-4-turbo",
+        messages,
+      });
+
+      return {
+        response:
+          response.choices[0].message.content || this.defaultNoResponseMessage,
+        sessionId,
+      };
+    } catch (error) {
+      console.error("Error in chat process:", error);
+      return {
+        response: this.defaultErrorMessage,
+        sessionId,
+      };
     }
-
-    if (run.status !== "completed") {
-      throw new ThreadStatusError();
-    }
-
-    const retrievedMessages = await this.client.beta.threads.messages.list(
-      thread.id,
-    );
-    const messages = await this.getTextMessages(retrievedMessages);
-
-    return messages[0];
-  }
-
-  public async getThread(
-    sessionId: string,
-  ): Promise<OpenAI.Beta.Threads.Thread> {
-    const threadData = this.threads.get(sessionId);
-
-    if (threadData?.threadId) {
-      return this.client.beta.threads.retrieve(threadData.threadId);
-    }
-
-    const thread = await this.client.beta.threads.create();
-    const expiresAt = Date.now() + 60 * 60 * 1000; // 1 hour from now
-    this.threads.set(sessionId, { threadId: thread.id, expiresAt });
-    return thread;
-  }
-
-  private async getTextMessages(messages: OpenAI.Beta.Threads.MessagesPage) {
-    const messageContents = messages.data.map((m) => m.content);
-    if (messageContents.filter((mC) => mC[0].type !== "text").length > 0) {
-      throw new MessageTypeError();
-    }
-
-    return messageContents.map((mC) => (mC[0] as TextContentBlock).text.value);
-  }
-
-  public async getThreadMessages(sessionId: string) {
-    const thread = await this.getThread(sessionId);
-    const messages = await this.client.beta.threads.messages.list(thread.id);
-
-    return this.getTextMessages(messages);
-  }
-
-  public async deleteThread(sessionId: string) {
-    const thread = await this.getThread(sessionId);
-    await this.client.beta.threads.del(thread.id).then(() => {
-      this.threads.delete(sessionId);
-    });
-  }
-
-  private startCleanupRoutine(): void {
-    setInterval(() => {
-      const now = Date.now();
-      for (const [sessionId, threadData] of this.threads.entries()) {
-        if (threadData.expiresAt <= now) {
-          this.threads.delete(sessionId);
-        }
-      }
-    }, 60 * 1000); // Run cleanup every 1 minute
   }
 }
