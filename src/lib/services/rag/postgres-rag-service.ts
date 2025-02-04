@@ -20,8 +20,11 @@ export class PostGresRAGService extends IRAGService {
     await Promise.all(ragFiles.map((rF) => insertFile(assistantId, rF)));
   }
 
-  _findClosest(query: EmbeddingType): Promise<RAGQueryResultType[]> {
-    return findClosest(query);
+  _findClosest(
+    query: EmbeddingType,
+    n?: number,
+  ): Promise<RAGQueryResultType[]> {
+    return findClosest(query, n);
   }
 
   async deleteFiles(assistantId: ChatBot["assistantId"]): Promise<void> {

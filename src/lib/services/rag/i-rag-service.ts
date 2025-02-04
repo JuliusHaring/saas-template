@@ -31,10 +31,16 @@ export abstract class IRAGService {
 
   abstract deleteFiles(assistantId: ChatBot["assistantId"]): Promise<void>;
 
-  abstract _findClosest(query: EmbeddingType): Promise<RAGQueryResultType[]>;
+  abstract _findClosest(
+    query: EmbeddingType,
+    n?: number,
+  ): Promise<RAGQueryResultType[]>;
 
-  public async findClosest(query: RAGQueryType): Promise<RAGQueryResultType[]> {
+  public async findClosest(
+    query: RAGQueryType,
+    n?: number,
+  ): Promise<RAGQueryResultType[]> {
     const embedding = await this.embeddingService.embedText(query);
-    return this._findClosest(embedding);
+    return this._findClosest(embedding, n);
   }
 }
