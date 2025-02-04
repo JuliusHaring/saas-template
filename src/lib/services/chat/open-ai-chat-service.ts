@@ -8,6 +8,7 @@ export class ThreadStatusError extends Error {}
 export class MessageTypeError extends Error {}
 
 export class OpenAIChatService extends IChatService {
+  private static _instance: OpenAIChatService;
   private client: OpenAI;
   private threads: Map<string, { threadId: string; expiresAt: number }>;
 
@@ -16,6 +17,10 @@ export class OpenAIChatService extends IChatService {
     this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
     this.threads = new Map();
     this.startCleanupRoutine();
+  }
+
+  public static get Instance() {
+    return this._instance || (this._instance = new this());
   }
 
   async _chatWithThread(

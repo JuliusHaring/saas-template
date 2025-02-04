@@ -16,8 +16,10 @@ export class PostGresRAGService extends IRAGService {
   async _insertFiles(
     assistantId: ChatBot["assistantId"],
     ragFiles: RAGInsertType[],
-  ): Promise<void> {
-    await Promise.all(ragFiles.map((rF) => insertFile(assistantId, rF)));
+  ): Promise<{ count: number }> {
+    return await Promise.all(
+      ragFiles.map((rF) => insertFile(assistantId, rF)),
+    ).then((r) => ({ count: r.length }));
   }
 
   _findClosest(

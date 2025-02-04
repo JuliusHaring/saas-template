@@ -1,10 +1,10 @@
 import { Quota, QuotaService } from "@/lib/services/quotas-service";
-import { PineconeRAGService } from "@/lib/services/rag/pinecone-rag-service";
+import { IRAGService } from "@/lib/services/rag/i-rag-service";
+import { PostGresRAGService } from "@/lib/services/rag/postgres-rag-service";
 import { WebsiteSourceCrawler } from "@/lib/services/rag/website-source-crawler";
-import { getUserId } from "@/lib/utils/routes/auth";
 
 const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
-const ragService = PineconeRAGService.Instance;
+const ragService: IRAGService = PostGresRAGService.Instance;
 const quotaService = QuotaService.Instance;
 
 export async function POST(request: Request): Promise<Response> {

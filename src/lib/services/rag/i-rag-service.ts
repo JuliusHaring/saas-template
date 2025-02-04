@@ -3,6 +3,7 @@ import { IEmbeddingService } from "./i-embedding-service";
 import { OpenAIEmbeddingService } from "./open-ai-embedding-service";
 import {
   EmbeddingType,
+  RAGFile,
   RAGInsertType,
   RAGQueryResultType,
   RAGQueryType,
@@ -18,15 +19,22 @@ export abstract class IRAGService {
   abstract _insertFiles(
     assistantId: ChatBot["assistantId"],
     ragFiles: RAGInsertType[],
-  ): Promise<void>;
+  ): Promise<{ count: number }>;
+
+  private async embedRAGFile(ragFile: RAGFile): Promise<RAGInsertType> {
+    const embedding = await this.embeddingService.embedText(ragFile.content);
+    return Object.assign({}, ragFile, { embedding });
+  }
 
   public async insertFiles(
     assistantId: ChatBot["assistantId"],
-    ragFiles: RAGInsertType[],
-  ): Promise<void> {
+    ragFiles: RAGFile[],
+  ): Promise<{ count: number }> {
     await this.deleteFiles(assistantId);
 
-    await this._insertFiles(assistantId, ragFiles);
+    const embeddedFiles = await Promise.all(ragFiles.map(this.embedRAGFile));
+
+    return this._insertFiles(assistantId, embeddedFiles);
   }
 
   abstract deleteFiles(assistantId: ChatBot["assistantId"]): Promise<void>;

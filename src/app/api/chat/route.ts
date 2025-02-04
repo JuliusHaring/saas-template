@@ -1,4 +1,5 @@
-import { OpenAIChatService } from "@/lib/services/openai-service";
+import { IChatService } from "@/lib/services/chat/i-chat-service";
+import { OpenAIChatService } from "@/lib/services/chat/open-ai-chat-service";
 import { Quota, QuotaService } from "@/lib/services/quotas-service";
 import {
   BadRequest,
@@ -7,7 +8,7 @@ import {
 } from "@/lib/utils/routes/http-errors";
 import { v4 as uuidv4 } from "uuid";
 
-const openAIChatService = OpenAIChatService.Instance;
+const openAIChatService: IChatService = OpenAIChatService.Instance;
 const quotaService = QuotaService.Instance;
 
 export async function POST(request: Request): Promise<Response> {
