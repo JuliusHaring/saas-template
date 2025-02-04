@@ -16,8 +16,11 @@ export async function getUserSubscription(userId: User["id"]) {
   });
 }
 
-export async function getUserUsage(userId: User["id"]) {
-  return prisma.usage.findFirstOrThrow({ where: { userId } });
+export async function getUserUsage(userId: User["id"], throws: boolean = true) {
+  const findQuery = { where: { userId } };
+  return throws
+    ? prisma.usage.findFirstOrThrow(findQuery)
+    : prisma.usage.findFirst(findQuery);
 }
 
 export async function createOrUpdateUserUsage(

@@ -7,6 +7,7 @@ import {
 import { ChatBot, User } from "@prisma/client";
 import { ChatBotService } from "./chatbot-service";
 import { StripeService } from "./stripe-service";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export class QuotaReachedException extends Error {
   constructor(quota: Quota) {
@@ -68,7 +69,7 @@ export class QuotaService {
     const userQuotaValue = userQuotas.get(quota)!;
 
     const userUsage = await getUserUsage(userId);
-    const userUsageValue = userUsage[quota];
+    const userUsageValue = userUsage![quota];
     const res = userQuotaValue - userUsageValue;
 
     if (raise && res <= 0) {
@@ -84,14 +85,11 @@ export class QuotaService {
     value: number,
   ) {
     let currentValue = 0;
-    try {
-      const currentUsage = await getUserUsage(userId);
+
+    const currentUsage = await getUserUsage(userId, false);
+
+    if (currentUsage !== null) {
       currentValue = currentUsage[quota];
-    } catch (e) {
-      console.error(
-        `Found no Usage for user ${userId}, this will subsequently be created`,
-        e,
-      );
     }
 
     const update = { [quota]: value + currentValue };
