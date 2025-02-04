@@ -31,7 +31,7 @@ export abstract class RAGSourceCrawler {
       );
     }
 
-    return splitFiles;
+    return splitFiles.splice(0, n);
   }
 
   private splitContent(content: string, maxLength: number): RAGFile[] {

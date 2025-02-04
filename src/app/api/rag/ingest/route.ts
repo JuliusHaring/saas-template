@@ -10,11 +10,13 @@ const quotaService = QuotaService.Instance;
 
 export async function POST(request: Request): Promise<Response> {
   const body = await request.json();
-  const userId = await getUserId();
+  // const userId = await getUserId();
   const { assistantId } = body;
+  const userId = "user_2sJ0FW5ihrjBvSXpMZkw5f5uzyG";
 
-  let n = await quotaService.getUserQuotaRemainder(userId, Quota.MAX_FILES);
-  n = Math.max(0, n);
+  //let n = await quotaService.getUserQuotaRemainder(userId, Quota.MAX_FILES);
+  //n = Math.max(0, n);
+  const n = 1;
 
   const files = await websiteSourceCrawler.listFiles(userId!, assistantId, n);
 
