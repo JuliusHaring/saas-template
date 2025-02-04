@@ -1,7 +1,7 @@
 import { Quota, QuotaService } from "@/lib/services/quotas-service";
 import { IRAGService } from "@/lib/services/rag/i-rag-service";
 import { PostGresRAGService } from "@/lib/services/rag/postgres-rag-service";
-import { WebsiteSourceCrawler } from "@/lib/services/rag/website-source-crawler";
+import { WebsiteSourceCrawler } from "@/lib/services/crawling/website-source-crawler";
 
 const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
 const ragService: IRAGService = PostGresRAGService.Instance;

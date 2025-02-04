@@ -3,7 +3,8 @@ import { User } from "@prisma/client";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { TextService } from "../text-service";
-import { RAGFile, RAGSourceCrawler } from "./i-rag-source-crawler";
+import { RAGSourceCrawler } from "./i-rag-source-crawler";
+import { RAGFile } from "../rag/types";
 
 export class WebsiteSourceCrawler extends RAGSourceCrawler {
   private static _instance: WebsiteSourceCrawler;

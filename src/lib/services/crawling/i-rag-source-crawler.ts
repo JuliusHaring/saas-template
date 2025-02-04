@@ -1,6 +1,6 @@
 import { User } from "@prisma/client";
 import { TextService } from "../text-service";
-import { RAGFile } from "./types";
+import { RAGFile } from "../rag/types";
 
 export abstract class RAGSourceCrawler {
   protected textService: TextService;
