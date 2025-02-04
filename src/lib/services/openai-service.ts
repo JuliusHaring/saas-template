@@ -1,6 +1,5 @@
 import { ChatBot, User } from "@prisma/client";
 import { OpenAI } from "openai";
-import { TextContentBlock } from "openai/resources/beta/threads/index.mjs";
 import { PromptService } from "./prompt-service";
 
 export class AssistantNotFoundException extends Error {}

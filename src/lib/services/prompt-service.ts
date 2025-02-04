@@ -1,4 +1,3 @@
-import { DocumentType } from "@/lib/db/pg-rag";
 import { RAGQueryResultType } from "./rag/types";
 
 export class PromptService {

@@ -7,7 +7,6 @@ import {
 import { ChatBot, User } from "@prisma/client";
 import { ChatBotService } from "./chatbot-service";
 import { StripeService } from "./stripe-service";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export class QuotaReachedException extends Error {
   constructor(quota: Quota) {
