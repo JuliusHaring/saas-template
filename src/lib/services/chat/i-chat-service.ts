@@ -4,11 +4,14 @@ import { IRAGService } from "../rag/i-rag-service";
 import { PostGresRAGService } from "../rag/postgres-rag-service";
 import { ChatResponseType } from "./types";
 import { ChatBotService } from "../chatbot-service";
+import { InMemoryChatHistoryStorageService } from "../memory/in-memory-history-storage-service";
+import { IHistoryStorageService } from "../memory/i-history-storage-service";
 
 export abstract class IChatService {
   private promptService: PromptService;
   private ragService: IRAGService;
   private chatbotService: ChatBotService;
+  private historyStorageService: IHistoryStorageService;
 
   protected defaultNoResponseMessage = ``;
   protected defaultErrorMessage = ``;
@@ -17,6 +20,7 @@ export abstract class IChatService {
     this.promptService = PromptService.Instance;
     this.ragService = PostGresRAGService.Instance;
     this.chatbotService = ChatBotService.Instance;
+    this.historyStorageService = InMemoryChatHistoryStorageService.Instance;
   }
 
   abstract _chatWithThread(
@@ -40,6 +44,26 @@ export abstract class IChatService {
     const systemPrompt = this.promptService.generateAssistantPrompt(
       chatbot.instructions,
     );
-    return await this._chatWithThread(sessionId, prompt, [], systemPrompt);
+
+    const preCalculationTimestamp = Date.now();
+    const answer = await this._chatWithThread(
+      sessionId,
+      prompt,
+      this.historyStorageService.getHistory(sessionId),
+      systemPrompt,
+    );
+
+    this.historyStorageService.addMessage(sessionId, {
+      role: "user",
+      content: prompt,
+      timestamp: preCalculationTimestamp,
+    });
+
+    this.historyStorageService.addMessage(sessionId, {
+      role: "assistant",
+      content: answer.response,
+      timestamp: Date.now(),
+    });
+    return answer.response;
   }
 }

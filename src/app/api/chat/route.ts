@@ -21,7 +21,7 @@ export async function POST(request: Request): Promise<Response> {
     if (!assistantId) throw BadRequest("Missing required field: assistantId");
     if (!userMessage) throw BadRequest("Missing required field: userMessage");
 
-    await checkAssistantQuotaReachedError(assistantId, Quota.MAX_CHAT_MESSAGES);
+    // await checkAssistantQuotaReachedError(assistantId, Quota.MAX_CHAT_MESSAGES);
 
     // Use provided sessionId or generate a new one
     const sessionId = providedSessionId || uuidv4();
