@@ -2,11 +2,12 @@ import OpenAI from "openai";
 import { IEmbeddingService } from "./i-embedding-service";
 import { EmbeddingQueryType, EmbeddingType } from "./types";
 
-export class OpenAIEmbeddingService implements IEmbeddingService {
+export class OpenAIEmbeddingService extends IEmbeddingService {
   private static _instance: OpenAIEmbeddingService;
   private client: OpenAI;
 
   private constructor() {
+    super();
     this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
   }
 

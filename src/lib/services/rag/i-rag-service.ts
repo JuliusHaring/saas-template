@@ -32,7 +32,9 @@ export abstract class IRAGService {
   ): Promise<{ count: number }> {
     await this.deleteFiles(assistantId);
 
-    const embeddedFiles = await Promise.all(ragFiles.map(this.embedRAGFile));
+    const embeddedFiles = await Promise.all(
+      ragFiles.map((ragFile) => this.embedRAGFile(ragFile)),
+    );
 
     return this._insertFiles(assistantId, embeddedFiles);
   }
