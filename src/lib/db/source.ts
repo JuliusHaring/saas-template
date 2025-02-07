@@ -1,16 +1,16 @@
-import { User, WebsiteSourceOptions } from "@prisma/client";
 import { prisma } from ".";
 import { getChatBot } from "./chatbot";
+import { ChatBotIdType, UserIdType } from "./types";
 
 export async function getWebsiteSource(
-  userId: User["id"],
-  assistantId: WebsiteSourceOptions["assistantId"],
+  userId: UserIdType,
+  chatBotId: ChatBotIdType,
 ) {
-  await getChatBot(userId, assistantId);
+  await getChatBot(userId, chatBotId);
 
   return prisma.websiteSourceOptions.findFirstOrThrow({
     where: {
-      assistantId,
+      chatBotId,
     },
   });
 }

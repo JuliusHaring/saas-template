@@ -2,11 +2,11 @@ export async function GET(): Promise<Response> {
   const scriptContent = `
       (function() {
         const script = document.currentScript;
-        const assistantId = script.getAttribute("assistant-id");
+        const chatBotId = script.getAttribute("chatbot-id");
         const apiUrl = script.getAttribute("api-url");
   
-        if (!assistantId || !apiUrl) {
-          console.error("Missing required attributes: assistantId or apiUrl");
+        if (!chatBotId || !apiUrl) {
+          console.error("Missing required attributes: chatBotId or apiUrl");
           return;
         }
   
@@ -26,7 +26,7 @@ export async function GET(): Promise<Response> {
   
         // Create an iframe for the chatbot
         const iframe = document.createElement("iframe");
-        iframe.src = \`\${apiUrl}/chatbot-ui?assistantId=\${assistantId}\`;
+        iframe.src = \`\${apiUrl}/chatbot-ui?chatBotId=\${chatBotId}\`;
         iframe.style.width = "100%";
         iframe.style.height = "100%";
         iframe.style.border = "none";

@@ -1,4 +1,3 @@
-import { ChatBot } from "@prisma/client";
 import { IChatService } from "./i-chat-service";
 import { OpenAI } from "openai";
 import { ChatResponseType } from "./types";

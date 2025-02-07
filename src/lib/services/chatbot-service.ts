@@ -1,70 +1,51 @@
 import {
-  ChatBotType,
   createChatBot,
-  CreateChatBotType,
   deleteChatBot,
   getChatBot,
   getChatBots,
   getUserIdOfChatbot,
 } from "@/lib/db/chatbot";
-import { ChatBot, User } from "@prisma/client";
-import { OpenAIService } from "./openai-service";
-
-export type CreateChatbotBeforeAssistantType = Omit<
+import {
+  ChatBotIdType,
+  ChatBotType,
   CreateChatBotType,
-  "assistantId"
->;
+  UserIdType,
+} from "../db/types";
 
 export class ChatBotService {
   private static _instance: ChatBotService;
 
-  private openAIService!: OpenAIService;
-
-  private constructor() {
-    this.openAIService = OpenAIService.Instance;
-  }
+  private constructor() {}
 
   public static get Instance() {
     return this._instance || (this._instance = new this());
   }
 
   public async getUserIdOfChatbot(
-    assistantId: ChatBot["assistantId"],
-  ): Promise<User["id"]> {
-    return getUserIdOfChatbot(assistantId);
+    chatBotId: ChatBotIdType,
+  ): Promise<UserIdType> {
+    return getUserIdOfChatbot(chatBotId);
   }
 
-  public async getChatBot(
-    userId: User["id"],
-    assistantId: ChatBot["assistantId"],
-  ) {
-    return getChatBot(userId, assistantId);
+  public async getChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {
+    return getChatBot(userId, chatBotId);
   }
 
-  public async getChatBots(userId: User["id"]): Promise<ChatBot[]> {
+  public async getChatBots(userId: UserIdType): Promise<ChatBotType[]> {
     return getChatBots(userId);
   }
 
   public async createChatBot(
-    userId: User["id"],
-    createAssistant?: CreateChatbotBeforeAssistantType,
+    userId: UserIdType,
+    createChatbot: CreateChatBotType,
   ): Promise<ChatBotType> {
-    const assistant = await this.openAIService.createAssistant(
-      userId,
-      createAssistant || {},
-    );
     return createChatBot(userId, {
-      name: assistant.name!,
-      instructions: createAssistant?.instructions,
-      assistantId: assistant.id,
+      name: createChatbot.name,
+      instructions: createChatbot?.instructions,
     });
   }
 
-  public async deleteChatBot(
-    userId: User["id"],
-    assistantId: ChatBot["assistantId"],
-  ) {
-    const assistant = await this.openAIService.deleteAssistant(assistantId);
-    return deleteChatBot(userId, assistant.id);
+  public async deleteChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {
+    return deleteChatBot(userId, chatBotId);
   }
 }

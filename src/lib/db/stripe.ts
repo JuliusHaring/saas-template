@@ -5,10 +5,11 @@ import {
 } from "@prisma/client";
 import { prisma } from ".";
 import Stripe from "stripe";
+import { UserIdType } from "./types";
 
 export type SubscriptionTier = PrismaSubscriptionTier;
 
-export async function getUserSubscription(userId: User["id"]) {
+export async function getUserSubscription(userId: UserIdType) {
   return prisma.subscription.findFirstOrThrow({
     where: {
       userId,
@@ -16,7 +17,7 @@ export async function getUserSubscription(userId: User["id"]) {
   });
 }
 
-export async function getUserUsage(userId: User["id"], throws: boolean = true) {
+export async function getUserUsage(userId: UserIdType, throws: boolean = true) {
   const findQuery = { where: { userId } };
   return throws
     ? prisma.usage.findFirstOrThrow(findQuery)
@@ -24,7 +25,7 @@ export async function getUserUsage(userId: User["id"], throws: boolean = true) {
 }
 
 export async function createOrUpdateUserUsage(
-  userId: User["id"],
+  userId: UserIdType,
   update: Omit<Prisma.UsageCreateInput, "userId">,
 ) {
   return await prisma.usage.upsert({
@@ -77,7 +78,7 @@ export async function deleteSubscription(email: string) {
   });
 }
 
-export async function hasActiveSubscription(userId: User["id"]) {
+export async function hasActiveSubscription(userId: UserIdType) {
   const subscription = await prisma.subscription.findFirst({
     where: { userId },
   });

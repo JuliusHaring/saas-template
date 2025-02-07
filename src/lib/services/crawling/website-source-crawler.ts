@@ -1,10 +1,10 @@
 import { getWebsiteSource } from "@/lib/db/source";
-import { User } from "@prisma/client";
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { TextService } from "../text-service";
 import { RAGSourceCrawler } from "./i-rag-source-crawler";
 import { RAGFile } from "../rag/types";
+import { UserIdType } from "@/lib/db/types";
 
 export class WebsiteSourceCrawler extends RAGSourceCrawler {
   private static _instance: WebsiteSourceCrawler;
@@ -20,11 +20,11 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
   }
 
   async _listFiles(
-    userId: User["id"],
-    assistantId: string,
+    userId: UserIdType,
+    chatBotId: string,
     n: number = Number.MAX_SAFE_INTEGER,
   ): Promise<RAGFile[]> {
-    const websiteSource = await getWebsiteSource(userId, assistantId);
+    const websiteSource = await getWebsiteSource(userId, chatBotId);
 
     const { url, url_exceptions } = websiteSource;
 

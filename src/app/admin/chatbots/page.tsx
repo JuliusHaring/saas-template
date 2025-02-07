@@ -2,18 +2,16 @@
 import { Input, Textarea } from "@/lib/components/atoms/Input";
 import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
-import { ChatBotType, CreateChatBotType } from "@/lib/db/chatbot";
-import { CreateChatbotBeforeAssistantType } from "@/lib/services/chatbot-service";
+import { ChatBotType, CreateChatBotType } from "@/lib/db/types";
 import { getImportScript } from "@/lib/utils/import-script";
 import { CodeBracketSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 
 export default function Chatbots() {
   const [chatbots, setChatbots] = useState<ChatBotType[]>([]);
-  const [formValues, setFormValues] =
-    useState<CreateChatbotBeforeAssistantType>({
-      name: "",
-    });
+  const [formValues, setFormValues] = useState<CreateChatBotType>({
+    name: "",
+  });
 
   useEffect(() => {
     const getChatBots = async () => {
@@ -31,7 +29,7 @@ export default function Chatbots() {
 
   const handleDelete = async (chatbot: ChatBotType) => {
     try {
-      const response = await fetch(`/api/chatbot/${chatbot.assistantId}`, {
+      const response = await fetch(`/api/chatbot/${chatbot.id}`, {
         method: "DELETE",
       });
 
@@ -40,7 +38,7 @@ export default function Chatbots() {
       }
 
       setChatbots((prevChatbots) =>
-        prevChatbots.filter((c) => c.assistantId !== chatbot.assistantId),
+        prevChatbots.filter((c) => c.id !== chatbot.id),
       );
     } catch (error) {
       console.error("Error deleting chatbot:", error);
@@ -83,7 +81,7 @@ function ChatBotCreate({
   setFormValues,
   onSubmit,
 }: {
-  formValues: CreateChatbotBeforeAssistantType;
+  formValues: CreateChatBotType;
   setFormValues: React.Dispatch<React.SetStateAction<CreateChatBotType>>;
   onSubmit: (e: React.FormEvent) => void;
 }) {
@@ -146,7 +144,7 @@ function ChatBotGrid({
         )
         .map((chatbot) => (
           <Card
-            key={chatbot.assistantId}
+            key={chatbot.id}
             header={chatBotCardHeader(chatbot)}
             footer={
               <ChatBotCardFooter

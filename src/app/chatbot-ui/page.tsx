@@ -6,15 +6,15 @@ export default function ChatbotUI() {
     [],
   );
   const [userInput, setUserInput] = useState("");
-  const [assistantId, setAssistantId] = useState<string | null>(null);
+  const [chatBotId, setChatBotId] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Get assistantId from the URL query string
+    // Get chatBotId from the URL query string
     const params = new URLSearchParams(window.location.search);
-    const id = params.get("assistantId");
+    const id = params.get("chatBotId");
     if (id) {
-      setAssistantId(id);
+      setChatBotId(id);
 
       // Retrieve the session ID from localStorage if it exists
       const storedSessionId = localStorage.getItem(`session_${id}`);
@@ -24,17 +24,17 @@ export default function ChatbotUI() {
         console.log("No session ID found; a new session will be created.");
       }
     } else {
-      console.error("Missing assistantId in the query string");
+      console.error("Missing chatBotId in the query string");
     }
   }, []);
 
   useEffect(() => {
     const loadStyles = async () => {
-      if (!assistantId) return;
+      if (!chatBotId) return;
 
       try {
         const response = await fetch(
-          `/api/chatbot/styles?assistantId=${assistantId}`,
+          `/api/chatbot/styles?chatBotId=${chatBotId}`,
         );
         if (response.ok) {
           const { css } = await response.json();
@@ -48,10 +48,10 @@ export default function ChatbotUI() {
     };
 
     loadStyles();
-  }, [assistantId]);
+  }, [chatBotId]);
 
   const sendMessage = async () => {
-    if (!userInput || !assistantId) return;
+    if (!userInput || !chatBotId) return;
 
     const userMessage = userInput;
     setMessages((prev) => [...prev, { role: "User", text: userMessage }]);
@@ -61,11 +61,11 @@ export default function ChatbotUI() {
       const response = await fetch("/api/chatbot/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ assistantId, userMessage, sessionId }),
+        body: JSON.stringify({ chatBotId, userMessage, sessionId }),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch response from the assistant");
+        throw new Error("Failed to fetch response from the chatbot");
       }
 
       const { answer, sessionId: newSessionId } = await response.json();
@@ -73,12 +73,12 @@ export default function ChatbotUI() {
       // Update session ID if a new one is provided
       if (newSessionId && newSessionId !== sessionId) {
         setSessionId(newSessionId);
-        localStorage.setItem(`session_${assistantId}`, newSessionId);
+        localStorage.setItem(`session_${chatBotId}`, newSessionId);
       }
 
-      setMessages((prev) => [...prev, { role: "Assistant", text: answer }]);
+      setMessages((prev) => [...prev, { role: "assistant", text: answer }]);
     } catch (error) {
-      console.error("Error communicating with the assistant:", error);
+      console.error("Error communicating with the chatbot:", error);
     }
   };
 

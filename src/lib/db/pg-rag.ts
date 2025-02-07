@@ -5,6 +5,7 @@ import {
   RAGInsertType,
   RAGQueryResultType,
 } from "../services/rag/types";
+import { ChatBotIdType } from "./types";
 
 export type DocumentType = Document & { distance: number };
 
@@ -17,13 +18,13 @@ export type CreateDocumentType = Omit<Prisma.DocumentCreateInput, "ChatBot"> & {
 export class DocumentNotFoundException extends Error {}
 
 export async function getVectorForDocument(
-  assistantId: ChatBot["assistantId"],
+  chatBotId: ChatBotIdType,
   documentId: string,
 ): Promise<number[]> {
   const vectors: { vector: string }[] = await prisma.$queryRaw(Prisma.sql`
     SELECT vector::text AS vector
     FROM "Document"
-    WHERE "assistantId" = ${assistantId} AND id = ${documentId};
+    WHERE "chatBotId" = ${chatBotId} AND id = ${documentId};
   `);
 
   if (vectors.length !== 1) {
@@ -37,13 +38,13 @@ export async function getVectorForDocument(
 }
 
 export async function insertFile(
-  assistantId: ChatBot["assistantId"],
+  chatBotId: ChatBotIdType,
   ragFile: RAGInsertType,
 ) {
   const { embedding, ...rest } = ragFile;
 
   const data: Prisma.DocumentCreateInput = Object.assign({}, rest, {
-    ChatBot: { connect: { assistantId } },
+    ChatBot: { connect: { id: chatBotId } },
   });
 
   const documents = await prisma.$transaction(
@@ -67,10 +68,10 @@ export async function insertFile(
   return documents;
 }
 
-export async function deleteDocuments(assistantId: ChatBot["assistantId"]) {
+export async function deleteDocuments(chatBotId: ChatBotIdType) {
   return prisma.document.deleteMany({
     where: {
-      ChatBot: { assistantId },
+      ChatBot: { id: chatBotId },
     },
   });
 }
@@ -83,7 +84,7 @@ export async function findClosest(
 
   // Perform similarity search at the SQL level
   const results = await prisma.$queryRaw<VectorFoundType[]>(Prisma.sql`
-    SELECT id, name, content, 'createdAt', 'assistantId', vector <-> ${vectorString}::vector(1536) AS distance
+    SELECT id, name, content, 'createdAt', 'chatBotId', vector <-> ${vectorString}::vector(1536) AS distance
     FROM "Document"
     WHERE vector IS NOT NULL
     ORDER BY distance DESC

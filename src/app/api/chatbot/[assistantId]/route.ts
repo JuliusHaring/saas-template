@@ -6,12 +6,9 @@ const chatbotService = ChatBotService.Instance;
 
 export async function DELETE(req: NextRequest) {
   const userId = await getUserId();
-  const assistantId = req.nextUrl.searchParams.get("assistantId");
+  const chatBotId = req.nextUrl.searchParams.get("chatBotId");
 
-  const chatbotDelete = await chatbotService.deleteChatBot(
-    userId,
-    assistantId!,
-  );
+  const chatbotDelete = await chatbotService.deleteChatBot(userId, chatBotId!);
 
   return NextResponse.json(chatbotDelete);
 }

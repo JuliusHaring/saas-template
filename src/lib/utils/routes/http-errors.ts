@@ -1,9 +1,9 @@
+import { ChatBotIdType, UserIdType } from "@/lib/db/types";
 import {
   Quota,
   QuotaReachedException,
   QuotaService,
 } from "@/lib/services/quotas-service";
-import { ChatBot, User } from "@prisma/client";
 
 export class HttpError extends Error {
   statusCode: number;
@@ -52,19 +52,19 @@ export const handleHttpError = (error: unknown): Response => {
   });
 };
 
-export async function checkAssistantQuotaReachedError(
-  assistantId: ChatBot["assistantId"],
+export async function checkChatBotQuotaReachedError(
+  chatBotId: ChatBotIdType,
   quota: Quota,
 ) {
   const quotaService = QuotaService.Instance;
 
   await _checkQuota(
-    quotaService.getAssistantQuotaRemainder(assistantId, quota, true),
+    quotaService.getChatBotQuotaRemainder(chatBotId, quota, true),
   );
 }
 
 export async function checkUserQuotaReachedError(
-  userId: User["id"],
+  userId: UserIdType,
   quota: Quota,
 ) {
   const quotaService = QuotaService.Instance;

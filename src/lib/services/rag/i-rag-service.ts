@@ -1,4 +1,3 @@
-import { ChatBot } from "@prisma/client";
 import { IEmbeddingService } from "./i-embedding-service";
 import { OpenAIEmbeddingService } from "./open-ai-embedding-service";
 import {
@@ -8,6 +7,7 @@ import {
   RAGQueryResultType,
   RAGQueryType,
 } from "./types";
+import { ChatBotIdType } from "@/lib/db/types";
 
 export abstract class IRAGService {
   protected embeddingService: IEmbeddingService;
@@ -17,7 +17,7 @@ export abstract class IRAGService {
   }
 
   abstract _insertFiles(
-    assistantId: ChatBot["assistantId"],
+    chatBotId: ChatBotIdType,
     ragFiles: RAGInsertType[],
   ): Promise<{ count: number }>;
 
@@ -27,19 +27,19 @@ export abstract class IRAGService {
   }
 
   public async insertFiles(
-    assistantId: ChatBot["assistantId"],
+    chatBotId: ChatBotIdType,
     ragFiles: RAGFile[],
   ): Promise<{ count: number }> {
-    await this.deleteFiles(assistantId);
+    await this.deleteFiles(chatBotId);
 
     const embeddedFiles = await Promise.all(
       ragFiles.map((ragFile) => this.embedRAGFile(ragFile)),
     );
 
-    return this._insertFiles(assistantId, embeddedFiles);
+    return this._insertFiles(chatBotId, embeddedFiles);
   }
 
-  abstract deleteFiles(assistantId: ChatBot["assistantId"]): Promise<void>;
+  abstract deleteFiles(chatBotId: ChatBotIdType): Promise<void>;
 
   abstract _findClosest(
     query: EmbeddingType,

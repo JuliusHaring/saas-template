@@ -4,13 +4,13 @@ import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
-  const assistantId = url.searchParams.get("assistantId");
+  const chatBotId = url.searchParams.get("chatBotId");
 
-  if (!assistantId) {
-    return NextResponse.json({ error: "Missing assistantId" }, { status: 400 });
+  if (!chatBotId) {
+    return NextResponse.json({ error: "Missing chatBotId" }, { status: 400 });
   }
 
-  const style = await stylesService.getStyle(assistantId);
+  const style = await stylesService.getStyle(chatBotId);
   if (!style) {
     return NextResponse.json({ error: "Style not found" }, { status: 404 });
   }
@@ -20,15 +20,15 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const userId = await getUserId();
-  const { assistantId, css } = await request.json();
+  const { chatBotId, css } = await request.json();
 
-  if (!assistantId || !css) {
+  if (!chatBotId || !css) {
     return NextResponse.json(
-      { error: "Missing assistantId or css" },
+      { error: "Missing chatBotId or css" },
       { status: 400 },
     );
   }
 
-  const updatedStyle = await stylesService.saveStyle(userId, assistantId, css);
+  const updatedStyle = await stylesService.saveStyle(userId, chatBotId, css);
   return NextResponse.json(updatedStyle);
 }

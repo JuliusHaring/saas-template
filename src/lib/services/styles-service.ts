@@ -1,5 +1,5 @@
 import { createOrUpdateStyle, getStyle } from "@/lib/db/styles";
-import { Style, User } from "@prisma/client";
+import { ChatBotIdType, StyleCssType, UserIdType } from "../db/types";
 
 class StylesService {
   private static _instance: StylesService;
@@ -13,16 +13,16 @@ class StylesService {
     return this._instance;
   }
 
-  async getStyle(assistantId: Style["assistantId"]) {
-    return await getStyle(assistantId);
+  async getStyle(chatBotId: ChatBotIdType) {
+    return await getStyle(chatBotId);
   }
 
   async saveStyle(
-    userId: User["id"],
-    assistantId: Style["assistantId"],
-    css: Style["css"],
+    userId: UserIdType,
+    chatBotId: ChatBotIdType,
+    css: StyleCssType,
   ) {
-    return await createOrUpdateStyle(userId, assistantId, css);
+    return await createOrUpdateStyle(userId, chatBotId, css);
   }
 }
 

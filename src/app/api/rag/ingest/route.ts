@@ -11,14 +11,14 @@ const quotaService = QuotaService.Instance;
 export async function POST(request: Request): Promise<Response> {
   const body = await request.json();
   const userId = await getUserId();
-  const { assistantId } = body;
+  const { chatBotId } = body;
 
   let n = await quotaService.getUserQuotaRemainder(userId, Quota.MAX_FILES);
   n = Math.max(0, n);
 
-  const files = await websiteSourceCrawler.listFiles(userId!, assistantId, n);
+  const files = await websiteSourceCrawler.listFiles(userId!, chatBotId, n);
 
-  const ingestedFiles = await ragService.insertFiles(assistantId, files);
+  const ingestedFiles = await ragService.insertFiles(chatBotId, files);
 
   if (ingestedFiles.count > 0) {
     await quotaService.updateUserUsage(

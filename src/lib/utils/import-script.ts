@@ -5,7 +5,7 @@ export function getImportScript(chatbot: ChatBotType) {
   return `
   <script
     src="${baseUrl}/api/chatbot/integrate" 
-    assistant-id="${chatbot.assistantId}" 
+    chatbot-id="${chatbot.id}" 
     api-url="${baseUrl}"
   ></script>`;
 }

@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
-import { User } from "@prisma/client";
 import { getUser } from "../db/user";
+import { UserIdType } from "../db/types";
 
 export class UserService {
   private static _instance: UserService;
@@ -10,11 +10,11 @@ export class UserService {
     return this._instance || (this._instance = new this());
   }
 
-  async getUser(userId: User["id"]) {
+  async getUser(userId: UserIdType) {
     return getUser(userId);
   }
 
-  async createOrUpdateUser(id: User["id"], email: User["email"]) {
+  async createOrUpdateUser(id: UserIdType, email: UserIdType) {
     return prisma.user.upsert({
       where: { id },
       update: {
@@ -27,7 +27,7 @@ export class UserService {
     });
   }
 
-  async deleteUser(id: User["id"]) {
+  async deleteUser(id: UserIdType) {
     await prisma.user.delete({
       where: { id },
     });

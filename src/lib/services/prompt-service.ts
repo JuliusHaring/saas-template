@@ -22,7 +22,7 @@ export class PromptService {
     return prompt.trim();
   }
 
-  generateAssistantPrompt(userInstructions?: string | null): string {
+  generateChatBotPrompt(userInstructions?: string | null): string {
     let prompt = `
     You are a ChatBot that is embedded into my customers website. Every message that you receive will have a USER_MESSAGE and a SOURCES part.
     Do only answer based on the sources. Do not include any exterior knowledge that is not to be derived from the sources.

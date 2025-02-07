@@ -3,7 +3,7 @@ import { OpenAIChatService } from "@/lib/services/chat/open-ai-chat-service";
 import { Quota, QuotaService } from "@/lib/services/quotas-service";
 import {
   BadRequest,
-  checkAssistantQuotaReachedError,
+  checkChatBotQuotaReachedError,
   handleHttpError,
 } from "@/lib/utils/routes/http-errors";
 import { v4 as uuidv4 } from "uuid";
@@ -15,31 +15,31 @@ export async function POST(request: Request): Promise<Response> {
   try {
     // Parse the request body
     const body = await request.json();
-    const { assistantId, sessionId: providedSessionId, userMessage } = body;
+    const { chatBotId, sessionId: providedSessionId, userMessage } = body;
 
     // Validate input
-    if (!assistantId) throw BadRequest("Missing required field: assistantId");
+    if (!chatBotId) throw BadRequest("Missing required field: chatBotId");
     if (!userMessage) throw BadRequest("Missing required field: userMessage");
 
-    // await checkAssistantQuotaReachedError(assistantId, Quota.MAX_CHAT_MESSAGES);
+    // await checkChatBotQuotaReachedError(chatBotId, Quota.MAX_CHAT_MESSAGES);
 
     // Use provided sessionId or generate a new one
     const sessionId = providedSessionId || uuidv4();
 
-    // Call OpenAI service to interact with the assistant
+    // Call OpenAI service to interact with the chatbot
     const answer = await openAIChatService.chatWithThread(
-      assistantId,
+      chatBotId,
       sessionId,
       userMessage,
     );
 
-    await quotaService.updateAssistantUsage(
-      assistantId,
+    await quotaService.updateChatbotUsage(
+      chatBotId,
       Quota.MAX_CHAT_MESSAGES,
       1,
     );
 
-    // Return the assistant's response and sessionId
+    // Return the chatbots's response and sessionId
     return new Response(
       JSON.stringify({
         answer,

@@ -4,10 +4,10 @@ import {
   hasActiveSubscription,
   SubscriptionTier,
 } from "@/lib/db/stripe";
-import { User } from "@prisma/client";
 import Stripe from "stripe";
 import { GetUserType } from "../db/user";
 import { baseUrl } from "../utils/base-url";
+import { UserIdType } from "../db/types";
 
 export class StripeProductInitException extends Error {}
 export class SubscriptionTierNotFoundException extends Error {}
@@ -127,7 +127,7 @@ export class StripeService {
     await deleteSubscription(email);
   }
 
-  async hasActiveSubscription(userId: User["id"]): Promise<boolean> {
+  async hasActiveSubscription(userId: UserIdType): Promise<boolean> {
     return hasActiveSubscription(userId);
   }
 

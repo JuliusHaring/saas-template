@@ -4,9 +4,9 @@ import {
   getUserUsage,
   SubscriptionTier,
 } from "@/lib/db/stripe";
-import { ChatBot, User } from "@prisma/client";
 import { ChatBotService } from "./chatbot-service";
 import { StripeService } from "./stripe-service";
+import { ChatBotIdType, UserIdType } from "../db/types";
 
 export class QuotaReachedException extends Error {
   constructor(quota: Quota) {
@@ -54,13 +54,13 @@ export class QuotaService {
     return quotaMap;
   }
 
-  public async getUserQuotas(userId: User["id"]) {
+  public async getUserQuotas(userId: UserIdType) {
     const userSubscription = await getUserSubscription(userId);
     return this._getTierQuotas(userSubscription.tier);
   }
 
   public async getUserQuotaRemainder(
-    userId: User["id"],
+    userId: UserIdType,
     quota: Quota,
     raise: boolean = false,
   ): Promise<number> {
@@ -79,7 +79,7 @@ export class QuotaService {
   }
 
   public async updateUserUsage(
-    userId: User["id"],
+    userId: UserIdType,
     quota: Quota,
     value: number,
   ) {
@@ -95,21 +95,21 @@ export class QuotaService {
     return createOrUpdateUserUsage(userId, update);
   }
 
-  async getAssistantQuotaRemainder(
-    assistantId: ChatBot["assistantId"],
+  async getChatBotQuotaRemainder(
+    chatBotId: ChatBotIdType,
     quota: Quota,
     raise: boolean = false,
   ) {
-    const userId = await this.chatbotService.getUserIdOfChatbot(assistantId);
+    const userId = await this.chatbotService.getUserIdOfChatbot(chatBotId);
     return this.getUserQuotaRemainder(userId, quota, raise);
   }
 
-  async updateAssistantUsage(
-    assistantId: ChatBot["assistantId"],
+  async updateChatbotUsage(
+    chatBotId: ChatBotIdType,
     quota: Quota,
     value: number,
   ) {
-    const userId = await this.chatbotService.getUserIdOfChatbot(assistantId);
+    const userId = await this.chatbotService.getUserIdOfChatbot(chatBotId);
     return this.updateUserUsage(userId, quota, value);
   }
 }

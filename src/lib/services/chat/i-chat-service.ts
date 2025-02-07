@@ -1,4 +1,3 @@
-import { ChatBot } from "@prisma/client";
 import { PromptService } from "../prompt-service";
 import { IRAGService } from "../rag/i-rag-service";
 import { PostGresRAGService } from "../rag/postgres-rag-service";
@@ -6,6 +5,7 @@ import { ChatResponseType } from "./types";
 import { ChatBotService } from "../chatbot-service";
 import { InMemoryChatHistoryStorageService } from "../memory/in-memory-history-storage-service";
 import { IHistoryStorageService } from "../memory/i-history-storage-service";
+import { ChatBotIdType } from "@/lib/db/types";
 
 export abstract class IChatService {
   private promptService: PromptService;
@@ -31,17 +31,17 @@ export abstract class IChatService {
   ): Promise<ChatResponseType>;
 
   public async chatWithThread(
-    assistantId: ChatBot["assistantId"],
+    chatBotId: ChatBotIdType,
     sessionId: string,
     userMessage: string,
   ) {
     const sources = await this.ragService.findClosest(userMessage);
     const prompt = this.promptService.generateChatPrompt(sources, userMessage);
 
-    const userId = await this.chatbotService.getUserIdOfChatbot(assistantId);
-    const chatbot = await this.chatbotService.getChatBot(userId, assistantId);
+    const userId = await this.chatbotService.getUserIdOfChatbot(chatBotId);
+    const chatbot = await this.chatbotService.getChatBot(userId, chatBotId);
 
-    const systemPrompt = this.promptService.generateAssistantPrompt(
+    const systemPrompt = this.promptService.generateChatBotPrompt(
       chatbot.instructions,
     );
 

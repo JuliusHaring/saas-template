@@ -1,47 +1,30 @@
 import { ChatBot, Prisma, User, WebsiteSourceOptions } from "@prisma/client";
 import { prisma } from ".";
+import {
+  ChatBotIdType,
+  chatBotInclude,
+  ChatBotType,
+  CreateChatBotType,
+  CreateGDriveSourceOptionsType,
+  CreateWebsiteSourceOptionsType,
+  UserIdType,
+} from "./types";
 
-export const chatBotInclude = {
-  Style: true,
-  GDriveSourceOptions: true,
-  WebsiteSourceOptions: true,
-  Documents: true,
-};
-
-export type CreateChatBotType = Omit<Prisma.ChatBotCreateInput, "User">;
-
-export type ChatBotType = Prisma.ChatBotGetPayload<{
-  include: typeof chatBotInclude;
-}>;
-
-export type CreateGDriveSourceOptionsType = Omit<
-  Prisma.GDriveSourceOptionsCreateInput,
-  "ChatBot"
->;
-
-export type CreateWebsiteSourceOptionsType = Omit<
-  Prisma.WebsiteSourceOptionsCreateInput,
-  "ChatBot"
->;
-
-export async function getUserIdOfChatbot(assistantId: ChatBot["assistantId"]) {
+export async function getUserIdOfChatbot(chatBotId: ChatBotIdType) {
   return prisma.chatBot
     .findFirstOrThrow({
-      where: { assistantId },
+      where: { id: chatBotId },
     })
     .then((chatbot) => chatbot.userId);
 }
 
-export async function getChatBot(
-  userId: User["id"],
-  assistantId: ChatBot["assistantId"],
-) {
+export async function getChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {
   return prisma.chatBot.findFirstOrThrow({
-    where: { assistantId, userId },
+    where: { id: chatBotId, userId },
   });
 }
 
-export async function getChatBots(userId: User["id"]): Promise<ChatBotType[]> {
+export async function getChatBots(userId: UserIdType): Promise<ChatBotType[]> {
   return prisma.chatBot.findMany({
     where: {
       userId: userId,
@@ -51,7 +34,7 @@ export async function getChatBots(userId: User["id"]): Promise<ChatBotType[]> {
 }
 
 export async function createChatBot(
-  userId: User["id"],
+  userId: UserIdType,
   createChatBot: CreateChatBotType,
 ): Promise<ChatBotType> {
   return prisma.chatBot.create({
@@ -64,22 +47,22 @@ export async function createChatBot(
 }
 
 export async function deleteChatBot(
-  userId: User["id"],
-  assistantId: ChatBot["assistantId"],
+  userId: UserIdType,
+  chatBotId: ChatBotIdType,
 ): Promise<ChatBotType> {
   return prisma.chatBot.delete({
-    where: { userId, assistantId },
+    where: { userId, id: chatBotId },
     include: chatBotInclude,
   });
 }
 
 export async function createGDriveSourceOptions(
-  assistantId: ChatBot["assistantId"],
+  chatBotId: ChatBotIdType,
   gDriveSourceCreate: CreateGDriveSourceOptionsType,
 ) {
   const data: Prisma.GDriveSourceOptionsCreateInput = Object.assign(
     {
-      ChatBot: { connect: { assistantId } },
+      ChatBot: { connect: { id: chatBotId } },
     },
     gDriveSourceCreate,
   );
@@ -90,12 +73,12 @@ export async function createGDriveSourceOptions(
 }
 
 export async function createWebsiteSourceOptions(
-  assistantId: ChatBot["assistantId"],
+  chatBotId: ChatBotIdType,
   websiteSourceCreate: CreateWebsiteSourceOptionsType,
 ) {
   const data: Prisma.WebsiteSourceOptionsCreateInput = Object.assign(
     {
-      ChatBot: { connect: { assistantId } },
+      ChatBot: { connect: { id: chatBotId } },
     },
     websiteSourceCreate,
   );
@@ -106,12 +89,12 @@ export async function createWebsiteSourceOptions(
 }
 
 export async function getWebsiteSourceOptions(
-  assistantId: WebsiteSourceOptions["assistantId"],
-  userId: ChatBot["assistantId"],
+  chatBotId: ChatBotIdType,
+  userId: UserIdType,
 ) {
   return prisma.websiteSourceOptions.findFirstOrThrow({
     where: {
-      assistantId,
+      chatBotId,
       ChatBot: {
         userId,
       },
