@@ -1,4 +1,4 @@
-import { Style, User } from "@prisma/client";
+import { Style } from "@prisma/client";
 import { prisma } from ".";
 import { ChatBotIdType, UserIdType } from "./types";
 

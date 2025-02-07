@@ -3,7 +3,6 @@ import { OpenAIChatService } from "@/lib/services/chat/open-ai-chat-service";
 import { Quota, QuotaService } from "@/lib/services/quotas-service";
 import {
   BadRequest,
-  checkChatBotQuotaReachedError,
   handleHttpError,
 } from "@/lib/utils/routes/http-errors";
 import { v4 as uuidv4 } from "uuid";

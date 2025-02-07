@@ -1,7 +1,6 @@
 import {
   Prisma,
   SubscriptionTier as PrismaSubscriptionTier,
-  User,
 } from "@prisma/client";
 import { prisma } from ".";
 import Stripe from "stripe";

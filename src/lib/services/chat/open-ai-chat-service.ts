@@ -64,7 +64,7 @@ export class OpenAIChatService extends IChatService {
     systemPrompt: string,
   ): Promise<ChatResponseType> {
     try {
-      let trimmedHistory = this.trimChatHistory(chatHistory);
+      const trimmedHistory = this.trimChatHistory(chatHistory);
       let summarizedHistory = "";
 
       if (chatHistory.length > this.maxHistoryLength) {

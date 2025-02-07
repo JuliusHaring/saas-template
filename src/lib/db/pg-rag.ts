@@ -1,4 +1,4 @@
-import { ChatBot, Document, Prisma } from "@prisma/client";
+import { Document, Prisma } from "@prisma/client";
 import { prisma } from ".";
 import {
   EmbeddingType,
