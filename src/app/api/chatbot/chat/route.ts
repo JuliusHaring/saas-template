@@ -1,10 +1,7 @@
 import { IChatService } from "@/lib/services/chat/i-chat-service";
 import { OpenAIChatService } from "@/lib/services/chat/open-ai-chat-service";
 import { Quota, QuotaService } from "@/lib/services/quotas-service";
-import {
-  BadRequest,
-  handleHttpError,
-} from "@/lib/utils/routes/http-errors";
+import { BadRequest, handleHttpError } from "@/lib/utils/routes/http-errors";
 import { v4 as uuidv4 } from "uuid";
 
 const openAIChatService: IChatService = OpenAIChatService.Instance;
