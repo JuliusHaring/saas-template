@@ -64,7 +64,7 @@ const _handleHttpError = (error: unknown): Response => {
 
   // Fallback for unexpected errors
   console.error("Unhandled Error:", error);
-  return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+  return new Response(JSON.stringify({ error: (error as Error).message }), {
     status: 500,
     headers: { "Content-Type": "application/json" },
   });

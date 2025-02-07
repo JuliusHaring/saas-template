@@ -7,10 +7,17 @@ import {
 import { ChatBotService } from "./chatbot-service";
 import { StripeService } from "./stripe-service";
 import { ChatBotIdType, UserIdType } from "../db/types";
+import Stripe from "stripe";
 
 export class QuotaReachedException extends Error {
   constructor(quota: Quota) {
     super(`Quota reached: ${quota}`);
+  }
+}
+
+export class QuotaNotFoundException extends Error {
+  constructor(quota: Quota, product: Stripe.Product) {
+    super(`Quota ${quota} not found in product ${product.name}`);
   }
 }
 
@@ -45,9 +52,7 @@ export class QuotaService {
       if (value !== undefined) {
         quotaMap.set(quota, parseInt(value, 10));
       } else {
-        console.warn(
-          `Quota ${quota} is missing in price metadata for tier ${tier}`,
-        );
+        throw new QuotaNotFoundException(quota, product);
       }
     }
 
