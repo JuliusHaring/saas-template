@@ -58,7 +58,7 @@ export default function ChatbotUI() {
     setUserInput("");
 
     try {
-      const response = await fetch("/api/chat", {
+      const response = await fetch("/api/chatbot/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ assistantId, userMessage, sessionId }),
