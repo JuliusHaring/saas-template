@@ -1,4 +1,4 @@
-import { ChatBotType } from "../db/chatbot";
+import { ChatBotType } from "../db/types";
 import { baseUrl } from "./base-url";
 
 export function getImportScript(chatbot: ChatBotType) {
