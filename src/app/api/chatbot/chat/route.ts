@@ -1,7 +1,11 @@
 import { IChatService } from "@/lib/services/chat/i-chat-service";
 import { OpenAIChatService } from "@/lib/services/chat/open-ai-chat-service";
 import { Quota, QuotaService } from "@/lib/services/quotas-service";
-import { BadRequest, withErrorHandling } from "@/lib/utils/routes/http-errors";
+import {
+  BadRequest,
+  checkChatBotQuotaReachedError,
+  withErrorHandling,
+} from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
@@ -17,7 +21,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   if (!chatBotId) throw BadRequest("Missing required field: chatBotId");
   if (!userMessage) throw BadRequest("Missing required field: userMessage");
 
-  // await checkChatBotQuotaReachedError(chatBotId, Quota.MAX_CHAT_MESSAGES);
+  await checkChatBotQuotaReachedError(chatBotId, Quota.MAX_CHAT_MESSAGES);
 
   // Use provided sessionId or generate a new one
   const sessionId = providedSessionId || uuidv4();
