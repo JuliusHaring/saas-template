@@ -1,10 +1,11 @@
 import { StripeService } from "@/lib/services/stripe-service";
-import { NextResponse } from "next/server";
+import { BadRequest, withErrorHandling } from "@/lib/utils/routes/http-errors";
+import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const stripeService = StripeService.Instance;
 
-export async function POST(request: Request): Promise<NextResponse> {
+export const POST = withErrorHandling(async (request: NextRequest) => {
   const signature = request.headers.get("stripe-signature");
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
@@ -22,10 +23,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     event = stripeService.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     console.error("Error verifying webhook signature:", (err as Error).message);
-    return NextResponse.json(
-      { error: "Webhook signature verification failed" },
-      { status: 400 },
-    );
+    throw BadRequest("Webhook signature verification failed");
   }
 
   try {
@@ -44,13 +42,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       default:
         console.warn(`Unhandled event type: ${event.type}`);
     }
-  } catch (err) {
-    console.error("Error handling Stripe event:", err);
-    return NextResponse.json(
-      { error: "Error handling event" },
-      { status: 500 },
-    );
+  } catch (error) {
+    throw BadRequest(`Error handling stripe event: ${error}`);
   }
-
-  return NextResponse.json({ received: true });
-}
+});

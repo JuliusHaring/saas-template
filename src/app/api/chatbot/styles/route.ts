@@ -1,8 +1,9 @@
 import { stylesService } from "@/lib/services/styles-service";
 import { getUserId } from "@/lib/utils/routes/auth";
-import { NextResponse } from "next/server";
+import { withErrorHandling } from "@/lib/utils/routes/http-errors";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export const GET = withErrorHandling(async (request: NextRequest) => {
   const url = new URL(request.url);
   const chatBotId = url.searchParams.get("chatBotId");
 
@@ -15,10 +16,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Style not found" }, { status: 404 });
   }
 
-  return NextResponse.json(style);
-}
+  return style;
+});
 
-export async function POST(request: Request) {
+export const POST = withErrorHandling(async (request: NextRequest) => {
   const userId = await getUserId();
   const { chatBotId, css } = await request.json();
 
@@ -30,5 +31,5 @@ export async function POST(request: Request) {
   }
 
   const updatedStyle = await stylesService.saveStyle(userId, chatBotId, css);
-  return NextResponse.json(updatedStyle);
-}
+  return updatedStyle;
+});

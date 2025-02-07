@@ -1,23 +1,19 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import { StripeService } from "@/lib/services/stripe-service";
+import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 
 const stripeService = StripeService.Instance;
 
-export async function POST(req: NextRequest) {
-  try {
-    const { userId } = await req.json();
+export const POST = withErrorHandling(async (request: NextRequest) => {
+  const { userId } = await request.json();
 
-    if (!userId) {
-      return NextResponse.json({ hasSubscription: false });
-    }
-
-    // Check subscription from the database
-    const hasSubscription = await stripeService.hasActiveSubscription(userId);
-
-    return NextResponse.json({ hasSubscription });
-  } catch (error) {
-    console.error("Error checking subscription:", error);
-    return NextResponse.json({ hasSubscription: false }, { status: 500 });
+  if (!userId) {
+    return { hasSubscription: false };
   }
-}
+
+  // Check subscription from the database
+  const hasSubscription = await stripeService.hasActiveSubscription(userId);
+
+  return { hasSubscription };
+});

@@ -1,18 +1,14 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
 import { UserService } from "@/lib/services/user-service";
+import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 
 const userService = UserService.Instance;
 
-export async function POST(req: NextRequest) {
-  try {
-    const { userId } = await req.json();
+export const POST = withErrorHandling(async (request: NextRequest) => {
+  const { userId } = await request.json();
 
-    const user = await userService.getUser(userId);
+  const user = await userService.getUser(userId);
 
-    return NextResponse.json({ email: user.email });
-  } catch (error) {
-    console.error("Error checking subscription:", error);
-    return NextResponse.json({ hasSubscription: false }, { status: 500 });
-  }
-}
+  return { email: user.email };
+});

@@ -1,24 +1,16 @@
-import { NextResponse } from "next/server";
 import { StripeService } from "@/lib/services/stripe-service";
 import { getUserId } from "@/lib/utils/routes/auth";
 import { UserService } from "@/lib/services/user-service";
+import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 
 const userService = UserService.Instance;
 
-export async function POST() {
-  try {
-    const userId = await getUserId();
+export const POST = withErrorHandling(async () => {
+  const userId = await getUserId();
 
-    const user = await userService.getUser(userId);
+  const user = await userService.getUser(userId);
 
-    const session = await StripeService.Instance.createBillingSession(user);
+  const session = await StripeService.Instance.createBillingSession(user);
 
-    return NextResponse.json({ url: session.url });
-  } catch (error) {
-    console.error("Error creating billing portal session:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 },
-    );
-  }
-}
+  return { url: session.url };
+});

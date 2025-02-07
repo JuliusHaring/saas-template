@@ -3,12 +3,14 @@ import { IRAGService } from "@/lib/services/rag/i-rag-service";
 import { PostGresRAGService } from "@/lib/services/rag/postgres-rag-service";
 import { WebsiteSourceCrawler } from "@/lib/services/crawling/website-source-crawler";
 import { getUserId } from "@/lib/utils/routes/auth";
+import { withErrorHandling } from "@/lib/utils/routes/http-errors";
+import { NextRequest } from "next/server";
 
 const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
 const ragService: IRAGService = PostGresRAGService.Instance;
 const quotaService = QuotaService.Instance;
 
-export async function POST(request: Request): Promise<Response> {
+export const POST = withErrorHandling(async (request: NextRequest) => {
   const body = await request.json();
   const userId = await getUserId();
   const { chatBotId } = body;
@@ -28,5 +30,5 @@ export async function POST(request: Request): Promise<Response> {
     );
   }
 
-  return Response.json(ingestedFiles);
-}
+  return ingestedFiles;
+});

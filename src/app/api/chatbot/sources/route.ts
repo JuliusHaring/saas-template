@@ -1,7 +1,4 @@
-import {
-  ChatBotIdType,
-  CreateWebsiteSourceType,
-} from "@/lib/db/types";
+import { ChatBotIdType, CreateWebsiteSourceType } from "@/lib/db/types";
 import { SourcesService } from "@/lib/services/sources-service";
 import { getUserId } from "@/lib/utils/routes/auth";
 import {

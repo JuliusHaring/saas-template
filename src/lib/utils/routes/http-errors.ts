@@ -92,6 +92,9 @@ export function withErrorHandling<T>(
   return async (req: NextRequest) => {
     try {
       const result = await handler(req);
+      if (result instanceof NextResponse) {
+        throw Error(`unable to process NextResponse in Error Handler`);
+      }
       return NextResponse.json(result);
     } catch (error) {
       return _handleHttpError(error);

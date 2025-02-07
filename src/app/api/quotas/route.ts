@@ -1,12 +1,12 @@
 import { QuotaService } from "@/lib/services/quotas-service";
 import { getUserId } from "@/lib/utils/routes/auth";
-import { NextResponse } from "next/server";
+import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 
 const quotaService = QuotaService.Instance;
 
-export async function GET() {
+export const GET = withErrorHandling(async () => {
   const userId = await getUserId();
 
   const map = await quotaService.getUserQuotas(userId);
-  return NextResponse.json(Object.fromEntries(map));
-}
+  return Object.fromEntries(map);
+});
