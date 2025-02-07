@@ -1,8 +1,8 @@
 import { ChatBotIdType, CreateWebsiteSourceType } from "@/lib/db/types";
 import { SourcesService } from "@/lib/services/sources-service";
 import { getUserId } from "@/lib/utils/routes/auth";
-import { handleHttpError } from "@/lib/utils/routes/http-errors";
-import { NextRequest, NextResponse } from "next/server";
+import { withErrorHandling } from "@/lib/utils/routes/http-errors";
+import { NextRequest } from "next/server";
 
 const sourcesService = SourcesService.Instance;
 
@@ -11,42 +11,30 @@ enum SourceType {
   G_DRIVE_SOURCE = "gDriveSource",
 }
 
-export async function GET() {
+export const POST = withErrorHandling(async (request: NextRequest) => {
   const userId = await getUserId();
 
-  const sources = await sourcesService.getSources(userId);
+  const body = await request.json();
+  const {
+    chatBotId,
+    sourceType,
+    websiteSourceCreate,
+  }: {
+    chatBotId: ChatBotIdType;
+    sourceType: SourceType;
+    websiteSourceCreate: CreateWebsiteSourceType;
+  } = body;
 
-  return NextResponse.json(sources);
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const userId = await getUserId();
-
-    const body = await request.json();
-    const {
-      chatBotId,
-      sourceType,
-      websiteSourceCreate,
-    }: {
-      chatBotId: ChatBotIdType;
-      sourceType: SourceType;
-      websiteSourceCreate: CreateWebsiteSourceType;
-    } = body;
-
-    let createdSource;
-    switch (sourceType) {
-      case "websiteSource":
-        createdSource = await sourcesService.createWebsiteSource(
-          userId,
-          chatBotId,
-          websiteSourceCreate,
-        );
-        break;
-    }
-
-    return createdSource;
-  } catch (error) {
-    return handleHttpError(error);
+  let createdSource;
+  switch (sourceType) {
+    case "websiteSource":
+      createdSource = await sourcesService.createWebsiteSource(
+        userId,
+        chatBotId,
+        websiteSourceCreate,
+      );
+      break;
   }
-}
+
+  return createdSource;
+});

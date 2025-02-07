@@ -4,6 +4,7 @@ import {
   QuotaReachedException,
   QuotaService,
 } from "@/lib/services/quotas-service";
+import { NextRequest, NextResponse } from "next/server";
 
 export class HttpError extends Error {
   statusCode: number;
@@ -35,8 +36,7 @@ export const InternalServerError = (message = "Internal Server Error") =>
 export const ServiceUnavailable = (message = "Service Unavailable") =>
   new HttpError(503, message);
 
-// Middleware for Error Handling (Optional, if you're using a framework like Express)
-export const handleHttpError = (error: unknown): Response => {
+const _handleHttpError = (error: unknown): Response => {
   if (error instanceof HttpError) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: error.statusCode,
@@ -81,4 +81,17 @@ async function _checkQuota(numberFunc: Promise<number>) {
     }
     throw BadRequest(`Error while reading the user quota.`);
   }
+}
+
+export function withErrorHandling<T>(
+  handler: (req: NextRequest) => Promise<T>,
+): (req: NextRequest) => Promise<Response> {
+  return async (req: NextRequest) => {
+    try {
+      const result = await handler(req);
+      return NextResponse.json(result);
+    } catch (error) {
+      return _handleHttpError(error);
+    }
+  };
 }
