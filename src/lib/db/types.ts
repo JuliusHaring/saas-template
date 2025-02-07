@@ -4,8 +4,8 @@ export type CreateChatBotType = Omit<Prisma.ChatBotCreateInput, "User">;
 
 export const chatBotInclude = {
   Style: true,
-  GDriveSourceOptions: true,
-  WebsiteSourceOptions: true,
+  GDriveSource: true,
+  WebsiteSource: true,
   Documents: true,
 };
 
@@ -13,13 +13,13 @@ export type ChatBotType = Prisma.ChatBotGetPayload<{
   include: typeof chatBotInclude;
 }>;
 
-export type CreateGDriveSourceOptionsType = Omit<
-  Prisma.GDriveSourceOptionsCreateInput,
+export type CreateGDriveSourceType = Omit<
+  Prisma.GDriveSourceCreateInput,
   "ChatBot"
 >;
 
-export type CreateWebsiteSourceOptionsType = Omit<
-  Prisma.WebsiteSourceOptionsCreateInput,
+export type CreateWebsiteSourceType = Omit<
+  Prisma.WebsiteSourceCreateInput,
   "ChatBot"
 >;
 

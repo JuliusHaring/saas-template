@@ -52,11 +52,11 @@ model ChatBot {
   userId String @unique
   User   User   @relation(fields: [userId], references: [id])
 
-  id                   String                @id @default(uuid())
-  GDriveSourceOptions  GDriveSourceOptions?
-  WebsiteSourceOptions WebsiteSourceOptions?
-  Documents            Document[]
-  Style                Style?
+  id            String         @id @default(dbgenerated("gen_random_uuid()"))
+  GDriveSource  GDriveSource?
+  WebsiteSource WebsiteSource?
+  Documents     Document[]
+  Style         Style?
 
   instructions String?
   name         String
@@ -65,7 +65,7 @@ model ChatBot {
   updatedAt DateTime @updatedAt
 }
 
-model GDriveSourceOptions {
+model GDriveSource {
   id        String  @id @default(dbgenerated("gen_random_uuid()"))
   chatBotId String  @unique
   ChatBot   ChatBot @relation(fields: [chatBotId], references: [id])
@@ -73,7 +73,7 @@ model GDriveSourceOptions {
   apiKey String
 }
 
-model WebsiteSourceOptions {
+model WebsiteSource {
   id        String  @id @default(dbgenerated("gen_random_uuid()"))
   chatBotId String  @unique
   ChatBot   ChatBot @relation(fields: [chatBotId], references: [id])

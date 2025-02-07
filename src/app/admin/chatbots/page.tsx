@@ -122,9 +122,9 @@ function ChatBotGrid({
 }) {
   const getSourcesList = (chatbot: ChatBotType) => {
     const sources = [];
-    if (chatbot.GDriveSourceOptions) sources.push("GDrive");
-    if (chatbot.WebsiteSourceOptions)
-      sources.push(`Webseite: ${chatbot.WebsiteSourceOptions.url}`);
+    if (chatbot.GDriveSource) sources.push("GDrive");
+    if (chatbot.WebsiteSource)
+      sources.push(`Webseite: ${chatbot.WebsiteSource.url}`);
     return sources.length > 0 ? sources.join(", ") : "Keine";
   };
 
