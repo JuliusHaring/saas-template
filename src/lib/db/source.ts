@@ -1,5 +1,4 @@
 import { prisma } from ".";
-import { getChatBot } from "./chatbot";
 import {
   ChatBotIdType,
   ChatBotSourceType,
