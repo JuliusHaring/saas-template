@@ -10,7 +10,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   const { ...createArgs } = await request.json();
 
   const chatBot = await chatbotService.createChatBot(userId, createArgs);
-  return NextResponse.json(chatBot);
+  return chatBot;
 });
 
 export async function GET() {

@@ -20,6 +20,9 @@ export class HttpError extends Error {
 export const BadRequest = (message = "Bad Request") =>
   new HttpError(400, message);
 
+export const UnprocessableContent = (message = "Unprocessable Content") =>
+  new HttpError(422, message);
+
 export const Unauthorized = (message = "Unauthorized") =>
   new HttpError(401, message);
 

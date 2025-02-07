@@ -1,10 +1,7 @@
 import { IChatService } from "@/lib/services/chat/i-chat-service";
 import { OpenAIChatService } from "@/lib/services/chat/open-ai-chat-service";
 import { Quota, QuotaService } from "@/lib/services/quotas-service";
-import {
-  BadRequest,
-  withErrorHandling,
-} from "@/lib/utils/routes/http-errors";
+import { BadRequest, withErrorHandling } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
@@ -34,15 +31,8 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
 
   await quotaService.updateChatbotUsage(chatBotId, Quota.MAX_CHAT_MESSAGES, 1);
 
-  // Return the chatbots's response and sessionId
-  return new Response(
-    JSON.stringify({
-      answer,
-      sessionId, // Return sessionId so the client can reuse it
-    }),
-    {
-      headers: { "Content-Type": "application/json" },
-      status: 200,
-    },
-  );
+  return {
+    answer,
+    sessionId,
+  };
 });
