@@ -14,7 +14,7 @@ export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {
     await auth.protect();
 
-    const userId = (await auth()).userId;
+    const userId = process.env.MODE === "dev" ? "test" : (await auth()).userId;
     if (!userId) {
       return Response.redirect("/");
     }
@@ -31,6 +31,9 @@ export default clerkMiddleware(async (auth, req) => {
     const { hasSubscription } = await response.json();
 
     const email = await getEmail(userId, req);
+    if (typeof email === "undefined") {
+      return Response.redirect(new URL("/", req.url));
+    }
 
     if (!hasSubscription) {
       return Response.redirect(
