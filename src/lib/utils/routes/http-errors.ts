@@ -4,6 +4,7 @@ import {
   QuotaReachedException,
   QuotaService,
 } from "@/lib/services/quotas-service";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
 
 export class HttpError extends Error {
@@ -43,6 +44,20 @@ const _handleHttpError = (error: unknown): Response => {
   if (error instanceof HttpError) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: error.statusCode,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  if (error instanceof PrismaClientKnownRequestError) {
+    let errMsg = `DB Error (${error.code}): ` + error.message;
+    switch (error.code) {
+      case "P2025":
+        errMsg = error.meta!.cause + ` (model: ${error.meta!.modelName})`;
+        break;
+    }
+
+    return new Response(JSON.stringify({ error: errMsg }), {
+      status: 400,
       headers: { "Content-Type": "application/json" },
     });
   }
