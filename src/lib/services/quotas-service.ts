@@ -9,13 +9,15 @@ import { StripeService } from "./stripe-service";
 import { ChatBotIdType, UserIdType } from "../db/types";
 import Stripe from "stripe";
 
-export class QuotaReachedException extends Error {
+export class QuotaException extends Error {}
+
+export class QuotaReachedException extends QuotaException {
   constructor(quota: Quota) {
     super(`Quota reached: ${quota}`);
   }
 }
 
-export class QuotaNotFoundException extends Error {
+export class QuotaNotFoundException extends QuotaException {
   constructor(quota: Quota, product: Stripe.Product) {
     super(`Quota ${quota} not found in product ${product.name}`);
   }
@@ -67,7 +69,6 @@ export class QuotaService {
   public async getUserQuotaRemainder(
     userId: UserIdType,
     quota: Quota,
-    raise: boolean = false,
   ): Promise<number> {
     const userQuotas = await this.getUserQuotas(userId);
     const userQuotaValue = userQuotas.get(quota)!;
@@ -76,7 +77,7 @@ export class QuotaService {
     const userUsageValue = userUsage![quota];
     const res = userQuotaValue - userUsageValue;
 
-    if (raise && res <= 0) {
+    if (res <= 0) {
       throw new QuotaReachedException(quota);
     }
 
@@ -100,13 +101,9 @@ export class QuotaService {
     return createOrUpdateUserUsage(userId, update);
   }
 
-  async getChatBotQuotaRemainder(
-    chatBotId: ChatBotIdType,
-    quota: Quota,
-    raise: boolean = false,
-  ) {
+  async getChatBotQuotaRemainder(chatBotId: ChatBotIdType, quota: Quota) {
     const userId = await this.chatbotService.getUserIdOfChatbot(chatBotId);
-    return this.getUserQuotaRemainder(userId, quota, raise);
+    return this.getUserQuotaRemainder(userId, quota);
   }
 
   async updateChatbotUsage(

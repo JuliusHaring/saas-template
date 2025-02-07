@@ -1,13 +1,9 @@
-import {
-  Quota,
-  QuotaNotFoundException,
-  QuotaService,
-} from "@/lib/services/quotas-service";
+import { Quota, QuotaService } from "@/lib/services/quotas-service";
 import { IRAGService } from "@/lib/services/rag/i-rag-service";
 import { PostGresRAGService } from "@/lib/services/rag/postgres-rag-service";
 import { WebsiteSourceCrawler } from "@/lib/services/crawling/website-source-crawler";
 import { getUserId } from "@/lib/utils/routes/auth";
-import { BadRequest, withErrorHandling } from "@/lib/utils/routes/http-errors";
+import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
 
 const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
@@ -20,16 +16,8 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
 
   const { chatBotId } = body;
 
-  let n;
-  try {
-    n = await quotaService.getUserQuotaRemainder(userId, Quota.MAX_FILES);
-    n = Math.max(0, n);
-  } catch (e) {
-    if (e instanceof QuotaNotFoundException) {
-      throw BadRequest(`Quota for user ${userId} not found`);
-    }
-    throw BadRequest();
-  }
+  let n = await quotaService.getUserQuotaRemainder(userId, Quota.MAX_FILES);
+  n = Math.max(0, n);
 
   const files = await websiteSourceCrawler.listFiles(userId!, chatBotId, n);
 

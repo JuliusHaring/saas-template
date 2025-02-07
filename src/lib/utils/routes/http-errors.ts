@@ -1,8 +1,7 @@
-import { ChatBotIdType, UserIdType } from "@/lib/db/types";
 import {
-  Quota,
+  QuotaException,
+  QuotaNotFoundException,
   QuotaReachedException,
-  QuotaService,
 } from "@/lib/services/quotas-service";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
@@ -34,25 +33,35 @@ export const Forbidden = (message = "Forbidden") => new HttpError(403, message);
 
 export const NotFound = (message = "Not Found") => new HttpError(404, message);
 
+export const TooManyRequests = (message = "Too Many Requests") =>
+  new HttpError(429, message);
+
 export const InternalServerError = (message = "Internal Server Error") =>
   new HttpError(500, message);
 
 export const ServiceUnavailable = (message = "Service Unavailable") =>
   new HttpError(503, message);
 
-const _handleHttpError = (error: unknown): Response => {
+const _handleHttpError = (error: HttpError) => {
+  return new Response(JSON.stringify({ error: error.message }), {
+    status: error.statusCode,
+    headers: { "Content-Type": "application/json" },
+  });
+};
+
+const _handleError = (error: unknown): Response => {
   if (error instanceof HttpError) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: error.statusCode,
-      headers: { "Content-Type": "application/json" },
-    });
+    return _handleHttpError(error);
   }
 
   if (error instanceof PrismaClientKnownRequestError) {
-    let errMsg = `DB Error (${error.code}): ` + error.message;
+    let errMsg = `DB Error (${error.code}): `;
     switch (error.code) {
       case "P2025":
-        errMsg = error.meta!.cause + ` (model: ${error.meta!.modelName})`;
+        errMsg += error.meta!.cause + ` (model: ${error.meta!.modelName})`;
+        break;
+      default:
+        errMsg += error.message;
         break;
     }
 
@@ -62,6 +71,15 @@ const _handleHttpError = (error: unknown): Response => {
     });
   }
 
+  if (error instanceof QuotaException) {
+    switch (error.constructor) {
+      case QuotaReachedException:
+        return _handleHttpError(TooManyRequests());
+      case QuotaNotFoundException:
+        return _handleHttpError(NotFound());
+    }
+  }
+
   // Fallback for unexpected errors
   console.error("Unhandled Error:", error);
   return new Response(JSON.stringify({ error: (error as Error).message }), {
@@ -69,37 +87,6 @@ const _handleHttpError = (error: unknown): Response => {
     headers: { "Content-Type": "application/json" },
   });
 };
-
-export async function checkChatBotQuotaReachedError(
-  chatBotId: ChatBotIdType,
-  quota: Quota,
-) {
-  const quotaService = QuotaService.Instance;
-
-  await _checkQuota(
-    quotaService.getChatBotQuotaRemainder(chatBotId, quota, true),
-  );
-}
-
-export async function checkUserQuotaReachedError(
-  userId: UserIdType,
-  quota: Quota,
-) {
-  const quotaService = QuotaService.Instance;
-
-  await _checkQuota(quotaService.getUserQuotaRemainder(userId, quota, true));
-}
-
-async function _checkQuota(numberFunc: Promise<number>) {
-  try {
-    await numberFunc;
-  } catch (e) {
-    if (e instanceof QuotaReachedException) {
-      throw QuotaReached(e.message);
-    }
-    throw BadRequest(`Error while reading the user quota.`);
-  }
-}
 
 export function withErrorHandling<T>(
   handler: (req: NextRequest) => Promise<T>,
@@ -112,7 +99,7 @@ export function withErrorHandling<T>(
       }
       return NextResponse.json(result);
     } catch (error) {
-      return _handleHttpError(error);
+      return _handleError(error);
     }
   };
 }
