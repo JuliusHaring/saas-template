@@ -5,8 +5,6 @@ import {
   chatBotInclude,
   ChatBotType,
   CreateChatBotType,
-  CreateGDriveSourceOptionsType,
-  CreateWebsiteSourceOptionsType,
   UserIdType,
 } from "./types";
 
@@ -53,51 +51,5 @@ export async function deleteChatBot(
   return prisma.chatBot.delete({
     where: { userId, id: chatBotId },
     include: chatBotInclude,
-  });
-}
-
-export async function createGDriveSourceOptions(
-  chatBotId: ChatBotIdType,
-  gDriveSourceCreate: CreateGDriveSourceOptionsType,
-) {
-  const data: Prisma.GDriveSourceOptionsCreateInput = Object.assign(
-    {
-      ChatBot: { connect: { id: chatBotId } },
-    },
-    gDriveSourceCreate,
-  );
-
-  return prisma.gDriveSourceOptions.create({
-    data,
-  });
-}
-
-export async function createWebsiteSourceOptions(
-  chatBotId: ChatBotIdType,
-  websiteSourceCreate: CreateWebsiteSourceOptionsType,
-) {
-  const data: Prisma.WebsiteSourceOptionsCreateInput = Object.assign(
-    {
-      ChatBot: { connect: { id: chatBotId } },
-    },
-    websiteSourceCreate,
-  );
-
-  return prisma.websiteSourceOptions.create({
-    data,
-  });
-}
-
-export async function getWebsiteSourceOptions(
-  chatBotId: ChatBotIdType,
-  userId: UserIdType,
-) {
-  return prisma.websiteSourceOptions.findFirstOrThrow({
-    where: {
-      chatBotId,
-      ChatBot: {
-        userId,
-      },
-    },
   });
 }
