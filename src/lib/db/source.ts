@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { prisma } from ".";
 import {
   ChatBotIdType,
@@ -6,6 +7,7 @@ import {
   CreateWebsiteSourceType,
   UserIdType,
 } from "./types";
+import { BadRequest } from "../utils/routes/http-errors";
 
 export async function getSources(
   userId: UserIdType,
@@ -20,12 +22,13 @@ export async function getSources(
 }
 
 export async function createGDriveSource(
+  userId: UserIdType,
   chatBotId: ChatBotIdType,
   gDriveSourceCreate: CreateGDriveSourceType,
 ) {
   const data = Object.assign(
     {
-      ChatBot: { connect: { id: chatBotId } },
+      ChatBot: { connect: { id: chatBotId, userId } },
     },
     gDriveSourceCreate,
   );
@@ -50,19 +53,23 @@ export async function getGDriveSource(
 }
 
 export async function createWebsiteSource(
+  userId: UserIdType,
   chatBotId: ChatBotIdType,
   websiteSourceCreate: CreateWebsiteSourceType,
 ) {
-  const data = Object.assign(
-    {
-      ChatBot: { connect: { id: chatBotId } },
-    },
-    websiteSourceCreate,
-  );
-
-  return prisma.websiteSource.create({
-    data,
-  });
+  try {
+    return await prisma.websiteSource.create({
+      data: {
+        ChatBot: { connect: { id: chatBotId, userId } },
+        ...websiteSourceCreate,
+      },
+    });
+  } catch (error) {
+    if ((error as PrismaClientKnownRequestError).code === "P2014") {
+      throw BadRequest("A WebsiteSource already exists for this ChatBot.");
+    }
+    throw error;
+  }
 }
 
 export async function getWebsiteSource(

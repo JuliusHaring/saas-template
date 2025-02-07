@@ -1,5 +1,9 @@
-import { getSources } from "../db/source";
-import { UserIdType } from "../db/types";
+import { createWebsiteSource, getSources } from "../db/source";
+import {
+  ChatBotIdType,
+  CreateWebsiteSourceType,
+  UserIdType,
+} from "../db/types";
 
 export class SourcesService {
   private static _instance: SourcesService;
@@ -11,5 +15,13 @@ export class SourcesService {
 
   async getSources(userId: UserIdType) {
     return getSources(userId);
+  }
+
+  async createWebsiteSource(
+    userId: UserIdType,
+    chatBotId: ChatBotIdType,
+    websiteSourceCreate: CreateWebsiteSourceType,
+  ) {
+    return createWebsiteSource(userId, chatBotId, websiteSourceCreate);
   }
 }
