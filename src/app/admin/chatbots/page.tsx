@@ -1,21 +1,24 @@
 "use client";
+import { QuotaUsageType } from "@/lib/api-services/quotas-service";
 import { Input, Textarea } from "@/lib/components/atoms/Input";
 import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
 import { ChatBotType, CreateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
+import { FEQutoaService } from "@/lib/frontend-services/quota-service";
 import { getImportScript } from "@/lib/utils/import-script";
-import { getQuotas } from "@/lib/utils/quotas";
 import { CodeBracketSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 
 const feChatBotService = FEChatBotService.Instance;
+const feQuotaService = FEQutoaService.Insance;
 
 export default function Chatbots() {
   const [chatbots, setChatbots] = useState<ChatBotType[]>([]);
   const [formValues, setFormValues] = useState<CreateChatBotType>({
     name: "",
   });
+  const [quotaUsage, setQuotaUsage] = useState<QuotaUsageType>();
 
   useEffect(() => {
     const getChatBots = async () => {
@@ -28,6 +31,17 @@ export default function Chatbots() {
     };
 
     getChatBots();
+
+    const checkQuota = async () => {
+      try {
+        const quotaUsage = await feQuotaService.getQuotas();
+        setQuotaUsage(quotaUsage);
+      } catch (error) {
+        console.error("Error fetching quota:", error);
+      }
+    };
+
+    checkQuota();
   }, []);
 
   const handleDelete = async (chatbot: ChatBotType) => {
@@ -63,7 +77,11 @@ export default function Chatbots() {
         onSubmit={handleFormSubmit}
       />
       <div className="mt-4"></div>
-      <ChatBotGrid chatbots={chatbots} handleDelete={handleDelete} />
+      <ChatBotGrid
+        chatbots={chatbots}
+        handleDelete={handleDelete}
+        quotaUsage={quotaUsage}
+      />
     </div>
   );
 }
@@ -108,9 +126,11 @@ function ChatBotCreate({
 function ChatBotGrid({
   chatbots,
   handleDelete,
+  quotaUsage,
 }: {
   chatbots: ChatBotType[];
   handleDelete: (chatbot: ChatBotType) => void;
+  quotaUsage?: QuotaUsageType;
 }) {
   const getSourcesList = (chatbot: ChatBotType) => {
     const sources = [];
@@ -141,7 +161,8 @@ function ChatBotGrid({
             footer={
               <ChatBotCardFooter
                 chatbot={chatbot}
-                handleDelete={() => handleDelete(chatbot)} // Pass specific chatbot
+                handleDelete={() => handleDelete(chatbot)}
+                quotaUsage={quotaUsage}
               />
             }
           >
@@ -179,27 +200,12 @@ function chatBotCardHeader(chatbot: ChatBotType) {
 function ChatBotCardFooter({
   chatbot,
   handleDelete,
+  quotaUsage,
 }: {
   chatbot: ChatBotType;
   handleDelete: () => void;
+  quotaUsage?: QuotaUsageType;
 }) {
-  const [remainingFiles, setRemainingFiles] = useState<number>(0);
-  const [limitFiles, setLimitFiles] = useState<number>(0);
-
-  useEffect(() => {
-    const checkQuota = async () => {
-      try {
-        const res = await getQuotas();
-        setRemainingFiles(res.fileCount.remaining);
-        setLimitFiles(res.fileCount.limit);
-      } catch (error) {
-        console.error("Error fetching quota:", error);
-      }
-    };
-
-    checkQuota();
-  }, []);
-
   const handleIngest = async () => {
     await fetch(`/api/rag/ingest`, {
       method: "POST",
@@ -215,14 +221,18 @@ function ChatBotCardFooter({
     );
   };
 
+  const hasRemainingFiles = (): boolean => {
+    return (quotaUsage?.fileCount.remaining || 0) > 0;
+  };
+
   return (
     <div className="flex items-center justify-between">
       <span className="font-semibold">{chatbot.name}</span>
       <Button
         onClick={handleIngest}
-        isDisabled={remainingFiles <= 0 || !hasSources()}
+        isDisabled={!hasRemainingFiles() || !hasSources()}
       >
-        Daten importieren ({remainingFiles} / {limitFiles} verbleibend)
+        Daten importieren
       </Button>
       <Button
         variant="danger"
