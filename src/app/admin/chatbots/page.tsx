@@ -6,12 +6,14 @@ import Card from "@/lib/components/organisms/Card";
 import { ChatBotType, CreateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
 import { FEQutoaService } from "@/lib/frontend-services/quota-service";
+import { FERAGService } from "@/lib/frontend-services/rag-service";
 import { getImportScript } from "@/lib/utils/import-script";
 import { CodeBracketSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 
 const feChatBotService = FEChatBotService.Instance;
 const feQuotaService = FEQutoaService.Insance;
+const feRagService = FERAGService.Instance;
 
 export default function Chatbots() {
   const [chatbots, setChatbots] = useState<ChatBotType[]>([]);
@@ -207,10 +209,7 @@ function ChatBotCardFooter({
   quotaUsage?: QuotaUsageType;
 }) {
   const handleIngest = async () => {
-    await fetch(`/api/rag/ingest`, {
-      method: "POST",
-      body: JSON.stringify({ chatBotId: chatbot.id }),
-    });
+    await feRagService.ingestFiles(chatbot.id);
   };
 
   const hasSources = (): boolean => {
