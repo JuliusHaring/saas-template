@@ -57,11 +57,10 @@ const _handleError = (error: unknown): Response => {
   if (error instanceof PrismaClientKnownRequestError) {
     let errMsg = `DB Error (${error.code}): `;
     switch (error.code) {
-      case "P2025":
-        errMsg += error.meta!.cause + ` (model: ${error.meta!.modelName})`;
-        break;
       default:
-        errMsg += error.message;
+        errMsg +=
+          error.meta?.cause ||
+          error.message + ` (model: ${error.meta!.modelName})`;
         break;
     }
 
@@ -88,14 +87,14 @@ const _handleError = (error: unknown): Response => {
   });
 };
 
-export function withErrorHandling<T>(
-  handler: (req: NextRequest) => Promise<T>,
-): (req: NextRequest) => Promise<Response> {
-  return async (req: NextRequest) => {
+export function withErrorHandling<T, P>(
+  handler: (req: NextRequest, context: { params: P }) => Promise<T>,
+): (req: NextRequest, context: { params: P }) => Promise<Response> {
+  return async (req: NextRequest, context: { params: P }) => {
     try {
-      const result = await handler(req);
+      const result = await handler(req, context);
       if (result instanceof NextResponse) {
-        throw Error(`unable to process NextResponse in Error Handler`);
+        throw new Error(`Unable to process NextResponse in Error Handler`);
       }
       return NextResponse.json(result);
     } catch (error) {

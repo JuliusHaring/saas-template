@@ -1,4 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher(["/admin(.*)"]);
 
@@ -40,6 +41,8 @@ export default clerkMiddleware(async (auth, req) => {
         new URL(`/stripe/pricing-table/${email}`, req.url),
       );
     }
+
+    NextResponse.next();
   }
 });
 

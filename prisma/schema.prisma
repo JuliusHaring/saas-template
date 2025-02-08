@@ -49,7 +49,7 @@ model Usage {
 }
 
 model ChatBot {
-  userId String @unique
+  userId String
   User   User   @relation(fields: [userId], references: [id])
 
   id            String         @id @default(dbgenerated("gen_random_uuid()"))
@@ -68,7 +68,7 @@ model ChatBot {
 model GDriveSource {
   id        String  @id @default(dbgenerated("gen_random_uuid()"))
   chatBotId String  @unique
-  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id])
+  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id], onDelete: Cascade)
 
   apiKey String
 }
@@ -76,7 +76,7 @@ model GDriveSource {
 model WebsiteSource {
   id        String  @id @default(dbgenerated("gen_random_uuid()"))
   chatBotId String  @unique
-  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id])
+  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id], onDelete: Cascade)
 
   url            String
   url_exceptions String[]
@@ -85,7 +85,7 @@ model WebsiteSource {
 model Document {
   id        String  @id @default(dbgenerated("gen_random_uuid()"))
   chatBotId String
-  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id])
+  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id], onDelete: Cascade)
 
   name      String
   content   String
@@ -96,7 +96,7 @@ model Document {
 model Style {
   id        String  @id @default(dbgenerated("gen_random_uuid()"))
   chatBotId String  @unique
-  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id])
+  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id], onDelete: Cascade)
 
   css String
 }

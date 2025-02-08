@@ -3,10 +3,13 @@ import { Input, Textarea } from "@/lib/components/atoms/Input";
 import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
 import { ChatBotType, CreateChatBotType } from "@/lib/db/types";
+import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
 import { getImportScript } from "@/lib/utils/import-script";
 import { getQuotas } from "@/lib/utils/quotas";
 import { CodeBracketSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
+
+const feChatBotService = FEChatBotService.Instance;
 
 export default function Chatbots() {
   const [chatbots, setChatbots] = useState<ChatBotType[]>([]);
@@ -17,9 +20,8 @@ export default function Chatbots() {
   useEffect(() => {
     const getChatBots = async () => {
       try {
-        const chatbotsResponse = await fetch("/api/chatbot");
-        const _chatbots: ChatBotType[] = await chatbotsResponse.json();
-        setChatbots(_chatbots);
+        const chatBots = await feChatBotService.getChatBots();
+        setChatbots(chatBots);
       } catch (error) {
         console.error("Error fetching chatbots:", error);
       }
@@ -30,16 +32,10 @@ export default function Chatbots() {
 
   const handleDelete = async (chatbot: ChatBotType) => {
     try {
-      const response = await fetch(`/api/chatbot/${chatbot.id}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete the chatbot");
-      }
+      const deletedChatBot = await feChatBotService.deleteChatBot(chatbot.id);
 
       setChatbots((prevChatbots) =>
-        prevChatbots.filter((c) => c.id !== chatbot.id),
+        prevChatbots.filter((c) => c.id !== deletedChatBot.id),
       );
     } catch (error) {
       console.error("Error deleting chatbot:", error);
@@ -50,14 +46,9 @@ export default function Chatbots() {
     e.preventDefault();
 
     try {
-      const chatBotResponse = await fetch("/api/chatbot", {
-        method: "POST",
-        body: JSON.stringify(formValues),
-      });
+      const newChatBot = await feChatBotService.createChatBot(formValues);
 
-      const newChatbot: ChatBotType = await chatBotResponse.json();
-
-      setChatbots((prevChatbots) => [...prevChatbots, newChatbot]);
+      setChatbots((prevChatbots) => [...prevChatbots, newChatBot]);
       setFormValues({ name: "" });
     } catch (error) {
       console.error("Error creating chatbot:", error);
@@ -216,10 +207,21 @@ function ChatBotCardFooter({
     });
   };
 
+  const hasSources = (): boolean => {
+    return (
+      [chatbot.GDriveSource, chatbot.WebsiteSource]
+        .map((source) => typeof source !== "undefined" && source !== null)
+        .indexOf(true) >= 0
+    );
+  };
+
   return (
     <div className="flex items-center justify-between">
       <span className="font-semibold">{chatbot.name}</span>
-      <Button onClick={handleIngest} isDisabled={remainingFiles <= 0}>
+      <Button
+        onClick={handleIngest}
+        isDisabled={remainingFiles <= 0 || !hasSources()}
+      >
         Daten importieren ({remainingFiles} / {limitFiles} verbleibend)
       </Button>
       <Button
