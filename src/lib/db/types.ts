@@ -37,3 +37,5 @@ export type UserIdType = User["id"];
 export type StyleCssType = Style["css"];
 
 export type ChatBotSourceType = WebsiteSource | GDriveSource;
+
+export type UpdateUsageType = Omit<Prisma.UsageCreateInput, "userId" | "User">;

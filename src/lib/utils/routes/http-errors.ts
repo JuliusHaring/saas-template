@@ -87,10 +87,11 @@ const _handleError = (error: unknown): Response => {
   });
 };
 
-export function withErrorHandling<T, P>(
-  handler: (req: NextRequest, context: { params: P }) => Promise<T>,
-): (req: NextRequest, context: { params: P }) => Promise<Response> {
-  return async (req: NextRequest, context: { params: P }) => {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export function withErrorHandling<T>(
+  handler: (req: NextRequest, context: { params: any }) => Promise<T>,
+): (req: NextRequest, context: { params: any }) => Promise<Response> {
+  return async (req: NextRequest, context: { params: any }) => {
     try {
       const result = await handler(req, context);
       if (result instanceof NextResponse) {
@@ -102,3 +103,4 @@ export function withErrorHandling<T, P>(
     }
   };
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */

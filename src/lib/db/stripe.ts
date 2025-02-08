@@ -1,10 +1,7 @@
-import {
-  Prisma,
-  SubscriptionTier as PrismaSubscriptionTier,
-} from "@prisma/client";
+import { SubscriptionTier as PrismaSubscriptionTier } from "@prisma/client";
 import { prisma } from ".";
 import Stripe from "stripe";
-import { UserIdType } from "./types";
+import { UpdateUsageType, UserIdType } from "./types";
 
 export type SubscriptionTier = PrismaSubscriptionTier;
 
@@ -25,7 +22,7 @@ export async function getUserUsage(userId: UserIdType, throws: boolean = true) {
 
 export async function createOrUpdateUserUsage(
   userId: UserIdType,
-  update: Omit<Prisma.UsageCreateInput, "userId">,
+  update: UpdateUsageType,
 ) {
   return await prisma.usage.upsert({
     where: { userId },
@@ -46,7 +43,6 @@ export async function createOrUpdateSubscription(
   await prisma.subscription.upsert({
     where: { subscriptionId: subscription.id },
     create: {
-      userId: user.id,
       User: { connect: { id: user.id } },
       subscriptionId: subscription.id,
       customerId: subscription.customer as string,

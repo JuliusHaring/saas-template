@@ -8,10 +8,10 @@ const chatbotService = ChatBotService.Instance;
 export const DELETE = withErrorHandling(
   async (
     request: NextRequest,
-    { params }: { params: { chatBotId: string } }, // Extract params from Next.js App Router
+    { params }: { params: Promise<{ chatBotId: string }> },
   ) => {
     const userId = await getUserId();
-    const chatBotId = (await params).chatBotId; // Get chatBotId from the route parameters
+    const chatBotId = (await params).chatBotId;
 
     if (!chatBotId) {
       throw NotFound(`ChatBot ${chatBotId} not found`);
