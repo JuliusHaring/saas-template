@@ -4,6 +4,7 @@ import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
 import { ChatBotType, CreateChatBotType } from "@/lib/db/types";
 import { getImportScript } from "@/lib/utils/import-script";
+import { getQuotas } from "@/lib/utils/quotas";
 import { CodeBracketSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 
@@ -191,9 +192,36 @@ function ChatBotCardFooter({
   chatbot: ChatBotType;
   handleDelete: () => void;
 }) {
+  const [remainingFiles, setRemainingFiles] = useState<number>(0);
+  const [limitFiles, setLimitFiles] = useState<number>(0);
+
+  useEffect(() => {
+    const checkQuota = async () => {
+      try {
+        const res = await getQuotas();
+        setRemainingFiles(res.fileCount.remaining);
+        setLimitFiles(res.fileCount.limit);
+      } catch (error) {
+        console.error("Error fetching quota:", error);
+      }
+    };
+
+    checkQuota();
+  }, []);
+
+  const handleIngest = async () => {
+    await fetch(`/api/rag/ingest`, {
+      method: "POST",
+      body: JSON.stringify({ chatBotId: chatbot.id }),
+    });
+  };
+
   return (
     <div className="flex items-center justify-between">
       <span className="font-semibold">{chatbot.name}</span>
+      <Button onClick={handleIngest} isDisabled={remainingFiles <= 0}>
+        Daten importieren ({remainingFiles} / {limitFiles} verbleibend)
+      </Button>
       <Button
         variant="danger"
         onClick={handleDelete}

@@ -28,7 +28,10 @@ export enum Quota {
   MAX_CHAT_MESSAGES = "chatMessages",
 }
 
-export type TierQuotaMap = Map<Quota, number>;
+export type QuotaUsageType = Record<
+  Quota,
+  { limit: number; used: number; reached: boolean; remaining: number }
+>;
 
 export class QuotaService {
   private static _instance: QuotaService;
@@ -45,9 +48,9 @@ export class QuotaService {
     return this._instance || (this._instance = new this());
   }
 
-  private async _getTierQuotas(tier: SubscriptionTier): Promise<TierQuotaMap> {
+  private async _getTierQuotas(tier: SubscriptionTier) {
     const product = await this.stripeService.getProductByTier(tier);
-    const quotaMap: TierQuotaMap = new Map();
+    const quotaMap: Map<Quota, number> = new Map();
 
     for (const quota of Object.values(Quota)) {
       const value = product.metadata[quota];
@@ -58,12 +61,30 @@ export class QuotaService {
       }
     }
 
-    return quotaMap;
+    return Object.fromEntries(quotaMap) as Record<Quota, number>;
   }
 
   public async getUserQuotas(userId: UserIdType) {
     const userSubscription = await getUserSubscription(userId);
-    return this._getTierQuotas(userSubscription.tier);
+    const quotas = await this._getTierQuotas(userSubscription.tier);
+    return quotas;
+  }
+
+  public async getUserQuotasWithRemainder(userId: UserIdType) {
+    const quotas = await this.getUserQuotas(userId);
+    const usage = (await getUserUsage(userId))!;
+
+    const quotaUsage: QuotaUsageType = Object.fromEntries(
+      Object.entries(quotas).map(([key, limit]) => {
+        const quotaKey = key as Quota;
+        const used = usage[quotaKey] ?? 0;
+        const reached = used >= limit;
+        const remaining = Math.max(limit - used, 0);
+        return [quotaKey, { limit, used, reached, remaining }];
+      }),
+    ) as QuotaUsageType;
+
+    return quotaUsage;
   }
 
   public async getUserQuotaRemainder(
@@ -71,7 +92,7 @@ export class QuotaService {
     quota: Quota,
   ): Promise<number> {
     const userQuotas = await this.getUserQuotas(userId);
-    const userQuotaValue = userQuotas.get(quota)!;
+    const userQuotaValue = userQuotas[quota];
 
     const userUsage = await getUserUsage(userId);
     const userUsageValue = userUsage![quota];

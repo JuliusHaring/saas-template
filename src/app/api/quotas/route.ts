@@ -7,6 +7,6 @@ const quotaService = QuotaService.Instance;
 export const GET = withErrorHandling(async () => {
   const userId = await getUserId();
 
-  const map = await quotaService.getUserQuotas(userId);
-  return Object.fromEntries(map);
+  const quotas = await quotaService.getUserQuotasWithRemainder(userId);
+  return quotas;
 });
