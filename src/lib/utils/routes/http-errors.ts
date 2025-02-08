@@ -59,8 +59,8 @@ const _handleError = (error: unknown): Response => {
     switch (error.code) {
       default:
         errMsg +=
-          error.meta?.cause ||
-          error.message + ` (model: ${error.meta!.modelName})`;
+          (error.meta?.cause || error.message) +
+          ` (model: ${error.meta!.modelName})`;
         break;
     }
 

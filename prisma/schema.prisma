@@ -14,9 +14,9 @@ model User {
   email String
 
   subscriptionId String?       @unique
-  Subscription   Subscription? @relation(fields: [subscriptionId], references: [userId], onDelete: Cascade)
+  Subscription   Subscription?
   usageId        String?       @unique
-  Usage          Usage?        @relation(fields: [usageId], references: [userId], onDelete: Cascade)
+  Usage          Usage?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -36,7 +36,7 @@ model Subscription {
   tier           SubscriptionTier
   createdAt      DateTime         @default(now())
   expiresAt      DateTime?
-  User           User?
+  User           User             @relation(fields: [userId], references: [id], onDelete: Cascade) // Cascade here
 }
 
 model Usage {
@@ -45,7 +45,7 @@ model Usage {
   fileCount    Int      @default(0)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  User         User?
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Cascade here
 }
 
 model ChatBot {

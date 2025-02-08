@@ -6,7 +6,8 @@ export default async function PricingTablePage({
 }: {
   params: Promise<{ customerEmail: string }>;
 }) {
-  const customerEmail = (await params).customerEmail;
+  const rawEmail = (await params).customerEmail;
+  const customerEmail = decodeURIComponent(rawEmail);
 
   return (
     <>
