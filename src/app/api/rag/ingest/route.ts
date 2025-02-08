@@ -1,7 +1,7 @@
-import { Quota, QuotaService } from "@/lib/services/quotas-service";
-import { IRAGService } from "@/lib/services/rag/i-rag-service";
-import { PostGresRAGService } from "@/lib/services/rag/postgres-rag-service";
-import { WebsiteSourceCrawler } from "@/lib/services/crawling/website-source-crawler";
+import { Quota, QuotaService } from "@/lib/api-services/quotas-service";
+import { IRAGService } from "@/lib/api-services/rag/i-rag-service";
+import { PostGresRAGService } from "@/lib/api-services/rag/postgres-rag-service";
+import { WebsiteSourceCrawler } from "@/lib/api-services/crawling/website-source-crawler";
 import { getUserId } from "@/lib/utils/routes/auth";
 import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";

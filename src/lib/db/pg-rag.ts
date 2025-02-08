@@ -4,7 +4,7 @@ import {
   EmbeddingType,
   RAGInsertType,
   RAGQueryResultType,
-} from "../services/rag/types";
+} from "../api-services/rag/types";
 import { ChatBotIdType } from "./types";
 
 export type DocumentType = Document & { distance: number };

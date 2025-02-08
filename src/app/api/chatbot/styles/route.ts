@@ -1,4 +1,4 @@
-import { stylesService } from "@/lib/services/styles-service";
+import { stylesService } from "@/lib/api-services/styles-service";
 import { getUserId } from "@/lib/utils/routes/auth";
 import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 import { NextRequest, NextResponse } from "next/server";

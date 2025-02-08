@@ -1,6 +1,6 @@
-import { IChatService } from "@/lib/services/chat/i-chat-service";
-import { OpenAIChatService } from "@/lib/services/chat/open-ai-chat-service";
-import { Quota, QuotaService } from "@/lib/services/quotas-service";
+import { IChatService } from "@/lib/api-services/chat/i-chat-service";
+import { OpenAIChatService } from "@/lib/api-services/chat/open-ai-chat-service";
+import { Quota, QuotaService } from "@/lib/api-services/quotas-service";
 import { BadRequest, withErrorHandling } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
 import { v4 as uuidv4 } from "uuid";

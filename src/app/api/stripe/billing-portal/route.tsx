@@ -1,6 +1,6 @@
-import { StripeService } from "@/lib/services/stripe-service";
+import { StripeService } from "@/lib/api-services/stripe-service";
 import { getUserId } from "@/lib/utils/routes/auth";
-import { UserService } from "@/lib/services/user-service";
+import { UserService } from "@/lib/api-services/user-service";
 import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 
 const userService = UserService.Instance;
