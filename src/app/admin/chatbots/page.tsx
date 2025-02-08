@@ -222,7 +222,7 @@ function ChatBotCardFooter({
   };
 
   const hasRemainingFiles = (): boolean => {
-    return (quotaUsage?.fileCount.remaining || 0) > 0;
+    return (quotaUsage?.fileCount?.remaining || 0) > 0;
   };
 
   return (
