@@ -1,5 +1,8 @@
 "use client";
+import { FEStyleService } from "@/lib/frontend-services/style-service";
 import { useEffect, useState } from "react";
+
+const feStyleService = FEStyleService.Insance;
 
 export default function ChatbotUI() {
   const [messages, setMessages] = useState<{ role: string; text: string }[]>(
@@ -33,15 +36,10 @@ export default function ChatbotUI() {
       if (!chatBotId) return;
 
       try {
-        const response = await fetch(
-          `/api/chatbot/styles?chatBotId=${chatBotId}`,
-        );
-        if (response.ok) {
-          const { css } = await response.json();
-          const styleTag = document.createElement("style");
-          styleTag.innerHTML = css;
-          document.head.appendChild(styleTag);
-        }
+        const style = await feStyleService.getStyle(chatBotId);
+        const styleTag = document.createElement("style");
+        styleTag.innerHTML = style.css;
+        document.head.appendChild(styleTag);
       } catch (error) {
         console.error("Failed to load styles:", error);
       }

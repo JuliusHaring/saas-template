@@ -1,5 +1,5 @@
 import { createOrUpdateStyle, getStyle } from "@/lib/db/styles";
-import { ChatBotIdType, StyleCssType, UserIdType } from "../db/types";
+import { ChatBotIdType, CreateStyleType, UserIdType } from "../db/types";
 
 class StylesService {
   private static _instance: StylesService;
@@ -20,9 +20,9 @@ class StylesService {
   async saveStyle(
     userId: UserIdType,
     chatBotId: ChatBotIdType,
-    css: StyleCssType,
+    createStyle: CreateStyleType,
   ) {
-    return await createOrUpdateStyle(userId, chatBotId, css);
+    return await createOrUpdateStyle(userId, chatBotId, createStyle);
   }
 }
 

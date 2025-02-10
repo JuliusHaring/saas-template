@@ -56,7 +56,14 @@ const _handleError = (error: unknown): Response => {
 
   if (error instanceof PrismaClientKnownRequestError) {
     let errMsg = `DB Error (${error.code}): `;
+    let errType = BadRequest;
     switch (error.code) {
+      case "P2025":
+        errMsg +=
+          (error.meta?.cause || error.message) +
+          ` (model: ${error.meta!.modelName})`;
+        errType = NotFound;
+        break;
       default:
         errMsg +=
           (error.meta?.cause || error.message) +
@@ -64,10 +71,7 @@ const _handleError = (error: unknown): Response => {
         break;
     }
 
-    return new Response(JSON.stringify({ error: errMsg }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return _handleError(errType(errMsg));
   }
 
   if (error instanceof QuotaException) {

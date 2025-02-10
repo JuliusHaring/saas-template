@@ -1,19 +1,24 @@
 import { stylesService } from "@/lib/api-services/styles-service";
+import { ChatBotIdType, CreateStyleType } from "@/lib/db/types";
 import { getUserId } from "@/lib/utils/routes/auth";
-import { withErrorHandling } from "@/lib/utils/routes/http-errors";
-import { NextRequest, NextResponse } from "next/server";
+import {
+  BadRequest,
+  NotFound,
+  withErrorHandling,
+} from "@/lib/utils/routes/http-errors";
+import { NextRequest } from "next/server";
 
 export const GET = withErrorHandling(async (request: NextRequest) => {
   const url = new URL(request.url);
   const chatBotId = url.searchParams.get("chatBotId");
 
   if (!chatBotId) {
-    return NextResponse.json({ error: "Missing chatBotId" }, { status: 400 });
+    throw NotFound(`ChatBot ${chatBotId} not found`);
   }
 
   const style = await stylesService.getStyle(chatBotId);
   if (!style) {
-    return NextResponse.json({ error: "Style not found" }, { status: 404 });
+    throw NotFound(`Style not found for user ${chatBotId}`);
   }
 
   return style;
@@ -21,15 +26,24 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
 
 export const POST = withErrorHandling(async (request: NextRequest) => {
   const userId = await getUserId();
-  const { chatBotId, css } = await request.json();
+  const {
+    chatBotId,
+    createStyle,
+  }: { chatBotId: ChatBotIdType; createStyle: CreateStyleType } =
+    await request.json();
 
-  if (!chatBotId || !css) {
-    return NextResponse.json(
-      { error: "Missing chatBotId or css" },
-      { status: 400 },
-    );
+  if (!chatBotId) {
+    throw BadRequest(`No chatBotId supplied`);
   }
 
-  const updatedStyle = await stylesService.saveStyle(userId, chatBotId, css);
+  if (!createStyle) {
+    throw BadRequest(`Style not supplied`);
+  }
+
+  const updatedStyle = await stylesService.saveStyle(
+    userId,
+    chatBotId,
+    createStyle,
+  );
   return updatedStyle;
 });

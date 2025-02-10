@@ -1,21 +1,20 @@
-import { Style } from "@prisma/client";
 import { prisma } from ".";
-import { ChatBotIdType, UserIdType } from "./types";
+import { ChatBotIdType, CreateStyleType, UserIdType } from "./types";
 
 export const getStyle = async (chatBotId: ChatBotIdType) => {
-  return await prisma.style.findUnique({
-    where: { chatBotId },
+  return await prisma.style.findFirstOrThrow({
+    where: { ChatBot: { is: { id: chatBotId } } },
   });
 };
 
 export const createOrUpdateStyle = async (
   userId: UserIdType,
   chatBotId: ChatBotIdType,
-  css: Style["css"],
+  createStyle: CreateStyleType,
 ) => {
   return await prisma.style.upsert({
     where: { chatBotId, ChatBot: { userId } },
-    update: { css },
-    create: { chatBotId, css },
+    update: { ...createStyle },
+    create: { ...createStyle, ChatBot: { connect: { id: chatBotId, userId } } },
   });
 };

@@ -9,7 +9,7 @@ export default function Home() {
       <script
         async
         src="/api/chatbot/integrate"
-        chatbot-id="39810b3e-6828-490c-9f5c-9cf02ee21792"
+        chatbot-id="bffdafea-41bb-4590-863f-6fa77857c466"
         api-url={baseUrl}
       ></script>
     </div>

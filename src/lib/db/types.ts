@@ -2,7 +2,6 @@ import {
   ChatBot,
   GDriveSource,
   Prisma,
-  Style,
   User,
   WebsiteSource,
 } from "@prisma/client";
@@ -34,7 +33,9 @@ export type ChatBotIdType = ChatBot["id"];
 
 export type UserIdType = User["id"];
 
-export type StyleCssType = Style["css"];
+export type StyleType = Prisma.StyleGetPayload<true>;
+
+export type CreateStyleType = Prisma.StyleCreateInput;
 
 export type ChatBotSourceType = WebsiteSource | GDriveSource;
 
