@@ -8,8 +8,7 @@ export default function Home() {
       Todo: fill me
       <script
         async
-        src="/api/chatbot/integrate"
-        chatbot-id="bffdafea-41bb-4590-863f-6fa77857c466"
+        src="/api/chatbot/integrate?chatbotId=bffdafea-41bb-4590-863f-6fa77857c466"
         api-url={baseUrl}
       ></script>
     </div>

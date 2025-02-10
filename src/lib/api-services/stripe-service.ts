@@ -138,3 +138,5 @@ export class StripeService {
     });
   }
 }
+
+StripeService.Instance.init();

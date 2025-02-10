@@ -1,8 +1,9 @@
 import { auth } from "@clerk/nextjs/server";
 import { Forbidden } from "./http-errors";
+import { isDevModeEnabled } from "../dev-mode";
 
 export async function getUserId() {
-  if (process.env.MODE?.toLowerCase() === "dev") {
+  if (isDevModeEnabled()) {
     return "test";
   }
 

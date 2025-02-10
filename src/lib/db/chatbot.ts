@@ -21,6 +21,16 @@ export async function getChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {
   });
 }
 
+export async function getAllowedDomainsForChatBot(
+  chatBotId: ChatBotIdType,
+): Promise<string[]> {
+  return prisma.chatBot
+    .findFirstOrThrow({
+      where: { id: chatBotId },
+    })
+    .then((chatBot) => chatBot.allowedDomains);
+}
+
 export async function getChatBots(userId: UserIdType): Promise<ChatBotType[]> {
   return prisma.chatBot.findMany({
     where: {

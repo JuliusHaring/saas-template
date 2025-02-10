@@ -5,7 +5,7 @@ export class FEStyleService {
   private static _instance: FEStyleService;
   private constructor() {}
 
-  public static get Insance() {
+  public static get Instance() {
     return this._instance || (this._instance = new this());
   }
 

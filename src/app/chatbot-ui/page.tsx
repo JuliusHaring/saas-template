@@ -2,7 +2,7 @@
 import { FEStyleService } from "@/lib/frontend-services/style-service";
 import { useEffect, useState } from "react";
 
-const feStyleService = FEStyleService.Insance;
+const feStyleService = FEStyleService.Instance;
 
 export default function ChatbotUI() {
   const [messages, setMessages] = useState<{ role: string; text: string }[]>(
@@ -11,13 +11,17 @@ export default function ChatbotUI() {
   const [userInput, setUserInput] = useState("");
   const [chatBotId, setChatBotId] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(null); // Store token
 
   useEffect(() => {
-    // Get chatBotId from the URL query string
+    // Get chatBotId and token from the URL query string
     const params = new URLSearchParams(window.location.search);
     const id = params.get("chatBotId");
+    const authToken = params.get("token"); // Extract token
+
     if (id) {
       setChatBotId(id);
+      setToken(authToken); // Store token in state
 
       // Retrieve the session ID from localStorage if it exists
       const storedSessionId = localStorage.getItem(`session_${id}`);
@@ -49,7 +53,10 @@ export default function ChatbotUI() {
   }, [chatBotId]);
 
   const sendMessage = async () => {
-    if (!userInput || !chatBotId) return;
+    if (!userInput || !chatBotId || !token) {
+      console.error("Missing required fields: chatBotId or token.");
+      return;
+    }
 
     const userMessage = userInput;
     setMessages((prev) => [...prev, { role: "User", text: userMessage }]);
@@ -58,8 +65,11 @@ export default function ChatbotUI() {
     try {
       const response = await fetch("/api/chatbot/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chatBotId, userMessage, sessionId }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // 🔹 Attach token in headers
+        },
+        body: JSON.stringify({ chatBotId, userMessage, sessionId, token }),
       });
 
       if (!response.ok) {

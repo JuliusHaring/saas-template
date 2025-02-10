@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { isDevModeEnabled } from "./lib/utils/dev-mode";
 
 const isProtectedRoute = createRouteMatcher(["/admin(.*)"]);
 
@@ -15,7 +16,7 @@ export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {
     await auth.protect();
 
-    const userId = process.env.MODE === "dev" ? "test" : (await auth()).userId;
+    const userId = isDevModeEnabled() ? "test" : (await auth()).userId;
     if (!userId) {
       return Response.redirect("/");
     }

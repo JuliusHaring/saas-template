@@ -52,11 +52,12 @@ model ChatBot {
   userId String
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  id            String         @id @default(dbgenerated("gen_random_uuid()"))
-  GDriveSource  GDriveSource?
-  WebsiteSource WebsiteSource?
-  Documents     Document[]
-  Style         Style?
+  id             String         @id @default(dbgenerated("gen_random_uuid()"))
+  allowedDomains String[]       @default([])
+  GDriveSource   GDriveSource?
+  WebsiteSource  WebsiteSource?
+  Documents      Document[]
+  Style          Style?
 
   instructions String?
   name         String
