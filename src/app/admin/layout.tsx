@@ -9,7 +9,7 @@ export default function Layout({
   return (
     <ClerkProvider>
       <Navbar />
-      <div className="p-[1em]">{children}</div>
+      <div className="lg:px-[15em] px-[2em] py-[2em]">{children}</div>
     </ClerkProvider>
   );
 }

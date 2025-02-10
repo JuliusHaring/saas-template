@@ -1,14 +1,17 @@
 "use client";
 import { QuotaUsageType } from "@/lib/api-services/quotas-service";
-import { Input, Textarea } from "@/lib/components/atoms/Input";
 import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
-import { ChatBotType, CreateChatBotType } from "@/lib/db/types";
+import { ChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
 import { FEQutoaService } from "@/lib/frontend-services/quota-service";
 import { FERAGService } from "@/lib/frontend-services/rag-service";
 import { getImportScript } from "@/lib/utils/import-script";
-import { CodeBracketSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+  CodeBracketSquareIcon,
+  TrashIcon,
+  PencilSquareIcon,
+} from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 
 const feChatBotService = FEChatBotService.Instance;
@@ -17,9 +20,6 @@ const feRagService = FERAGService.Instance;
 
 export default function Chatbots() {
   const [chatbots, setChatbots] = useState<ChatBotType[]>([]);
-  const [formValues, setFormValues] = useState<CreateChatBotType>({
-    name: "",
-  });
   const [quotaUsage, setQuotaUsage] = useState<QuotaUsageType>();
 
   useEffect(() => {
@@ -58,70 +58,12 @@ export default function Chatbots() {
     }
   };
 
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      const newChatBot = await feChatBotService.createChatBot(formValues);
-
-      setChatbots((prevChatbots) => [...prevChatbots, newChatBot]);
-      setFormValues({ name: "" });
-    } catch (error) {
-      console.error("Error creating chatbot:", error);
-    }
-  };
-
   return (
-    <div>
-      <ChatBotCreate
-        formValues={formValues}
-        setFormValues={setFormValues}
-        onSubmit={handleFormSubmit}
-      />
-      <div className="mt-4"></div>
-      <ChatBotGrid
-        chatbots={chatbots}
-        handleDelete={handleDelete}
-        quotaUsage={quotaUsage}
-      />
-    </div>
-  );
-}
-
-function ChatBotCreate({
-  formValues,
-  setFormValues,
-  onSubmit,
-}: {
-  formValues: CreateChatBotType;
-  setFormValues: React.Dispatch<React.SetStateAction<CreateChatBotType>>;
-  onSubmit: (e: React.FormEvent) => void;
-}) {
-  return (
-    <form
-      onSubmit={onSubmit}
-      className="flex flex-col space-y-4 p-4 bg-gray-200 rounded-lg"
-    >
-      <Input
-        type="text"
-        label="Chatbot Name"
-        value={formValues.name}
-        onChange={(e) =>
-          setFormValues((prev) => ({ ...prev, name: e.target.value }))
-        }
-        required
-      />
-      <Textarea
-        label="Chatbot Anweisungen"
-        value={formValues.instructions || ""}
-        onChange={(e) =>
-          setFormValues((prev) => ({ ...prev, instructions: e.target.value }))
-        }
-      />
-      <Button type="submit" variant="primary">
-        Hinzufügen
-      </Button>
-    </form>
+    <ChatBotGrid
+      chatbots={chatbots}
+      handleDelete={handleDelete}
+      quotaUsage={quotaUsage}
+    />
   );
 }
 
@@ -142,15 +84,8 @@ function ChatBotGrid({
     return sources.length > 0 ? sources.join(", ") : "Keine";
   };
 
-  const responsiveColsClass =
-    {
-      1: "grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1",
-      2: "grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2",
-      3: "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3",
-    }[Math.min(3, chatbots.length)] || "grid-cols-1";
-
   return (
-    <div className={`grid ${responsiveColsClass} gap-4`}>
+    <div className={`grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3n gap-4`}>
       {chatbots
         .sort(
           (a, b) =>
@@ -177,24 +112,9 @@ function ChatBotGrid({
 }
 
 function chatBotCardHeader(chatbot: ChatBotType) {
-  const handleCopyToClipboard = () => {
-    const script = getImportScript(chatbot);
-    navigator.clipboard.writeText(script).then(
-      () => {
-        alert("Script copied to clipboard!");
-      },
-      (error) => {
-        console.error("Failed to copy script:", error);
-      },
-    );
-  };
-
   return (
     <div className="flex items-center justify-between">
       <span className="font-semibold">{chatbot.name}</span>
-      <Button onClick={handleCopyToClipboard} className="flex items-center">
-        <CodeBracketSquareIcon className="h-5 w-5 text-white" />
-      </Button>
     </div>
   );
 }
@@ -224,14 +144,29 @@ function ChatBotCardFooter({
     return (quotaUsage?.fileCount?.remaining || 0) > 0;
   };
 
+  const handleCopyToClipboard = () => {
+    const script = getImportScript(chatbot);
+    navigator.clipboard.writeText(script).then(
+      () => {
+        alert("Script copied to clipboard!");
+      },
+      (error) => {
+        console.error("Failed to copy script:", error);
+      },
+    );
+  };
+
   return (
-    <div className="flex items-center justify-between">
-      <span className="font-semibold">{chatbot.name}</span>
+    <div className="flex items-center justify-end gap-2">
+      <Button onClick={handleCopyToClipboard} className="flex items-center">
+        <CodeBracketSquareIcon className="h-5 w-5 text-white" />
+      </Button>
+
       <Button
         onClick={handleIngest}
         isDisabled={!hasRemainingFiles() || !hasSources()}
       >
-        Daten importieren
+        <PencilSquareIcon className="h-5 w-5 text-white" />
       </Button>
       <Button
         variant="danger"

@@ -16,7 +16,7 @@ export default function Button({
   className?: string;
 }) {
   const baseClasses =
-    "inline-flex items-center justify-center font-semibold rounded-lg focus:outline-none transition-all";
+    "inline-flex inset-shadow-black justify-center font-semibold focus:outline-none hover:items-center hover:inset-shadow-sm transition-all";
 
   const sizeClasses = {
     sm: "px-3 py-1 text-sm",
