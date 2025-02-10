@@ -4,7 +4,7 @@ import React from "react";
 
 interface NavbarItemProps extends LinkProps {
   icon?: IconType;
-  onClick?: () => void; // Optional onClick handler
+  onClick?: () => void;
 }
 
 export default function NavbarItem({
@@ -15,10 +15,10 @@ export default function NavbarItem({
 }: React.PropsWithChildren<NavbarItemProps>) {
   const content = (
     <div
-      className="flex items-center gap-2 p-3 hover:bg-blue-400 hover:font-semibold hover:shadow hover:shadow-blue-600 active:bg-blue-500 -sm cursor-pointer"
-      onClick={onClick} // Trigger onClick when clicked
+      className="cursor-pointer text-gray-700 hover:text-black transition-colors duration-200"
+      onClick={onClick}
     >
-      {Icon && <Icon className="h-6 w-6" />}
+      {Icon && <Icon className="h-5 w-5 inline-block mr-2" />}
       {children}
     </div>
   );

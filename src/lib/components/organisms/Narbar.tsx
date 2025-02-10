@@ -3,6 +3,7 @@
 import { UserCircleIcon } from "@heroicons/react/24/outline";
 import NavbarItem from "../atoms/NavbarItem";
 import { NAVBAR_CONTENT } from "@/app/admin/constants";
+import Link from "next/link";
 
 const Navbar: React.FC = () => {
   const openBillingPortal = async () => {
@@ -16,21 +17,25 @@ const Navbar: React.FC = () => {
       }
     } catch (err) {
       console.error("Failed to open billing portal:", err);
-    } finally {
     }
   };
 
   return (
-    <nav className="h-screen fixed flex flex-col bg-blue-300 w-[12em] inset-shadow-sm inset-shadow-blue-800">
-      {NAVBAR_CONTENT.map((navbarItem, index) => (
-        <NavbarItem href={navbarItem.href} key={index} icon={navbarItem.icon}>
-          {navbarItem.title}
-        </NavbarItem>
-      ))}
+    <nav className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
+      <div className="text-lg font-bold">
+        <Link href="/admin">KnexAI</Link>
+      </div>
 
-      <NavbarItem href="#" onClick={openBillingPortal} icon={UserCircleIcon}>
-        Kundenportal
-      </NavbarItem>
+      <div className="flex space-x-6">
+        {NAVBAR_CONTENT.map((navbarItem, index) => (
+          <NavbarItem href={navbarItem.href} key={index} icon={navbarItem.icon}>
+            {navbarItem.title}
+          </NavbarItem>
+        ))}
+        <NavbarItem href="#" onClick={openBillingPortal} icon={UserCircleIcon}>
+          Kundenportal
+        </NavbarItem>
+      </div>
     </nav>
   );
 };
