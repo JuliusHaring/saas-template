@@ -1,7 +1,15 @@
 import { IChatService } from "@/lib/api-services/chat/i-chat-service";
 import { OpenAIChatService } from "@/lib/api-services/chat/open-ai-chat-service";
-import { Quota, QuotaService } from "@/lib/api-services/quotas-service";
-import { BadRequest, withErrorHandling } from "@/lib/utils/routes/http-errors";
+import {
+  Quota,
+  QuotaReachedException,
+  QuotaService,
+} from "@/lib/api-services/quotas-service";
+import {
+  BadRequest,
+  TooManyRequests,
+  withErrorHandling,
+} from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
@@ -17,10 +25,17 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   if (!chatBotId) throw BadRequest("Missing required field: chatBotId");
   if (!userMessage) throw BadRequest("Missing required field: userMessage");
 
-  await quotaService.getChatBotQuotaRemainder(
-    chatBotId,
-    Quota.MAX_CHAT_MESSAGES,
-  );
+  try {
+    await quotaService.getChatBotQuotaRemainder(
+      chatBotId,
+      Quota.MAX_CHAT_MESSAGES,
+    );
+  } catch (e) {
+    if (e instanceof QuotaReachedException) {
+      throw TooManyRequests(`Quota for ChatBot ${chatBotId} is exceeded`);
+    }
+    throw e;
+  }
 
   // Use provided sessionId or generate a new one
   const sessionId = providedSessionId || uuidv4();
