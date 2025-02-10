@@ -13,11 +13,16 @@ export async function getUserSubscription(userId: UserIdType) {
   });
 }
 
-export async function getUserUsage(userId: UserIdType, throws: boolean = true) {
-  const findQuery = { where: { userId } };
-  return throws
-    ? prisma.usage.findFirstOrThrow(findQuery)
-    : prisma.usage.findFirst(findQuery);
+export async function getOrCreateUserUsage(userId: UserIdType) {
+  return prisma.usage.upsert({
+    where: { userId },
+    create: {
+      chatMessages: 0,
+      fileCount: 0,
+      User: { connect: { id: userId } },
+    },
+    update: {},
+  });
 }
 
 export async function createOrUpdateUserUsage(

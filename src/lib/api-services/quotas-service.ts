@@ -1,7 +1,7 @@
 import {
   createOrUpdateUserUsage,
   getUserSubscription,
-  getUserUsage,
+  getOrCreateUserUsage,
   SubscriptionTier,
 } from "@/lib/db/stripe";
 import { ChatBotService } from "./chatbot-service";
@@ -72,7 +72,7 @@ export class QuotaService {
 
   public async getUserQuotasWithRemainder(userId: UserIdType) {
     const quotas = await this.getUserQuotas(userId);
-    const usage = (await getUserUsage(userId))!;
+    const usage = (await getOrCreateUserUsage(userId))!;
 
     const quotaUsage: QuotaUsageType = Object.fromEntries(
       Object.entries(quotas).map(([key, limit]) => {
@@ -94,7 +94,7 @@ export class QuotaService {
     const userQuotas = await this.getUserQuotas(userId);
     const userQuotaValue = userQuotas[quota];
 
-    const userUsage = await getUserUsage(userId);
+    const userUsage = await getOrCreateUserUsage(userId);
     const userUsageValue = userUsage![quota];
     const res = userQuotaValue - userUsageValue;
 
@@ -112,7 +112,7 @@ export class QuotaService {
   ) {
     let currentValue = 0;
 
-    const currentUsage = await getUserUsage(userId, false);
+    const currentUsage = await getOrCreateUserUsage(userId);
 
     if (currentUsage !== null) {
       currentValue = currentUsage[quota];
