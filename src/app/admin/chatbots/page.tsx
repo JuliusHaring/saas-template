@@ -11,6 +11,7 @@ import {
   CodeBracketSquareIcon,
   TrashIcon,
   PencilSquareIcon,
+  PlusIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 
@@ -59,11 +60,16 @@ export default function Chatbots() {
   };
 
   return (
-    <ChatBotGrid
-      chatbots={chatbots}
-      handleDelete={handleDelete}
-      quotaUsage={quotaUsage}
-    />
+    <div>
+      <Button href="" className="mb-2">
+        <PlusIcon className="h-5 w-5 text-white" />
+      </Button>
+      <ChatBotGrid
+        chatbots={chatbots}
+        handleDelete={handleDelete}
+        quotaUsage={quotaUsage}
+      />
+    </div>
   );
 }
 

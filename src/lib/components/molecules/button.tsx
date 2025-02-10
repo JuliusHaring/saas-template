@@ -1,7 +1,10 @@
+import Link from "next/link";
+
 export default function Button({
   children,
   variant = "primary",
   size = "md",
+  href,
   isDisabled = false,
   type = "button",
   onClick,
@@ -10,6 +13,7 @@ export default function Button({
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "danger";
   size?: "sm" | "md" | "lg";
+  href?: string;
   isDisabled?: boolean;
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
@@ -44,7 +48,11 @@ export default function Button({
       disabled={isDisabled}
       onClick={onClick}
     >
-      {children}
+      {typeof href === "string" ? (
+        <Link href={href}>{children}</Link>
+      ) : (
+        children
+      )}
     </button>
   );
 }
