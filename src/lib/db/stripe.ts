@@ -1,11 +1,15 @@
-import { SubscriptionTier as PrismaSubscriptionTier } from "@prisma/client";
 import { prisma } from ".";
 import Stripe from "stripe";
-import { UpdateUsageType, UserIdType } from "./types";
+import {
+  SubscriptionTier,
+  SubscriptionType,
+  UpdateUsageType,
+  UserIdType,
+} from "./types";
 
-export type SubscriptionTier = PrismaSubscriptionTier;
-
-export async function getUserSubscription(userId: UserIdType) {
+export async function getUserSubscription(
+  userId: UserIdType,
+): Promise<SubscriptionType> {
   return prisma.subscription.findFirstOrThrow({
     where: {
       userId,

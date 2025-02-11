@@ -22,6 +22,7 @@
     "openai": "^4.79.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-gauge-component": "^1.2.64",
     "stripe": "^17.5.0",
     "svix": "^1.45.1",
     "turndown": "^7.2.0",

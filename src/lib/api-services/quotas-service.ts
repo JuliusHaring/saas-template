@@ -2,12 +2,14 @@ import {
   createOrUpdateUserUsage,
   getUserSubscription,
   getOrCreateUserUsage,
-  SubscriptionTier,
 } from "@/lib/db/stripe";
 import { ChatBotService } from "./chatbot-service";
 import { StripeService } from "./stripe-service";
-import { ChatBotIdType, UserIdType } from "../db/types";
+import { ChatBotIdType, SubscriptionTierEnum, UserIdType } from "../db/types";
 import Stripe from "stripe";
+import { SubscriptionTier } from "@/lib/db/types";
+
+const stripeService = StripeService.Instance;
 
 export class QuotaException extends Error {}
 
@@ -32,6 +34,19 @@ export type QuotaUsageType = Record<
   Quota,
   { limit: number; used: number; reached: boolean; remaining: number }
 >;
+
+export type TierQuotasLimits = {
+  tier: SubscriptionTier;
+  quotaLimits: {
+    quota: string;
+    limit: number;
+  }[];
+};
+
+export type TierQuotasLimitsInfo = {
+  userTier: SubscriptionTier;
+  tierQuotaLimits: TierQuotasLimits[];
+};
 
 export class QuotaService {
   private static _instance: QuotaService;
@@ -61,7 +76,32 @@ export class QuotaService {
       }
     }
 
-    return Object.fromEntries(quotaMap) as Record<Quota, number>;
+    return Object.fromEntries(quotaMap) as Record<string, number>;
+  }
+
+  public async getTierQuotasLimitInfo(
+    userId: UserIdType,
+  ): Promise<TierQuotasLimitsInfo> {
+    const tierQuotaLimits: TierQuotasLimits[] = [];
+    for (const tier of Object.values(SubscriptionTierEnum)) {
+      const tierQuota = await this._getTierQuotas(tier);
+
+      tierQuotaLimits.push({
+        tier,
+        quotaLimits: Object.keys(tierQuota).map((k: string) => ({
+          quota: k,
+          limit: tierQuota[k],
+        })),
+      });
+    }
+
+    const userTier = await stripeService
+      .getUserSubscription(userId)
+      .then((s) => s.tier);
+    return {
+      userTier: userTier,
+      tierQuotaLimits,
+    };
   }
 
   public async getUserQuotas(userId: UserIdType) {

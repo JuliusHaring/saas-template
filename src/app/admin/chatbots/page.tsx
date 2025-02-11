@@ -2,6 +2,7 @@
 import { QuotaUsageType } from "@/lib/api-services/quotas-service";
 import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
+import QuotasOverview from "@/lib/components/organisms/QuotasOverview";
 import { ChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
 import { FEQutoaService } from "@/lib/frontend-services/quota-service";
@@ -61,6 +62,7 @@ export default function Chatbots() {
 
   return (
     <div>
+      <QuotasOverview />
       <Button href="" className="mb-2">
         <PlusIcon className="h-5 w-5 text-white" />
       </Button>

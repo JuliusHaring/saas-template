@@ -1,13 +1,13 @@
 import {
   createOrUpdateSubscription,
   deleteSubscription,
+  getUserSubscription,
   hasActiveSubscription,
-  SubscriptionTier,
 } from "@/lib/db/stripe";
 import Stripe from "stripe";
 import { GetUserType } from "../db/user";
 import { baseUrl } from "../utils/base-url";
-import { UserIdType } from "../db/types";
+import { SubscriptionTier, SubscriptionType, UserIdType } from "../db/types";
 
 export class StripeProductInitException extends Error {}
 export class SubscriptionTierNotFoundException extends Error {}
@@ -61,6 +61,7 @@ export class StripeService {
       case "ENTERPRISE":
         return this.productEnterprise;
     }
+    throw Error(`Subscription ${tier} not found`);
   }
 
   async getTierBySubscription(
@@ -113,6 +114,10 @@ export class StripeService {
       throw new StripeCustomerEmailMissingException();
     }
     return customer.email;
+  }
+
+  async getUserSubscription(userId: UserIdType): Promise<SubscriptionType> {
+    return getUserSubscription(userId);
   }
 
   async createOrUpdateSubscription(subscription: Stripe.Subscription) {

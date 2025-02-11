@@ -4,6 +4,9 @@ import {
   Prisma,
   User,
   WebsiteSource,
+  $Enums,
+  SubscriptionTier as PrismaSubscriptionTier,
+  Subscription,
 } from "@prisma/client";
 
 export type CreateChatBotType = Omit<Prisma.ChatBotCreateInput, "User">;
@@ -40,3 +43,9 @@ export type CreateStyleType = Prisma.StyleCreateInput;
 export type ChatBotSourceType = WebsiteSource | GDriveSource;
 
 export type UpdateUsageType = Omit<Prisma.UsageCreateInput, "userId" | "User">;
+
+export type SubscriptionType = Subscription;
+
+export type SubscriptionTier = PrismaSubscriptionTier;
+
+export const SubscriptionTierEnum = $Enums.SubscriptionTier;
