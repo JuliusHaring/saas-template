@@ -48,4 +48,4 @@ export type SubscriptionType = Subscription;
 
 export type SubscriptionTier = PrismaSubscriptionTier;
 
-export const SubscriptionTierEnum = $Enums.SubscriptionTier;
+export const SubscriptionTierValues = Object.values($Enums.SubscriptionTier);

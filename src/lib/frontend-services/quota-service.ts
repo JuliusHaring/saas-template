@@ -1,4 +1,7 @@
-import { QuotaUsageType } from "../api-services/quotas-service";
+import {
+  QuotasTierLimitsInfo,
+  QuotaUsageType,
+} from "../api-services/quotas-service";
 import { fetchJson } from "../utils/fetch";
 
 export class FEQutoaService {
@@ -11,5 +14,9 @@ export class FEQutoaService {
 
   public async getQuotas() {
     return fetchJson<QuotaUsageType>("/api/quotas");
+  }
+
+  public async getTierQuotaLimits() {
+    return fetchJson<QuotasTierLimitsInfo>("/api/quotas/info");
   }
 }

@@ -1,47 +1,51 @@
-import { TierQuotasLimitsInfo } from "@/lib/api-services/quotas-service";
 import { useEffect, useState } from "react";
-import { GaugeComponent } from "react-gauge-component";
+import QuotaGauge from "../atoms/QuotaGauge";
+import { QuotasTierLimitsInfo } from "@/lib/api-services/quotas-service";
+import Card from "./Card";
+import { FEQutoaService } from "@/lib/frontend-services/quota-service";
+
+const feQuotaService = FEQutoaService.Insance;
 
 const QuotasOverview: React.FC = () => {
   const [tierQuotaLimitsInfo, setTierQuotaLimitsInfo] =
-    useState<TierQuotasLimitsInfo>();
+    useState<QuotasTierLimitsInfo>();
 
   useEffect(() => {
     const queryTierQuotaLimits = async () => {
-      const res = await fetch("/api/quotas/info");
-      const tQLI = await res.json();
+      const qtli: QuotasTierLimitsInfo =
+        await feQuotaService.getTierQuotaLimits();
 
-      setTierQuotaLimitsInfo(tQLI);
+      qtli.quotasTierLimits[0].limits[1].limit = 200;
+      qtli.quotasTierLimits[0].limits[2].limit = 300;
+
+      qtli.quotasTierLimits[1].limits[1].limit = 200;
+      qtli.quotasTierLimits[1].limits[2].limit = 300;
+
+      setTierQuotaLimitsInfo(qtli);
     };
     queryTierQuotaLimits();
-  });
+  }, []);
+
+  if (!tierQuotaLimitsInfo?.userTier || !tierQuotaLimitsInfo.quotasTierLimits)
+    return <></>;
 
   return (
-    <GaugeComponent
-      type="semicircle"
-      arc={{
-        nbSubArcs: 3,
-        colorArray: ["#5BE12C", "#F5CD19", "#EA4228"],
-        width: 0.3,
-        padding: 0.003,
-      }}
-      labels={{
-        valueLabel: {
-          style: { fontSize: 40 },
-          formatTextValue: (val) => val,
-        },
-        tickLabels: {
-          type: "outer",
-          ticks: [{ value: 20 }, { value: 50 }, { value: 100 }],
-          defaultTickValueConfig: {
-            formatTextValue: (val) => val,
-          },
-        },
-      }}
-      pointer={{ type: "arrow" }}
-      value={20}
-      maxValue={100}
-    />
+    <Card
+      className="mb-4"
+      header={<h1 className="font-semibold">Nutzungslimits</h1>}
+    >
+      <div className="grid sm:grid-cols-1 md:grid-cols-2">
+        {tierQuotaLimitsInfo.quotasTierLimits.map((qTL, i) => {
+          return (
+            <QuotaGauge
+              key={i}
+              subscriptionTier={tierQuotaLimitsInfo!.userTier}
+              quotasTierLimits={qTL}
+            />
+          );
+        })}
+      </div>
+    </Card>
   );
 };
 
