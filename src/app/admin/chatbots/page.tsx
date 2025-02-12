@@ -1,4 +1,5 @@
 "use client";
+import LoadingSpinner from "@/lib/components/atoms/LoadingSpinner";
 import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
 import QuotasOverview from "@/lib/components/organisms/QuotasOverview";
@@ -16,7 +17,7 @@ import { useState, useEffect } from "react";
 const feChatBotService = FEChatBotService.Instance;
 
 export default function Chatbots() {
-  const [chatbots, setChatbots] = useState<ChatBotType[]>([]);
+  const [chatbots, setChatbots] = useState<ChatBotType[]>();
 
   useEffect(() => {
     const getChatBots = async () => {
@@ -31,12 +32,14 @@ export default function Chatbots() {
     getChatBots();
   }, []);
 
+  if (typeof chatbots === "undefined") return <LoadingSpinner />;
+
   const handleDelete = async (chatbot: ChatBotType) => {
     try {
       const deletedChatBot = await feChatBotService.deleteChatBot(chatbot.id);
 
       setChatbots((prevChatbots) =>
-        prevChatbots.filter((c) => c.id !== deletedChatBot.id),
+        prevChatbots!.filter((c) => c.id !== deletedChatBot.id),
       );
     } catch (error) {
       console.error("Error deleting chatbot:", error);

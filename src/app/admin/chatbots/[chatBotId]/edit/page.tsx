@@ -1,6 +1,7 @@
 "use client";
 import { Input, Textarea } from "@/lib/components/atoms/Input";
 import InputError from "@/lib/components/atoms/InputError";
+import LoadingSpinner from "@/lib/components/atoms/LoadingSpinner";
 import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
 import { UpdateChatBotType } from "@/lib/db/types";
@@ -15,6 +16,7 @@ const ChatBotEdit: React.FC = () => {
   const router = useRouter();
   const params = useParams<{ chatBotId: string }>();
   const [headerTitle, setHeaderTitle] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const {
     register,
@@ -42,10 +44,13 @@ const ChatBotEdit: React.FC = () => {
       setValue("name", chatbot.name);
       setValue("instructions", chatbot.instructions || "");
       setValue("allowedDomains", chatbot.allowedDomains?.join(", ") || ""); // Convert array to string
+      setIsLoading(false);
     };
 
     if (params.chatBotId) getChatBot();
   }, [params.chatBotId, setValue]);
+
+  if (isLoading) return <LoadingSpinner />;
 
   const onSubmit = async (data: {
     name: string;

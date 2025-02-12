@@ -3,6 +3,7 @@ import QuotaGauge from "../atoms/QuotaGauge";
 import { QuotasTierLimitsInfo } from "@/lib/api-services/quotas-service";
 import Card from "./Card";
 import { FEQutoaService } from "@/lib/frontend-services/quota-service";
+import LoadingSpinner from "../atoms/LoadingSpinner";
 
 const feQuotaService = FEQutoaService.Insance;
 
@@ -29,7 +30,7 @@ const QuotasOverview: React.FC = () => {
   }, []);
 
   if (!tierQuotaLimitsInfo?.userTier || !tierQuotaLimitsInfo.quotasTierLimits)
-    return <></>;
+    return <LoadingSpinner />;
 
   return (
     <Card
