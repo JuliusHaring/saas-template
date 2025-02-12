@@ -5,6 +5,7 @@ import { WebsiteSourceCrawler } from "@/lib/api-services/crawling/website-source
 import { getUserId } from "@/lib/utils/routes/auth";
 import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
+import { IngestedFilesResponseType } from "@/lib/api-services/rag/types";
 
 const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
 const ragService: IRAGService = PostGresRAGService.Instance;
@@ -31,5 +32,5 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     );
   }
 
-  return ingestedFiles;
+  return ingestedFiles as IngestedFilesResponseType;
 });

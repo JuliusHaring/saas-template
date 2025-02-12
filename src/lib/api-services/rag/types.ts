@@ -18,3 +18,5 @@ export type RAGQueryResultType = RAGInsertType;
 
 export type EmbeddingQueryType = RAGQueryType;
 export type EmbeddingType = number[];
+
+export type IngestedFilesResponseType = { count: number };
