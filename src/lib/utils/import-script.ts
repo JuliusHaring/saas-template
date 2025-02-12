@@ -6,5 +6,6 @@ export function getImportScript(chatbot: ChatBotType) {
   <script
     src="${baseUrl}/api/chatbot/integrate?chatbotId=${chatbot.id}" 
     api-url="${baseUrl}"
-  ></script>`;
+></script>
+  `.trim();
 }
