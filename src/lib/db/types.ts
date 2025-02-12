@@ -11,6 +11,8 @@ import {
 
 export type CreateChatBotType = Omit<Prisma.ChatBotCreateInput, "User">;
 
+export type UpdateChatBotType = Omit<Prisma.ChatBotUpdateInput, "User">;
+
 export const chatBotInclude = {
   Style: true,
   GDriveSource: true,

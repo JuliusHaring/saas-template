@@ -4,6 +4,7 @@ import {
   chatBotInclude,
   ChatBotType,
   CreateChatBotType,
+  UpdateChatBotType,
   UserIdType,
 } from "./types";
 
@@ -50,6 +51,17 @@ export async function createChatBot(
       ...createChatBot,
     },
     include: chatBotInclude,
+  });
+}
+
+export async function updateChatBot(
+  userId: UserIdType,
+  chatBotId: ChatBotIdType,
+  updateChatBot: UpdateChatBotType,
+) {
+  return prisma.chatBot.update({
+    where: { id: chatBotId },
+    data: updateChatBot,
   });
 }
 

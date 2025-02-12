@@ -1,4 +1,9 @@
-import { ChatBotIdType, ChatBotType, CreateChatBotType } from "../db/types";
+import {
+  ChatBotIdType,
+  ChatBotType,
+  CreateChatBotType,
+  UpdateChatBotType,
+} from "../db/types";
 import { fetchJson } from "../utils/fetch";
 
 export class FEChatBotService {
@@ -13,6 +18,10 @@ export class FEChatBotService {
     return fetchJson<ChatBotType[]>("/api/chatbot");
   }
 
+  public async getChatBot(chatBotId: ChatBotIdType) {
+    return fetchJson<ChatBotType>(`/api/chatbot/${chatBotId}`);
+  }
+
   public async createChatBot(formValues: CreateChatBotType) {
     return fetchJson<ChatBotType>("/api/chatbot", {
       method: "POST",
@@ -20,9 +29,19 @@ export class FEChatBotService {
     });
   }
 
-  public async deleteChatBot(chatbotId: ChatBotIdType) {
-    return fetchJson<ChatBotType>(`/api/chatbot/${chatbotId}`, {
+  public async deleteChatBot(chatBotId: ChatBotIdType) {
+    return fetchJson<ChatBotType>(`/api/chatbot/${chatBotId}`, {
       method: "DELETE",
+    });
+  }
+
+  public async updateChatBot(
+    chatBotId: ChatBotIdType,
+    updateChatBot: UpdateChatBotType,
+  ) {
+    return fetchJson<ChatBotType>(`/api/chatbot/${chatBotId}`, {
+      method: "PUT",
+      body: JSON.stringify(updateChatBot),
     });
   }
 }

@@ -1,12 +1,9 @@
 "use client";
-import { QuotaUsageType } from "@/lib/api-services/quotas-service";
 import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
 import QuotasOverview from "@/lib/components/organisms/QuotasOverview";
 import { ChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
-import { FEQutoaService } from "@/lib/frontend-services/quota-service";
-import { FERAGService } from "@/lib/frontend-services/rag-service";
 import { getImportScript } from "@/lib/utils/import-script";
 import {
   CodeBracketSquareIcon,
@@ -17,12 +14,9 @@ import {
 import { useState, useEffect } from "react";
 
 const feChatBotService = FEChatBotService.Instance;
-const feQuotaService = FEQutoaService.Insance;
-const feRagService = FERAGService.Instance;
 
 export default function Chatbots() {
   const [chatbots, setChatbots] = useState<ChatBotType[]>([]);
-  const [quotaUsage, setQuotaUsage] = useState<QuotaUsageType>();
 
   useEffect(() => {
     const getChatBots = async () => {
@@ -35,17 +29,6 @@ export default function Chatbots() {
     };
 
     getChatBots();
-
-    const checkQuota = async () => {
-      try {
-        const quotaUsage = await feQuotaService.getQuotas();
-        setQuotaUsage(quotaUsage);
-      } catch (error) {
-        console.error("Error fetching quota:", error);
-      }
-    };
-
-    checkQuota();
   }, []);
 
   const handleDelete = async (chatbot: ChatBotType) => {
@@ -63,14 +46,10 @@ export default function Chatbots() {
   return (
     <div>
       <QuotasOverview />
-      <Button href="" className="mb-2">
+      <Button className="my-2">
         <PlusIcon className="h-5 w-5 text-white" />
       </Button>
-      <ChatBotGrid
-        chatbots={chatbots}
-        handleDelete={handleDelete}
-        quotaUsage={quotaUsage}
-      />
+      <ChatBotGrid chatbots={chatbots} handleDelete={handleDelete} />
     </div>
   );
 }
@@ -78,11 +57,9 @@ export default function Chatbots() {
 function ChatBotGrid({
   chatbots,
   handleDelete,
-  quotaUsage,
 }: {
   chatbots: ChatBotType[];
   handleDelete: (chatbot: ChatBotType) => void;
-  quotaUsage?: QuotaUsageType;
 }) {
   const getSourcesList = (chatbot: ChatBotType) => {
     const sources = [];
@@ -107,7 +84,6 @@ function ChatBotGrid({
               <ChatBotCardFooter
                 chatbot={chatbot}
                 handleDelete={() => handleDelete(chatbot)}
-                quotaUsage={quotaUsage}
               />
             }
           >
@@ -130,28 +106,10 @@ function chatBotCardHeader(chatbot: ChatBotType) {
 function ChatBotCardFooter({
   chatbot,
   handleDelete,
-  quotaUsage,
 }: {
   chatbot: ChatBotType;
   handleDelete: () => void;
-  quotaUsage?: QuotaUsageType;
 }) {
-  const handleIngest = async () => {
-    await feRagService.ingestFiles(chatbot.id);
-  };
-
-  const hasSources = (): boolean => {
-    return (
-      [chatbot.GDriveSource, chatbot.WebsiteSource]
-        .map((source) => typeof source !== "undefined" && source !== null)
-        .indexOf(true) >= 0
-    );
-  };
-
-  const hasRemainingFiles = (): boolean => {
-    return (quotaUsage?.fileCount?.remaining || 0) > 0;
-  };
-
   const handleCopyToClipboard = () => {
     const script = getImportScript(chatbot);
     navigator.clipboard.writeText(script).then(
@@ -170,10 +128,7 @@ function ChatBotCardFooter({
         <CodeBracketSquareIcon className="h-5 w-5 text-white" />
       </Button>
 
-      <Button
-        onClick={handleIngest}
-        isDisabled={!hasRemainingFiles() || !hasSources()}
-      >
+      <Button href={`/admin/chatbots/${chatbot.id}/edit`}>
         <PencilSquareIcon className="h-5 w-5 text-white" />
       </Button>
       <Button

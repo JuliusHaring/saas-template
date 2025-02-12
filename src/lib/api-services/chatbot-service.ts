@@ -5,11 +5,13 @@ import {
   getChatBot,
   getChatBots,
   getUserIdOfChatbot,
+  updateChatBot as updateChatBotFunc,
 } from "@/lib/db/chatbot";
 import {
   ChatBotIdType,
   ChatBotType,
   CreateChatBotType,
+  UpdateChatBotType,
   UserIdType,
 } from "../db/types";
 
@@ -54,5 +56,13 @@ export class ChatBotService {
 
   public async deleteChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {
     return deleteChatBot(userId, chatBotId);
+  }
+
+  public async updateChatBot(
+    userId: UserIdType,
+    chatBotId: ChatBotIdType,
+    updateChatBot: UpdateChatBotType,
+  ) {
+    return updateChatBotFunc(userId, chatBotId, updateChatBot);
   }
 }

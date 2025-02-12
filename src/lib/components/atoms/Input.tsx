@@ -17,7 +17,7 @@ export const Input: React.FC<InputProps> = ({
       <label className="text-sm font-medium text-gray-700">{label}</label>
     )}
     <input
-      className={`border border-gray-300 rounded-lg p-2 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none ${className}`}
+      className={`border border-gray-300 p-2 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none ${className}`}
       {...props}
     />
     {error && <span className="text-sm text-red-500">{error}</span>}
@@ -42,7 +42,7 @@ export const Textarea: React.FC<TextareaProps> = ({
       <label className="text-sm font-medium text-gray-700">{label}</label>
     )}
     <textarea
-      className={`border border-gray-300 rounded-lg p-2 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none ${className}`}
+      className={`border border-gray-300 p-2 bg-gray-50 focus:ring-2 focus:ring-blue-500 focus:outline-none ${className}`}
       {...props}
     />
     {error && <span className="text-sm text-red-500">{error}</span>}
