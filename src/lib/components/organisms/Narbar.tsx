@@ -4,22 +4,9 @@ import { UserCircleIcon } from "@heroicons/react/24/outline";
 import NavbarItem from "../atoms/NavbarItem";
 import { NAVBAR_CONTENT } from "@/app/admin/constants";
 import Link from "next/link";
+import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
 
 const Navbar: React.FC = () => {
-  const openBillingPortal = async () => {
-    try {
-      const res = await fetch("/api/stripe/billing-portal", { method: "POST" });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url; // Redirect user to Stripe billing portal
-      } else {
-        console.error("Error fetching billing portal URL:", data.error);
-      }
-    } catch (err) {
-      console.error("Failed to open billing portal:", err);
-    }
-  };
-
   return (
     <nav className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
       <div className="text-lg font-bold">
