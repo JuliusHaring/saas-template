@@ -42,7 +42,11 @@ export type StyleType = Prisma.StyleGetPayload<true>;
 
 export type CreateStyleType = Prisma.StyleCreateInput;
 
-export type ChatBotSourceType = WebsiteSource | GDriveSource;
+export type WebsiteSourceType = WebsiteSource;
+
+export type GDriveSourceType = GDriveSource;
+
+export type ChatBotSourceType = WebsiteSourceType | GDriveSourceType;
 
 export type UpdateUsageType = Omit<Prisma.UsageCreateInput, "userId" | "User">;
 

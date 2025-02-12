@@ -6,6 +6,7 @@ import {
   CreateGDriveSourceType,
   CreateWebsiteSourceType,
   UserIdType,
+  WebsiteSourceType,
 } from "./types";
 import { BadRequest } from "../utils/routes/http-errors";
 
@@ -83,5 +84,14 @@ export async function getWebsiteSource(
         userId,
       },
     },
+  });
+}
+
+export async function deleteWebsiteSource(
+  userId: UserIdType,
+  chatBotId: ChatBotIdType,
+): Promise<WebsiteSourceType> {
+  return prisma.websiteSource.delete({
+    where: { chatBotId, ChatBot: { userId } },
   });
 }

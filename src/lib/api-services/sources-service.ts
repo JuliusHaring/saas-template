@@ -1,4 +1,8 @@
-import { createWebsiteSource, getSources } from "../db/source";
+import {
+  createWebsiteSource,
+  deleteWebsiteSource,
+  getSources,
+} from "../db/source";
 import {
   ChatBotIdType,
   CreateWebsiteSourceType,
@@ -23,5 +27,9 @@ export class SourcesService {
     websiteSourceCreate: CreateWebsiteSourceType,
   ) {
     return createWebsiteSource(userId, chatBotId, websiteSourceCreate);
+  }
+
+  async deleteWebsiteSource(userId: UserIdType, chatBotId: ChatBotIdType) {
+    return deleteWebsiteSource(userId, chatBotId);
   }
 }

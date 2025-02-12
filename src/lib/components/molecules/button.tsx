@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MouseEventHandler } from "react";
 
 export default function Button({
   children,
@@ -16,7 +17,7 @@ export default function Button({
   href?: string;
   isDisabled?: boolean;
   type?: "button" | "submit" | "reset";
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLButtonElement> | undefined;
   className?: string;
 }) {
   const baseClasses =

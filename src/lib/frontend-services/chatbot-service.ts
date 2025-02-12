@@ -3,6 +3,7 @@ import {
   ChatBotType,
   CreateChatBotType,
   UpdateChatBotType,
+  WebsiteSourceType,
 } from "../db/types";
 import { fetchJson } from "../utils/fetch";
 
@@ -42,6 +43,12 @@ export class FEChatBotService {
     return fetchJson<ChatBotType>(`/api/chatbot/${chatBotId}`, {
       method: "PUT",
       body: JSON.stringify(updateChatBot),
+    });
+  }
+
+  public async deleteWebsiteSource(chatBotId: ChatBotIdType) {
+    return fetchJson<WebsiteSourceType>(`/api/chatbot/source/${chatBotId}`, {
+      method: "DELETE",
     });
   }
 }

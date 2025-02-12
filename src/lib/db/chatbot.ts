@@ -19,6 +19,7 @@ export async function getUserIdOfChatbot(chatBotId: ChatBotIdType) {
 export async function getChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {
   return prisma.chatBot.findFirstOrThrow({
     where: { id: chatBotId, userId },
+    include: chatBotInclude,
   });
 }
 
@@ -62,6 +63,7 @@ export async function updateChatBot(
   return prisma.chatBot.update({
     where: { id: chatBotId },
     data: updateChatBot,
+    include: chatBotInclude,
   });
 }
 
