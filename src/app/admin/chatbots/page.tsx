@@ -46,7 +46,7 @@ export default function Chatbots() {
   return (
     <div>
       <QuotasOverview />
-      <Button className="my-2">
+      <Button className="my-2" href="/admin/chatbots/create">
         <PlusIcon className="h-5 w-5 text-white" />
       </Button>
       <ChatBotGrid chatbots={chatbots} handleDelete={handleDelete} />
