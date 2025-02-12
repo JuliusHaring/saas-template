@@ -15,11 +15,13 @@ const QuotasOverview: React.FC = () => {
       const qtli: QuotasTierLimitsInfo =
         await feQuotaService.getTierQuotaLimits();
 
-      qtli.quotasTierLimits[0].limits[1].limit = 200;
-      qtli.quotasTierLimits[0].limits[2].limit = 300;
+      if (qtli.quotasTierLimits) {
+        qtli.quotasTierLimits[0].limits[1].limit = 200;
+        qtli.quotasTierLimits[0].limits[2].limit = 300;
 
-      qtli.quotasTierLimits[1].limits[1].limit = 200;
-      qtli.quotasTierLimits[1].limits[2].limit = 300;
+        qtli.quotasTierLimits[1].limits[1].limit = 200;
+        qtli.quotasTierLimits[1].limits[2].limit = 300;
+      }
 
       setTierQuotaLimitsInfo(qtli);
     };
