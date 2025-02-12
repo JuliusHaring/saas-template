@@ -3,7 +3,7 @@ import { Input, Textarea } from "@/lib/components/atoms/Input";
 import InputError from "@/lib/components/atoms/InputError";
 import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";
-import { ChatBotType, UpdateChatBotType } from "@/lib/db/types";
+import { UpdateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -15,15 +15,22 @@ const ChatBotEdit: React.FC = () => {
   const router = useRouter();
   const params = useParams<{ chatBotId: string }>();
   const [headerTitle, setHeaderTitle] = useState<string>("");
+
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors, isValid },
-  } = useForm<ChatBotType>({
+  } = useForm<{
+    name: string;
+    instructions: string;
+    allowedDomains: string; // Handle it as a comma-separated string in the form
+  }>({
+    mode: "onChange",
     defaultValues: {
       name: "",
       instructions: "",
+      allowedDomains: "",
     },
   });
 
@@ -31,17 +38,29 @@ const ChatBotEdit: React.FC = () => {
     const getChatBot = async () => {
       const chatbot = await feChatBotService.getChatBot(params.chatBotId);
       setHeaderTitle(chatbot.name);
+
       setValue("name", chatbot.name);
-      setValue("instructions", chatbot.instructions);
+      setValue("instructions", chatbot.instructions || "");
+      setValue("allowedDomains", chatbot.allowedDomains?.join(", ") || ""); // Convert array to string
     };
+
     if (params.chatBotId) getChatBot();
   }, [params.chatBotId, setValue]);
 
-  const onSubmit = async (data: ChatBotType) => {
+  const onSubmit = async (data: {
+    name: string;
+    instructions: string;
+    allowedDomains: string;
+  }) => {
     const updateChatBot: UpdateChatBotType = {
       name: data.name,
       instructions: data.instructions,
+      allowedDomains: data.allowedDomains
+        .split(",")
+        .map((domain) => domain.trim())
+        .filter((domain) => domain.length > 0), // Convert string back to an array and filter empty values
     };
+
     const updatedChatBot = await feChatBotService.updateChatBot(
       params.chatBotId,
       updateChatBot,
@@ -69,10 +88,38 @@ const ChatBotEdit: React.FC = () => {
         />
         <InputError errors={errors} name="name" />
 
+        <Input
+          type="text"
+          label="Erlaubte Domains (durch Komma getrennt)"
+          {...register("allowedDomains", {
+            validate: (value) => {
+              if (!value.trim()) return "Erlaubte Domains sind erforderlich";
+              const domains = value.split(",").map((domain) => domain.trim());
+              for (const domain of domains) {
+                if (
+                  !/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/.test(
+                    domain,
+                  )
+                ) {
+                  return `Ungültige Domain: ${domain}`;
+                }
+              }
+              return true;
+            },
+          })}
+        />
+        <InputError errors={errors} name="allowedDomains" />
+
         <Textarea
           label="Anweisungen"
           className="h-[10em] resize-none"
-          {...register("instructions")}
+          {...register("instructions", {
+            required: "Anweisungen sind erforderlich",
+            minLength: {
+              value: 10,
+              message: "Mindestens 10 Zeichen erforderlich",
+            },
+          })}
         />
         <InputError errors={errors} name="instructions" />
 
