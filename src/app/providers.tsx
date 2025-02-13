@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Analytics } from "@vercel/analytics/react";
+import { injectSpeedInsights } from "@vercel/speed-insights";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [initialized, setInitialized] = useState(false);
+  injectSpeedInsights();
 
   useEffect(() => {
     const initialize = async () => {
@@ -18,5 +21,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     return <></>; // Keeps the UI hidden until Stripe is initialized
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <Analytics />
+      {children}
+    </>
+  );
 }
