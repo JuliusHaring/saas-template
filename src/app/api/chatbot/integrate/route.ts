@@ -53,7 +53,7 @@ export async function GET(request: Request): Promise<Response> {
       chatbotContainer.style.width = "300px";
       chatbotContainer.style.height = "400px";
       chatbotContainer.style.border = "1px solid #ddd";
-      chatbotContainer.style.borderRadius = "8px";
+      // chatbotContainer.style.borderRadius = "8px";
       chatbotContainer.style.overflow = "hidden";
       chatbotContainer.style.boxShadow = "0px 4px 6px rgba(0, 0, 0, 0.1)";
       document.body.appendChild(chatbotContainer);
