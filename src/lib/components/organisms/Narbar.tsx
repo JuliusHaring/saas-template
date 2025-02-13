@@ -1,10 +1,14 @@
 "use client";
 
-import { UserCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowRightStartOnRectangleIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
 import NavbarItem from "../atoms/NavbarItem";
 import { NAVBAR_CONTENT } from "@/app/admin/constants";
 import Link from "next/link";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
+import { SignOutButton } from "@clerk/nextjs";
 
 const Navbar: React.FC = () => {
   return (
@@ -22,6 +26,12 @@ const Navbar: React.FC = () => {
         <NavbarItem href="#" onClick={openBillingPortal} icon={UserCircleIcon}>
           Kundenportal
         </NavbarItem>
+
+        <SignOutButton>
+          <NavbarItem href="#" icon={ArrowRightStartOnRectangleIcon}>
+            Ausloggen
+          </NavbarItem>
+        </SignOutButton>
       </div>
     </nav>
   );
