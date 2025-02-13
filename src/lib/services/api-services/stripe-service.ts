@@ -27,6 +27,14 @@ export class StripeService {
   }
 
   public async init(): Promise<void> {
+    if (
+      [this.productBasic, this.productPremium, this.productEnterprise].every(
+        (p) => typeof p !== "undefined",
+      )
+    ) {
+      return;
+    }
+
     try {
       this.productBasic = await this.stripe.products.retrieve(
         process.env.STRIPE_PRODUCT_BASIC_ID!,
@@ -44,13 +52,7 @@ export class StripeService {
   }
 
   public static get Instance() {
-    if (typeof this._instance !== "undefined") {
-      return this._instance;
-    }
-
-    this._instance = new this();
-    this._instance.init();
-    return this._instance;
+    return this._instance || (this._instance = new this());
   }
 
   getProductByTier(tier: SubscriptionTier): Stripe.Product {
