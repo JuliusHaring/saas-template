@@ -7,7 +7,7 @@ import {
 import Card from "./Card";
 import { FEQutoaService } from "@/lib/frontend-services/quota-service";
 import LoadingSpinner from "../atoms/LoadingSpinner";
-import Banner from "../atoms/Banner";
+import Banner from "../molecules/Banner";
 import Link from "next/link";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
 

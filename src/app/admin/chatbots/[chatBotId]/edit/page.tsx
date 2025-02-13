@@ -2,7 +2,7 @@
 import { Input, Textarea } from "@/lib/components/molecules/Input";
 import InputError from "@/lib/components/molecules/InputError";
 import LoadingSpinner from "@/lib/components/atoms/LoadingSpinner";
-import Button from "@/lib/components/molecules/button";
+import Button from "@/lib/components/molecules/Button";
 import Card from "@/lib/components/organisms/Card";
 import ChatBotSources from "@/lib/components/organisms/ChatBotSources";
 import { UpdateChatBotType } from "@/lib/db/types";

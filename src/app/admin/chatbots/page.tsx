@@ -1,7 +1,7 @@
 "use client";
 import { QuotaUsageType } from "@/lib/api-services/quotas-service";
 import LoadingSpinner from "@/lib/components/atoms/LoadingSpinner";
-import Button from "@/lib/components/molecules/button";
+import Button from "@/lib/components/molecules/Button";
 import Card from "@/lib/components/organisms/Card";
 import QuotasOverview from "@/lib/components/organisms/QuotasOverview";
 import { ChatBotType } from "@/lib/db/types";
