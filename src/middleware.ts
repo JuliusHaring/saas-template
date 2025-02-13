@@ -1,14 +1,17 @@
 import { isDevModeEnabled } from "@/lib/utils/dev-mode";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher(["/admin(.*)"]);
 
-async function getEmail(userId: string, req: Request): Promise<string> {
-  const response = await fetch(new URL(`/api/user/get-email`, req.url), {
-    method: "POST",
-    body: JSON.stringify({ userId }),
-  });
+async function getEmail(userId: string, req: NextRequest): Promise<string> {
+  const response = await fetch(
+    new URL(`/api/user/get-email`, req.nextUrl.origin),
+    {
+      method: "POST",
+      body: JSON.stringify({ userId }),
+    },
+  );
   return response.json().then((res) => res.email);
 }
 
@@ -23,7 +26,7 @@ export default clerkMiddleware(async (auth, req) => {
 
     // Call API route to check subscription (Edge-safe)
     const response = await fetch(
-      new URL(`/api/stripe/subscription/check`, req.url),
+      new URL(`/api/stripe/subscription/check`, req.nextUrl.origin),
       {
         method: "POST",
         body: JSON.stringify({ userId }),
@@ -34,16 +37,16 @@ export default clerkMiddleware(async (auth, req) => {
 
     const email = await getEmail(userId, req);
     if (typeof email === "undefined") {
-      return Response.redirect(new URL("/", req.url));
+      return NextResponse.redirect(new URL("/", req.nextUrl.origin));
     }
 
     if (!hasSubscription) {
-      return Response.redirect(
-        new URL(`/stripe/pricing-table/${email}`, req.url),
+      return NextResponse.redirect(
+        new URL(`/stripe/pricing-table/${email}`, req.nextUrl.origin),
       );
     }
 
-    NextResponse.next();
+    return NextResponse.next();
   }
 });
 
