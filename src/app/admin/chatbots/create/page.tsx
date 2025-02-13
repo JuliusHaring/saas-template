@@ -1,8 +1,8 @@
 "use client";
-import { Input, Textarea } from "@/lib/components/molecules/Input";
-import InputError from "@/lib/components/molecules/InputError";
-import Button from "@/lib/components/molecules/Button";
-import Card from "@/lib/components/organisms/Card";
+import { Input, Textarea } from "@/lib/admin-components/molecules/Input";
+import InputError from "@/lib/admin-components/molecules/InputError";
+import Button from "@/lib/admin-components/molecules/Button";
+import Card from "@/lib/admin-components/organisms/Card";
 import { CreateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
 import { useRouter } from "next/navigation";

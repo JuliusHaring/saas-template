@@ -1,10 +1,10 @@
 "use client";
-import { Input, Textarea } from "@/lib/components/molecules/Input";
-import InputError from "@/lib/components/molecules/InputError";
-import LoadingSpinner from "@/lib/components/atoms/LoadingSpinner";
-import Button from "@/lib/components/molecules/Button";
-import Card from "@/lib/components/organisms/Card";
-import ChatBotSources from "@/lib/components/organisms/ChatBotSources";
+import { Input, Textarea } from "@/lib/admin-components/molecules/Input";
+import InputError from "@/lib/admin-components/molecules/InputError";
+import LoadingSpinner from "@/lib/admin-components/atoms/LoadingSpinner";
+import Button from "@/lib/admin-components/molecules/Button";
+import Card from "@/lib/admin-components/organisms/Card";
+import ChatBotSources from "@/lib/admin-components/organisms/ChatBotSources";
 import { UpdateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
 import { useParams, useRouter } from "next/navigation";
