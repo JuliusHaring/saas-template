@@ -9,7 +9,7 @@ import Link from "next/link";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
 import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import NavbarItem from "@/lib/admin-components/atoms/NavbarItem";
+import NavbarItem from "@/lib/components/admin/atoms/NavbarItem";
 
 const Navbar: React.FC = () => {
   const { signOut } = useClerk();

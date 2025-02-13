@@ -1,4 +1,4 @@
-import Navbar from "@/lib/admin-components/organisms/Narbar";
+import Navbar from "@/lib/components/admin/organisms/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 
 export default function Layout({

@@ -1,5 +1,5 @@
-import Button from "@/lib/admin-components/molecules/Button";
-import { Input } from "@/lib/admin-components/molecules/Input";
+import Button from "@/lib/components/admin/molecules/Button";
+import { Input } from "@/lib/components/admin/molecules/Input";
 import { useState } from "react";
 
 interface ChatInputProps {

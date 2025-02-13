@@ -1,9 +1,5 @@
 "use client";
 import { QuotaUsageType } from "@/lib/services/api-services/quotas-service";
-import LoadingSpinner from "@/lib/admin-components/atoms/LoadingSpinner";
-import Button from "@/lib/admin-components/molecules/Button";
-import Card from "@/lib/admin-components/organisms/Card";
-import QuotasOverview from "@/lib/admin-components/organisms/QuotasOverview";
 import { ChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { FEQutoaService } from "@/lib/services/frontend-services/quota-service";
@@ -17,6 +13,10 @@ import {
   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
+import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
+import Button from "@/lib/components/admin/molecules/Button";
+import Card from "@/lib/components/admin/organisms/Card";
+import QuotasOverview from "@/lib/components/admin/organisms/QuotasOverview";
 
 const feChatBotService = FEChatBotService.Instance;
 const feQuotaService = FEQutoaService.Insance;

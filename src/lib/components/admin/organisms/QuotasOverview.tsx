@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 
 import Link from "next/link";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
-import LoadingSpinner from "@/lib/admin-components/atoms/LoadingSpinner";
-import QuotaGauge from "@/lib/admin-components/atoms/QuotaGauge";
-import Banner from "@/lib/admin-components/molecules/Banner";
-import Card from "@/lib/admin-components/organisms/Card";
 import {
   QuotasTierLimitsInfo,
   QuotaUsageType,
 } from "@/lib/services/api-services/quotas-service";
 import { FEQutoaService } from "@/lib/services/frontend-services/quota-service";
+import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
+import QuotaGauge from "@/lib/components/admin/atoms/QuotaGauge";
+import Banner from "@/lib/components/admin/molecules/Banner";
+import Card from "@/lib/components/admin/organisms/Card";
 
 const feQuotaService = FEQutoaService.Insance;
 

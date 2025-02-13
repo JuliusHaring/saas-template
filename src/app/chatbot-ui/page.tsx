@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { FEStyleService } from "@/lib/services/frontend-services/style-service";
-import { MessageList } from "@/lib/chatbot-ui-components/molecules/MessagesList";
-import { ChatInput } from "@/lib/chatbot-ui-components/molecules/ChatInput";
-import { MessageType } from "@/lib/chatbot-ui-components/types";
 import { FEChatService } from "@/lib/services/frontend-services/chat-service";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
+import { MessageList } from "@/lib/components/chatbot-ui/molecules/MessagesList";
+import { ChatInput } from "@/lib/components/chatbot-ui/molecules/ChatInput";
+import { MessageType } from "@/lib/components/chatbot-ui/types";
 
 const feStyleService = FEStyleService.Instance;
 const feChatService = FEChatService.Instance;
