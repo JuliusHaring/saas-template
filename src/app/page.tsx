@@ -10,10 +10,9 @@ import {
 import { Element } from "react-scroll";
 import Typical from "react-typical";
 import Image from "next/image";
-import SyntaxHighlighter from "react-syntax-highlighter";
 import { getImportScript } from "@/lib/utils/import-script";
 import { baseUrl } from "@/lib/utils/base-url";
-import { vs } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import CodeView from "@/lib/components/shared/organisms/CodeView";
 
 export default function LandingPage() {
   return (
@@ -150,16 +149,6 @@ const HowTo: React.FC = () => {
   );
 };
 
-const CodeView: React.FC<{ code: string }> = ({ code }) => {
-  return (
-    <div className="border rounded-none text-white text-sm border border-gray-200">
-      <SyntaxHighlighter language="typescript" style={vs} wrapLongLines>
-        {code}
-      </SyntaxHighlighter>
-    </div>
-  );
-};
-
 const SnippetExample: React.FC = () => {
   const script = getImportScript({
     id: "test",
@@ -181,9 +170,10 @@ const SnippetExample: React.FC = () => {
         Integriere deinen ChatBot mit nur einer Zeile Code!
       </h2>
       <p>
-        Kopiere einfach das folgende Skript und füge es in deiner Webseite ein.
-        Dein ChatBot ist dann sofort einsatzbereit!
+        Kopiere einfach das von KnexAI erstellte Skript und füge es in deiner
+        Webseite ein. Dein ChatBot ist dann sofort einsatzbereit!
       </p>
+      <h2 className="">Beispiel:</h2>
       <CodeView code={script} />
     </div>
   );
