@@ -18,13 +18,19 @@ import {
 import { NextRequest } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 import { OpenAIChatService } from "@/lib/api-services/chat/open-ai-chat-service";
+import { ChatRequestType, ChatResponseType } from "@/lib/db/types";
 
 const openAIChatService = OpenAIChatService.Instance;
 const quotaService = QuotaService.Instance;
 
 export const POST = withErrorHandling(async (request: NextRequest) => {
   const body = await request.json();
-  const { chatBotId, sessionId: providedSessionId, userMessage, token } = body;
+  const {
+    chatBotId,
+    sessionId: providedSessionId,
+    userMessage,
+    token,
+  }: ChatRequestType = body;
 
   if (!chatBotId || !userMessage || !token) {
     throw BadRequest("Missing required fields");
@@ -76,5 +82,5 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   );
   await quotaService.updateChatbotUsage(chatBotId, Quota.MAX_CHAT_MESSAGES, 1);
 
-  return { answer, sessionId };
+  return { answer, sessionId } as ChatResponseType;
 });

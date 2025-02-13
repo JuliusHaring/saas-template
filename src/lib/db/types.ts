@@ -55,3 +55,15 @@ export type SubscriptionType = Subscription;
 export type SubscriptionTier = PrismaSubscriptionTier;
 
 export const SubscriptionTierValues = Object.values($Enums.SubscriptionTier);
+
+export type ChatRequestType = {
+  chatBotId: string;
+  sessionId?: string | null;
+  userMessage: string;
+  token: string;
+};
+
+export type ChatResponseType = {
+  answer: string;
+  sessionId: string;
+};

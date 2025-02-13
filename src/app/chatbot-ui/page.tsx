@@ -4,8 +4,10 @@ import { FEStyleService } from "@/lib/frontend-services/style-service";
 import { MessageList } from "@/lib/chatbot-ui-components/molecules/MessagesList";
 import { ChatInput } from "@/lib/chatbot-ui-components/molecules/ChatInput";
 import { MessageType } from "@/lib/chatbot-ui-components/types";
+import { FEChatService } from "@/lib/frontend-services/chat-service";
 
 const feStyleService = FEStyleService.Instance;
+const feChatService = FEChatService.Instance;
 
 const ChatbotUI: React.FC = () => {
   const [messages, setMessages] = useState<MessageType[]>([]);
@@ -80,6 +82,13 @@ const ChatbotUI: React.FC = () => {
 
       setMessages((prev) => [...prev, { role: "Antwort", text: answer }]);
     } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "Antwort",
+          text: "Es ist ein Fehler aufgetreten. Versuche es bitte später nochmal!",
+        },
+      ]);
       console.error("Error communicating with chatbot:", error);
     } finally {
       setIsWaiting(false);
