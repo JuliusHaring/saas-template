@@ -45,26 +45,15 @@ export async function GET(request: Request): Promise<Response> {
       }
 
       // Create chatbot container
-      const chatbotContainer = document.createElement("div");
-      chatbotContainer.id = "chatbot-container";
+      const chatbotContainer = document.createElement("iframe");
+      chatbotContainer.style.height = "100vh";
+      chatbotContainer.style.width = "100%";
+      chatbotContainer.style.bottom = "0";
+      chatbotContainer.style.left = "0";
       chatbotContainer.style.position = "fixed";
-      chatbotContainer.style.bottom = "20px";
-      chatbotContainer.style.right = "20px";
-      chatbotContainer.style.width = "300px";
-      chatbotContainer.style.height = "400px";
-      chatbotContainer.style.border = "1px solid #ddd";
-      // chatbotContainer.style.borderRadius = "8px";
-      chatbotContainer.style.overflow = "hidden";
-      chatbotContainer.style.boxShadow = "0px 4px 6px rgba(0, 0, 0, 0.1)";
+      chatbotContainer.style.zIndex = "9999";
+      chatbotContainer.src = \`\${apiUrl}/chatbot-ui?chatBotId=\${chatBotId}&token=\${token}\`;
       document.body.appendChild(chatbotContainer);
-
-      // Create an iframe for the chatbot
-      const iframe = document.createElement("iframe");
-      iframe.src = \`\${apiUrl}/chatbot-ui?chatBotId=\${chatBotId}&token=\${token}\`;
-      iframe.style.width = "100%";
-      iframe.style.height = "100%";
-      iframe.style.border = "none";
-      chatbotContainer.appendChild(iframe);
     })();
   `;
 

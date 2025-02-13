@@ -61,19 +61,13 @@ const ChatbotUI: React.FC = () => {
     setIsWaiting(true);
 
     try {
-      const response = await fetch("/api/chatbot/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ chatBotId, userMessage, sessionId, token }),
-      });
-
-      if (!response.ok)
-        throw new Error("Failed to fetch response from chatbot");
-
-      const { answer, sessionId: newSessionId } = await response.json();
+      const { answer, sessionId: newSessionId } =
+        await feChatService.sendMessage({
+          chatBotId,
+          userMessage,
+          sessionId,
+          token,
+        });
 
       if (newSessionId && newSessionId !== sessionId) {
         setSessionId(newSessionId);
@@ -98,9 +92,12 @@ const ChatbotUI: React.FC = () => {
   // Auto-scroll logic
   useEffect(() => {
     if (!isUserScrolling) {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      chatContainerRef.current?.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
     }
-  }, [messages, isUserScrolling]);
+  }, [messages]);
 
   // Detect user scrolling manually
   const handleScroll = () => {
@@ -110,16 +107,18 @@ const ChatbotUI: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="fixed bottom-5 right-5 w-[300px] h-[400px] border border-gray-300 shadow-lg bg-white flex flex-col">
+      {/* Scrollable messages area */}
       <div
         ref={chatContainerRef}
-        className="flex-1 overflow-y-auto p-4 space-y-2"
         onScroll={handleScroll}
+        className="flex-1 overflow-y-auto p-2"
       >
         <MessageList messages={messages} />
-        <div ref={messagesEndRef} />{" "}
-        {/* Keeps scrolling to the latest message */}
+        <div ref={messagesEndRef} />
       </div>
+
+      {/* Chat input - stays at the bottom */}
       <ChatInput onSend={sendMessage} isWaiting={isWaiting} />
     </div>
   );

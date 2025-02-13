@@ -1,6 +1,6 @@
 import Button from "@/lib/components/molecules/Button";
 import { Input } from "@/lib/components/molecules/Input";
-import React, { useState } from "react";
+import { useState } from "react";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -24,7 +24,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isWaiting }) => {
   };
 
   return (
-    <div className="flex w-full max-w-full p-4 border-t border-gray-300">
+    <div className="w-full border-t border-gray-300 p-4 flex bg-white">
       <Input
         type="text"
         value={userInput}
