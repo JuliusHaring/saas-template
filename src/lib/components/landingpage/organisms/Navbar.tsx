@@ -27,6 +27,12 @@ const NavBar: React.FC<NavBarProps> = ({ className }) => {
         </Link>
       </NavbarItem>
 
+      <NavbarItem href={"#"} onClick={() => {}}>
+        <Link to="code-example" duration={500}>
+          Code-Beispiel
+        </Link>
+      </NavbarItem>
+
       <NavbarItem href="#" onClick={() => router.push("/admin")}>
         <Button>Anmelden</Button>
       </NavbarItem>

@@ -21,27 +21,31 @@ export default function LandingPage() {
       <NavBar className="mb-8" />
 
       <div className="text-xl px-40">
-        <Spacing />
-
         <Element name="eyecatcher">
           <EyeCatcher />
         </Element>
         <Spacing />
 
-        <SnippetExample />
-        <Spacing />
-
         <Element name="howto">
           <HowTo />
         </Element>
+
+        <Element name="code-example">
+          <SnippetExample />
+        </Element>
+        <Spacing amount={40} />
       </div>
     </div>
   );
 }
 
-const Spacing: React.FC<{ amount?: number | string }> = ({ amount = 20 }) => (
-  <div className={`my-${amount}`}></div>
-);
+const Spacing: React.FC<{ amount?: number | string }> = ({ amount = 20 }) => {
+  return (
+    <div
+      style={{ marginTop: typeof amount === "number" ? `${amount}px` : amount }}
+    />
+  );
+};
 
 const EyeCatcher: React.FC = () => {
   const typicalElements: string[] = [
@@ -170,9 +174,16 @@ const SnippetExample: React.FC = () => {
     createdAt: new Date(),
     updatedAt: new Date(),
   }).replaceAll(baseUrl, "<URL>");
+
   return (
-    <div>
-      Importieren ist so einfach:
+    <div className="space-y-4 mt-6">
+      <h2 className="text-xl font-semibold">
+        Integriere deinen ChatBot mit nur einer Zeile Code!
+      </h2>
+      <p>
+        Kopiere einfach das folgende Skript und füge es in deiner Webseite ein.
+        Dein ChatBot ist dann sofort einsatzbereit!
+      </p>
       <CodeView code={script} />
     </div>
   );
