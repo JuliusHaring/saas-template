@@ -16,7 +16,7 @@ const Navbar: React.FC = () => {
   const router = useRouter();
 
   return (
-    <nav className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
+    <nav className="md:flex md:items-center md:justify-between px-6 py-4 border-b border-gray-300">
       <div className="text-lg font-bold">
         <Link href="/admin">KnexAI</Link>
       </div>
