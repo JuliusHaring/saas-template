@@ -1,34 +1,32 @@
 "use client";
-import { FEStyleService } from "@/lib/frontend-services/style-service";
 import { useEffect, useState } from "react";
+import { FEStyleService } from "@/lib/frontend-services/style-service";
+import { MessageList } from "@/lib/chatbot-ui-components/molecules/MessagesList";
+import { ChatInput } from "@/lib/chatbot-ui-components/molecules/ChatInput";
+import { MessageType } from "@/lib/chatbot-ui-components/types";
 
 const feStyleService = FEStyleService.Instance;
 
-export default function ChatbotUI() {
-  const [messages, setMessages] = useState<{ role: string; text: string }[]>(
+const ChatbotUI: React.FC = () => {
+  const [messages, setMessages] = useState<MessageType[]>(
     [],
   );
-  const [userInput, setUserInput] = useState("");
   const [chatBotId, setChatBotId] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(null); // Store token
+  const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // Get chatBotId and token from the URL query string
     const params = new URLSearchParams(window.location.search);
     const id = params.get("chatBotId");
-    const authToken = params.get("token"); // Extract token
+    const authToken = params.get("token");
 
     if (id) {
       setChatBotId(id);
-      setToken(authToken); // Store token in state
+      setToken(authToken);
 
-      // Retrieve the session ID from localStorage if it exists
       const storedSessionId = localStorage.getItem(`session_${id}`);
       if (storedSessionId) {
         setSessionId(storedSessionId);
-      } else {
-        console.log("No session ID found; a new session will be created.");
       }
     } else {
       console.error("Missing chatBotId in the query string");
@@ -52,100 +50,46 @@ export default function ChatbotUI() {
     loadStyles();
   }, [chatBotId]);
 
-  const sendMessage = async () => {
-    if (!userInput || !chatBotId || !token) {
-      console.error("Missing required fields: chatBotId or token.");
+  const sendMessage = async (userMessage: string) => {
+    if (!chatBotId || !token) {
+      console.error("Missing chatBotId or token.");
       return;
     }
 
-    const userMessage = userInput;
-    setMessages((prev) => [...prev, { role: "User", text: userMessage }]);
-    setUserInput("");
+    setMessages((prev) => [...prev, { role: "Nutzer", text: userMessage }]);
 
     try {
       const response = await fetch("/api/chatbot/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // 🔹 Attach token in headers
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ chatBotId, userMessage, sessionId, token }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch response from the chatbot");
-      }
+      if (!response.ok)
+        throw new Error("Failed to fetch response from chatbot");
 
       const { answer, sessionId: newSessionId } = await response.json();
 
-      // Update session ID if a new one is provided
       if (newSessionId && newSessionId !== sessionId) {
         setSessionId(newSessionId);
         localStorage.setItem(`session_${chatBotId}`, newSessionId);
       }
 
-      setMessages((prev) => [...prev, { role: "assistant", text: answer }]);
+      setMessages((prev) => [...prev, { role: "Antwort", text: answer }]);
     } catch (error) {
-      console.error("Error communicating with the chatbot:", error);
+      console.error("Error communicating with chatbot:", error);
     }
   };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100vh",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <div
-        id="messages"
-        style={{
-          flex: 1,
-          overflowY: "auto",
-          padding: "10px",
-        }}
-      >
-        {messages.map((message, index) => (
-          <div key={index} style={{ marginBottom: "8px" }}>
-            <strong>{message.role}:</strong> {message.text}
-          </div>
-        ))}
-      </div>
-      <div
-        id="input-area"
-        style={{
-          display: "flex",
-          padding: "10px",
-          borderTop: "1px solid #ddd",
-        }}
-      >
-        <input
-          type="text"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Type a message..."
-          style={{
-            flex: 1,
-            padding: "10px",
-            border: "1px solid #ddd",
-            borderRadius: "4px",
-          }}
-        />
-        <button
-          onClick={sendMessage}
-          style={{
-            marginLeft: "10px",
-            padding: "10px 15px",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Send
-        </button>
-      </div>
+    <div className="flex flex-col h-screen">
+      <MessageList messages={messages} />
+      <ChatInput onSend={sendMessage} />
     </div>
   );
-}
+};
+
+export default ChatbotUI;
