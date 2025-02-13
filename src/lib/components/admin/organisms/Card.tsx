@@ -12,17 +12,17 @@ export default function Card({
   return (
     <div className={`border border-gray-300 divide-y divide-gray-300`}>
       {typeof header !== "undefined" && (
-        <div className="px-4 py-2 font-semibold truncate">{header}</div>
+        <div className="px-4 py-2 font-semibold">{header}</div>
       )}
 
       <div
-        className={`p-4 truncate inset-shadow-sm  inset-shadow-black-100  ${className}`}
+        className={`p-4 inset-shadow-sm  inset-shadow-black-100  ${className}`}
       >
         {children}
       </div>
 
       {typeof footer !== "undefined" && (
-        <div className="px-4 py-2 truncate">{footer}</div>
+        <div className="px-4 py-2">{footer}</div>
       )}
     </div>
   );
