@@ -97,7 +97,7 @@ const ChatbotUI: React.FC = () => {
         behavior: "smooth",
       });
     }
-  }, [messages]);
+  }, [messages, isUserScrolling]);
 
   // Detect user scrolling manually
   const handleScroll = () => {
