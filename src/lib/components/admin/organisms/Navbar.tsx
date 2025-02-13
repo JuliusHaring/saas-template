@@ -18,7 +18,7 @@ const Navbar: React.FC = () => {
   return (
     <nav className="md:flex md:items-center md:justify-between px-6 py-4 border-b border-gray-300">
       <div className="text-lg font-bold">
-        <Link href="/admin">KnexAI</Link>
+        <Link href="/admin/chatbots">KnexAI</Link>
       </div>
 
       <div className="flex space-x-6">

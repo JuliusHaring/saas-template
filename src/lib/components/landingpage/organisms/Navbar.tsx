@@ -33,7 +33,7 @@ const NavBar: React.FC<NavBarProps> = ({ className }) => {
         </Link>
       </NavbarItem>
 
-      <NavbarItem href="#" onClick={() => router.push("/admin")}>
+      <NavbarItem href="#" onClick={() => router.push("/admin/chatbots")}>
         <Button>Anmelden</Button>
       </NavbarItem>
     </nav>

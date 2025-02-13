@@ -1,5 +1,3 @@
-import { CpuChipIcon } from "@heroicons/react/24/outline";
-
 export type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>;
 export interface SidenavContent {
   title: string;
@@ -8,9 +6,9 @@ export interface SidenavContent {
 }
 
 export const NAVBAR_CONTENT: SidenavContent[] = [
-  {
-    title: "ChatBots",
-    href: "/admin/chatbots",
-    icon: CpuChipIcon,
-  },
+  // {
+  //   title: "ChatBots",
+  //   href: "/admin/chatbots",
+  //   icon: CpuChipIcon,
+  // },
 ];
