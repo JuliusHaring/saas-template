@@ -85,7 +85,7 @@ const HowTo: React.FC = () => {
     <div>
       Wie geht eigentlich...
       <span className="text-blue-600 text-2xl font-bold mb-8">KnexAI</span>?
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8 border border-gray-200 p-20">
         {/* Text & Steps */}
         <div>
           <ul className="space-y-6 text-lg">
