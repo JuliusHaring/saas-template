@@ -16,6 +16,12 @@ const NavBar: React.FC<NavBarProps> = ({ className }) => {
     >
       {/* Workaround that removes <a></a> to mitigate hydration errors.  */}
       <NavbarItem href={"#"} onClick={() => {}}>
+        <Link to="eyecatcher" duration={500}>
+          Startseite
+        </Link>
+      </NavbarItem>
+
+      <NavbarItem href={"#"} onClick={() => {}}>
         <Link to="howto" duration={500}>
           Anleitung
         </Link>

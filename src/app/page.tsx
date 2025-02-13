@@ -10,6 +10,10 @@ import {
 import { Element } from "react-scroll";
 import Typical from "react-typical";
 import Image from "next/image";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { getImportScript } from "@/lib/utils/import-script";
+import { baseUrl } from "@/lib/utils/base-url";
+import { vs } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 export default function LandingPage() {
   return (
@@ -17,9 +21,16 @@ export default function LandingPage() {
       <NavBar className="mb-8" />
 
       <div className="text-xl px-40">
-        <EyeCatcher />
-
         <Spacing />
+
+        <Element name="eyecatcher">
+          <EyeCatcher />
+        </Element>
+        <Spacing />
+
+        <SnippetExample />
+        <Spacing />
+
         <Element name="howto">
           <HowTo />
         </Element>
@@ -68,7 +79,7 @@ const EyeCatcher: React.FC = () => {
 
 const HowTo: React.FC = () => {
   return (
-    <div className="max-w-5xl mx-auto px-6 py-12">
+    <div className="max-w-5xl mx-auto py-12">
       Wie geht eigentlich...
       <span className="text-blue-600 text-2xl font-bold mb-8">KnexAI</span>?
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
@@ -131,6 +142,38 @@ const HowTo: React.FC = () => {
           />
         </div>
       </div>
+    </div>
+  );
+};
+
+const CodeView: React.FC<{ code: string }> = ({ code }) => {
+  return (
+    <div className="border rounded-none text-white text-sm border border-gray-200">
+      <SyntaxHighlighter language="typescript" style={vs} wrapLongLines>
+        {code}
+      </SyntaxHighlighter>
+    </div>
+  );
+};
+
+const SnippetExample: React.FC = () => {
+  const script = getImportScript({
+    id: "test",
+    name: "Test ChatBot",
+    Style: null,
+    GDriveSource: null,
+    WebsiteSource: null,
+    Documents: [],
+    userId: "",
+    allowedDomains: [],
+    instructions: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  }).replaceAll(baseUrl, "<URL>");
+  return (
+    <div>
+      Importieren ist so einfach:
+      <CodeView code={script} />
     </div>
   );
 };
