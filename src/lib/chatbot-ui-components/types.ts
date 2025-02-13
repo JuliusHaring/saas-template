@@ -1,6 +1,6 @@
-export type MessageRole = "Nutzer" | "Antwort"
+export type MessageRole = "Nutzer" | "Antwort";
 
 export type MessageType = {
-    role: MessageRole,
-    text: string,
+  role: MessageRole;
+  text: string;
 };

@@ -15,12 +15,20 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
     setUserInput("");
   };
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent form submission (if inside a form)
+      handleSend();
+    }
+  };
+
   return (
     <div className="flex p-4 border-t border-gray-300">
       <Input
         type="text"
         value={userInput}
         onChange={(e) => setUserInput(e.target.value)}
+        onKeyDown={handleKeyDown} // Handle "Enter" key
         placeholder="Nachricht..."
         className="flex-1"
       />

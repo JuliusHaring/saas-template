@@ -8,9 +8,7 @@ import { MessageType } from "@/lib/chatbot-ui-components/types";
 const feStyleService = FEStyleService.Instance;
 
 const ChatbotUI: React.FC = () => {
-  const [messages, setMessages] = useState<MessageType[]>(
-    [],
-  );
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const [chatBotId, setChatBotId] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);

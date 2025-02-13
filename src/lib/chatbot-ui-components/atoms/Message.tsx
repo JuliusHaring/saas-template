@@ -1,7 +1,7 @@
 import React from "react";
-import { MessageRole, MessageType } from "../types";
+import { MessageType } from "../types";
 
-interface MessageProps extends MessageType {}
+interface MessageProps extends MessageType {}
 
 export const Message: React.FC<MessageProps> = ({ role, text }) => (
   <div
