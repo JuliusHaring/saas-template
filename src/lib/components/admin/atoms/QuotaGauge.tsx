@@ -46,6 +46,12 @@ const QuotaGauge: React.FC<QuotaGaugeProps> = ({
           ticks: quotasTierLimits.limits.map((qTL) => ({ value: qTL.limit })),
         },
         valueLabel: {
+          style: {
+            color: "black",
+            fill: "unset",
+            textShadow: "unset",
+            fontSize: "50%",
+          },
           formatTextValue: (val) =>
             val + " " + createTitle(quotasTierLimits.quota),
         },
