@@ -4,10 +4,11 @@ import {
   getUserSubscription,
   hasActiveSubscription,
 } from "@/lib/db/stripe";
+import { UserIdType, SubscriptionType } from "@/lib/db/types";
+import { GetUserType } from "@/lib/db/user";
+import { baseUrl } from "@/lib/utils/base-url";
+import { SubscriptionTier } from "@prisma/client";
 import Stripe from "stripe";
-import { GetUserType } from "../db/user";
-import { baseUrl } from "../utils/base-url";
-import { SubscriptionTier, SubscriptionType, UserIdType } from "../db/types";
 
 export class StripeProductInitException extends Error {}
 export class SubscriptionTierNotFoundException extends Error {}

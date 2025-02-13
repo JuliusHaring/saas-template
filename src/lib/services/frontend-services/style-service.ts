@@ -1,5 +1,5 @@
-import { ChatBotIdType, CreateStyleType, StyleType } from "../db/types";
-import { fetchJson } from "../utils/fetch";
+import { ChatBotIdType, StyleType, CreateStyleType } from "@/lib/db/types";
+import { fetchJson } from "@/lib/utils/fetch";
 
 export class FEStyleService {
   private static _instance: FEStyleService;

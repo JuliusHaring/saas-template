@@ -2,7 +2,7 @@ import {
   QuotaException,
   QuotaNotFoundException,
   QuotaReachedException,
-} from "@/lib/api-services/quotas-service";
+} from "@/lib/services/api-services/quotas-service";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
 

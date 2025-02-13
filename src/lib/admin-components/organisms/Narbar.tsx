@@ -4,12 +4,12 @@ import {
   ArrowRightStartOnRectangleIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import NavbarItem from "../atoms/NavbarItem";
 import { NAVBAR_CONTENT } from "@/app/admin/constants";
 import Link from "next/link";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
 import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import NavbarItem from "@/lib/admin-components/atoms/NavbarItem";
 
 const Navbar: React.FC = () => {
   const { signOut } = useClerk();

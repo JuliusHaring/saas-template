@@ -1,7 +1,7 @@
 import {
-  ChatMessage,
   IHistoryStorageService,
-} from "./i-history-storage-service";
+  ChatMessage,
+} from "@/lib/services/api-services/memory/i-history-storage-service";
 
 export class InMemoryChatHistoryStorageService extends IHistoryStorageService {
   private static _instance: InMemoryChatHistoryStorageService;

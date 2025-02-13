@@ -1,11 +1,11 @@
 import {
-  ChatBotIdType,
   ChatBotType,
+  ChatBotIdType,
   CreateChatBotType,
   UpdateChatBotType,
   WebsiteSourceType,
-} from "../db/types";
-import { fetchJson } from "../utils/fetch";
+} from "@/lib/db/types";
+import { fetchJson } from "@/lib/utils/fetch";
 
 export class FEChatBotService {
   private static _instance: FEChatBotService;

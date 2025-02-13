@@ -1,13 +1,13 @@
-import { IEmbeddingService } from "./i-embedding-service";
-import { OpenAIEmbeddingService } from "./open-ai-embedding-service";
+import { ChatBotIdType } from "@/lib/db/types";
+import { IEmbeddingService } from "@/lib/services/api-services/rag/i-embedding-service";
+import { OpenAIEmbeddingService } from "@/lib/services/api-services/rag/open-ai-embedding-service";
 import {
-  EmbeddingType,
-  RAGFile,
   RAGInsertType,
+  RAGFile,
+  EmbeddingType,
   RAGQueryResultType,
   RAGQueryType,
-} from "./types";
-import { ChatBotIdType } from "@/lib/db/types";
+} from "@/lib/services/api-services/rag/types";
 
 export abstract class IRAGService {
   protected embeddingService: IEmbeddingService;

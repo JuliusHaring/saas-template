@@ -1,4 +1,4 @@
-import { StripeService } from "@/lib/api-services/stripe-service";
+import { StripeService } from "@/lib/services/api-services/stripe-service";
 import { BadRequest, withErrorHandling } from "@/lib/utils/routes/http-errors";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";

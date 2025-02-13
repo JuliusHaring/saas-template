@@ -1,4 +1,4 @@
-import { RAGQueryResultType } from "./rag/types";
+import { RAGQueryResultType } from "@/lib/services/api-services/rag/types";
 
 export class PromptService {
   private static _instance: PromptService;

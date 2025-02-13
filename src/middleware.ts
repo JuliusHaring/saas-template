@@ -1,6 +1,6 @@
+import { isDevModeEnabled } from "@/lib/utils/dev-mode";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { isDevModeEnabled } from "./lib/utils/dev-mode";
 
 const isProtectedRoute = createRouteMatcher(["/admin(.*)"]);
 

@@ -1,10 +1,10 @@
 import { getWebsiteSource } from "@/lib/db/source";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { TextService } from "../text-service";
-import { RAGSourceCrawler } from "./i-rag-source-crawler";
-import { RAGFile } from "../rag/types";
 import { UserIdType } from "@/lib/db/types";
+import { RAGSourceCrawler } from "@/lib/services/api-services/crawling/i-rag-source-crawler";
+import { RAGFile } from "@/lib/services/api-services/rag/types";
+import { TextService } from "@/lib/services/api-services/text-service";
 
 export class WebsiteSourceCrawler extends RAGSourceCrawler {
   private static _instance: WebsiteSourceCrawler;

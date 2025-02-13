@@ -1,7 +1,11 @@
-import { IRAGService } from "./i-rag-service";
-import { findClosest, deleteDocuments, insertFile } from "@/lib/db/pg-rag";
-import { EmbeddingType, RAGInsertType, RAGQueryResultType } from "./types";
+import { insertFile, findClosest, deleteDocuments } from "@/lib/db/pg-rag";
 import { ChatBotIdType } from "@/lib/db/types";
+import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
+import {
+  RAGInsertType,
+  EmbeddingType,
+  RAGQueryResultType,
+} from "@/lib/services/api-services/rag/types";
 
 export class PostGresRAGService extends IRAGService {
   private static _instance: PostGresRAGService;

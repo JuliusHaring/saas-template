@@ -6,7 +6,7 @@ import Button from "@/lib/admin-components/molecules/Button";
 import Card from "@/lib/admin-components/organisms/Card";
 import ChatBotSources from "@/lib/admin-components/organisms/ChatBotSources";
 import { UpdateChatBotType } from "@/lib/db/types";
-import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
+import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";

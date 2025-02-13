@@ -14,7 +14,7 @@ import {
   CreateChatBotType,
   UpdateChatBotType,
   UserIdType,
-} from "../db/types";
+} from "@/lib/db/types";
 
 export class ChatBotService {
   private static _instance: ChatBotService;

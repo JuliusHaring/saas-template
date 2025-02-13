@@ -1,11 +1,11 @@
 import { Document, Prisma } from "@prisma/client";
-import { prisma } from ".";
 import {
   EmbeddingType,
   RAGInsertType,
   RAGQueryResultType,
-} from "../api-services/rag/types";
-import { ChatBotIdType } from "./types";
+} from "@/lib/services/api-services/rag/types";
+import { prisma } from "@/lib/db";
+import { ChatBotIdType } from "@/lib/db/types";
 
 export type DocumentType = Document & { distance: number };
 

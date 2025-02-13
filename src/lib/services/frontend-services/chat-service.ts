@@ -1,5 +1,8 @@
-import { ChatRequestType, ChatResponseType } from "../db/types";
-import { fetchJson } from "../utils/fetch";
+import {
+  ChatRequestType,
+  ChatResponseType,
+} from "@/lib/services/api-services/chat/types";
+import { fetchJson } from "@/lib/utils/fetch";
 
 export class FEChatService {
   private static _instance: FEChatService;

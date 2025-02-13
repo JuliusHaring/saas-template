@@ -3,11 +3,15 @@ import {
   getUserSubscription,
   getOrCreateUserUsage,
 } from "@/lib/db/stripe";
-import { ChatBotService } from "./chatbot-service";
-import { ChatBotIdType, SubscriptionTierValues, UserIdType } from "../db/types";
 import Stripe from "stripe";
-import { SubscriptionTier } from "@/lib/db/types";
-import { StripeService } from "./stripe-service";
+import {
+  ChatBotIdType,
+  SubscriptionTier,
+  SubscriptionTierValues,
+  UserIdType,
+} from "@/lib/db/types";
+import { ChatBotService } from "@/lib/services/api-services/chatbot-service";
+import { StripeService } from "@/lib/services/api-services/stripe-service";
 
 export class QuotaException extends Error {}
 

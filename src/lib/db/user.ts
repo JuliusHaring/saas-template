@@ -1,6 +1,6 @@
+import { prisma } from "@/lib/db";
+import { UserIdType } from "@/lib/db/types";
 import { Prisma } from "@prisma/client";
-import { prisma } from ".";
-import { UserIdType } from "./types";
 
 const userInclude = {
   Subscription: true,

@@ -1,6 +1,6 @@
-import { TextService } from "../text-service";
-import { RAGFile } from "../rag/types";
 import { UserIdType } from "@/lib/db/types";
+import { RAGFile } from "@/lib/services/api-services/rag/types";
+import { TextService } from "@/lib/services/api-services/text-service";
 
 export abstract class RAGSourceCrawler {
   protected textService: TextService;

@@ -1,13 +1,13 @@
 "use client";
-import { QuotaUsageType } from "@/lib/api-services/quotas-service";
+import { QuotaUsageType } from "@/lib/services/api-services/quotas-service";
 import LoadingSpinner from "@/lib/admin-components/atoms/LoadingSpinner";
 import Button from "@/lib/admin-components/molecules/Button";
 import Card from "@/lib/admin-components/organisms/Card";
 import QuotasOverview from "@/lib/admin-components/organisms/QuotasOverview";
 import { ChatBotType } from "@/lib/db/types";
-import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
-import { FEQutoaService } from "@/lib/frontend-services/quota-service";
-import { FERAGService } from "@/lib/frontend-services/rag-service";
+import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
+import { FEQutoaService } from "@/lib/services/frontend-services/quota-service";
+import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import { getImportScript } from "@/lib/utils/import-script";
 import {
   CodeBracketSquareIcon,

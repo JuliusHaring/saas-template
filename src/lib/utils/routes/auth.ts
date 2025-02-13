@@ -1,6 +1,6 @@
+import { isDevModeEnabled } from "@/lib/utils/dev-mode";
+import { Forbidden } from "@/lib/utils/routes/http-errors";
 import { auth } from "@clerk/nextjs/server";
-import { Forbidden } from "./http-errors";
-import { isDevModeEnabled } from "../dev-mode";
 
 export async function getUserId() {
   if (isDevModeEnabled()) {

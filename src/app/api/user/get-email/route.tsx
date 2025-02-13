@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-import { UserService } from "@/lib/api-services/user-service";
+import { UserService } from "@/lib/services/api-services/user-service";
 import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 
 const userService = UserService.Instance;

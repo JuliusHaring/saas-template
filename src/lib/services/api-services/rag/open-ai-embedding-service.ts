@@ -1,6 +1,9 @@
+import { IEmbeddingService } from "@/lib/services/api-services/rag/i-embedding-service";
+import {
+  EmbeddingQueryType,
+  EmbeddingType,
+} from "@/lib/services/api-services/rag/types";
 import OpenAI from "openai";
-import { IEmbeddingService } from "./i-embedding-service";
-import { EmbeddingQueryType, EmbeddingType } from "./types";
 
 export class OpenAIEmbeddingService extends IEmbeddingService {
   private static _instance: OpenAIEmbeddingService;

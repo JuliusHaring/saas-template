@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
-import Card from "./Card";
 import { Input } from "@/lib/admin-components/molecules/Input";
 import InputError from "@/lib/admin-components/molecules/InputError";
 import Button from "@/lib/admin-components/molecules/Button";
-import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
+import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { useForm } from "react-hook-form";
+import Card from "@/lib/admin-components/organisms/Card";
 
 const feChatBotService = FEChatBotService.Instance;
 

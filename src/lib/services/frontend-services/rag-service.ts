@@ -1,6 +1,6 @@
-import { IngestedFilesResponseType } from "../api-services/rag/types";
-import { ChatBotIdType } from "../db/types";
-import { fetchJson } from "../utils/fetch";
+import { ChatBotIdType } from "@/lib/db/types";
+import { IngestedFilesResponseType } from "@/lib/services/api-services/rag/types";
+import { fetchJson } from "@/lib/utils/fetch";
 
 export class FERAGService {
   private static _instance: FERAGService;

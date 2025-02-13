@@ -8,7 +8,7 @@ import {
   Quota,
   QuotaReachedException,
   QuotaService,
-} from "@/lib/api-services/quotas-service";
+} from "@/lib/services/api-services/quotas-service";
 import {
   withErrorHandling,
   BadRequest,
@@ -17,8 +17,11 @@ import {
 } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-import { OpenAIChatService } from "@/lib/api-services/chat/open-ai-chat-service";
-import { ChatRequestType, ChatResponseType } from "@/lib/db/types";
+import { OpenAIChatService } from "@/lib/services/api-services/chat/open-ai-chat-service";
+import {
+  ChatRequestType,
+  ChatResponseType,
+} from "@/lib/services/api-services/chat/types";
 
 const openAIChatService = OpenAIChatService.Instance;
 const quotaService = QuotaService.Instance;
@@ -75,12 +78,12 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   }
 
   const sessionId = providedSessionId || uuidv4();
-  const answer = await openAIChatService.chatWithThread(
+  const response = await openAIChatService.chatWithThread(
     chatBotId,
     sessionId,
     userMessage,
   );
   await quotaService.updateChatbotUsage(chatBotId, Quota.MAX_CHAT_MESSAGES, 1);
 
-  return { answer, sessionId } as ChatResponseType;
+  return { response, sessionId } as ChatResponseType;
 });

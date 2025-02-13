@@ -1,4 +1,4 @@
-import { ChatBotService } from "@/lib/api-services/chatbot-service";
+import { ChatBotService } from "@/lib/services/api-services/chatbot-service";
 import { isDevModeEnabled } from "@/lib/utils/dev-mode";
 import { sign } from "jsonwebtoken";
 

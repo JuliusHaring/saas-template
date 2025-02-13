@@ -1,5 +1,5 @@
+import { MessageType } from "@/lib/chatbot-ui-components/types";
 import React from "react";
-import { MessageType } from "../types";
 
 export const Message: React.FC<MessageType> = ({ role, text }) => {
   const isUser = role === "Nutzer";

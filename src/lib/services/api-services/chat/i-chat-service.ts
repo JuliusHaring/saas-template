@@ -1,11 +1,11 @@
-import { PromptService } from "../prompt-service";
-import { IRAGService } from "../rag/i-rag-service";
-import { PostGresRAGService } from "../rag/postgres-rag-service";
-import { ChatResponseType } from "./types";
-import { ChatBotService } from "../chatbot-service";
-import { InMemoryChatHistoryStorageService } from "../memory/in-memory-history-storage-service";
-import { IHistoryStorageService } from "../memory/i-history-storage-service";
 import { ChatBotIdType } from "@/lib/db/types";
+import { ChatResponseType } from "@/lib/services/api-services/chat/types";
+import { ChatBotService } from "@/lib/services/api-services/chatbot-service";
+import { IHistoryStorageService } from "@/lib/services/api-services/memory/i-history-storage-service";
+import { InMemoryChatHistoryStorageService } from "@/lib/services/api-services/memory/in-memory-history-storage-service";
+import { PromptService } from "@/lib/services/api-services/prompt-service";
+import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
+import { PostGresRAGService } from "@/lib/services/api-services/rag/postgres-rag-service";
 
 export abstract class IChatService {
   private promptService: PromptService;

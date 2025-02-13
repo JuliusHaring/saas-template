@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/db";
-import { getUser } from "../db/user";
-import { UserIdType } from "../db/types";
+import { UserIdType } from "@/lib/db/types";
+import { getUser } from "@/lib/db/user";
 
 export class UserService {
   private static _instance: UserService;

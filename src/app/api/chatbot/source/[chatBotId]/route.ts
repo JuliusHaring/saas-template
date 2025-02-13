@@ -1,4 +1,4 @@
-import { SourcesService } from "@/lib/api-services/sources-service";
+import { SourcesService } from "@/lib/services/api-services/sources-service";
 import { getUserId } from "@/lib/utils/routes/auth";
 import { withErrorHandling, NotFound } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";

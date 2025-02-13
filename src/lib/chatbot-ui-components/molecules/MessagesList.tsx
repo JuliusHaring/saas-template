@@ -1,6 +1,6 @@
+import { Message } from "@/lib/chatbot-ui-components/atoms/Message";
+import { MessageRole } from "@/lib/chatbot-ui-components/types";
 import React from "react";
-import { Message } from "../atoms/Message";
-import { MessageRole } from "../types";
 
 interface MessageListProps {
   messages: { role: MessageRole; text: string }[];

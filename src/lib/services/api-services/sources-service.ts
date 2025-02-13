@@ -2,12 +2,12 @@ import {
   createWebsiteSource,
   deleteWebsiteSource,
   getSources,
-} from "../db/source";
+} from "@/lib/db/source";
 import {
   ChatBotIdType,
   CreateWebsiteSourceType,
   UserIdType,
-} from "../db/types";
+} from "@/lib/db/types";
 
 export class SourcesService {
   private static _instance: SourcesService;

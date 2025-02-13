@@ -1,5 +1,5 @@
 import { ChatBotIdType, CreateWebsiteSourceType } from "@/lib/db/types";
-import { SourcesService } from "@/lib/api-services/sources-service";
+import { SourcesService } from "@/lib/services/api-services/sources-service";
 import { getUserId } from "@/lib/utils/routes/auth";
 import {
   UnprocessableContent,

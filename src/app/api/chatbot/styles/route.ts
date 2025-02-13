@@ -1,4 +1,4 @@
-import { stylesService } from "@/lib/api-services/styles-service";
+import { stylesService } from "@/lib/services/api-services/styles-service";
 import { ChatBotIdType, CreateStyleType } from "@/lib/db/types";
 import { getUserId } from "@/lib/utils/routes/auth";
 import {

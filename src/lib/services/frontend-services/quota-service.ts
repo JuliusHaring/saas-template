@@ -1,8 +1,8 @@
 import {
-  QuotasTierLimitsInfo,
   QuotaUsageType,
-} from "../api-services/quotas-service";
-import { fetchJson } from "../utils/fetch";
+  QuotasTierLimitsInfo,
+} from "@/lib/services/api-services/quotas-service";
+import { fetchJson } from "@/lib/utils/fetch";
 
 export class FEQutoaService {
   private static _instance: FEQutoaService;

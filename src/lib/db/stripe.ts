@@ -1,11 +1,7 @@
+import { UserIdType, SubscriptionType, UpdateUsageType } from "@/lib/db/types";
+import { SubscriptionTier } from "@prisma/client";
 import { prisma } from ".";
 import Stripe from "stripe";
-import {
-  SubscriptionTier,
-  SubscriptionType,
-  UpdateUsageType,
-  UserIdType,
-} from "./types";
 
 export async function getUserSubscription(
   userId: UserIdType,

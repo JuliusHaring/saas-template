@@ -1,6 +1,6 @@
-import { IChatService } from "./i-chat-service";
-import { OpenAI } from "openai";
-import { ChatResponseType } from "./types";
+import { IChatService } from "@/lib/services/api-services/chat/i-chat-service";
+import { ChatResponseType } from "@/lib/services/api-services/chat/types";
+import OpenAI from "openai";
 
 export class OpenAIChatService extends IChatService {
   private static _instance: OpenAIChatService;

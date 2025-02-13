@@ -1,4 +1,4 @@
-import { ChatBotService } from "@/lib/api-services/chatbot-service";
+import { ChatBotService } from "@/lib/services/api-services/chatbot-service";
 import { UpdateChatBotType } from "@/lib/db/types";
 import { getUserId } from "@/lib/utils/routes/auth";
 import { NotFound, withErrorHandling } from "@/lib/utils/routes/http-errors";

@@ -1,5 +1,4 @@
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-import { prisma } from ".";
+import { prisma } from "@/lib/db";
 import {
   ChatBotIdType,
   ChatBotSourceType,
@@ -7,8 +6,9 @@ import {
   CreateWebsiteSourceType,
   UserIdType,
   WebsiteSourceType,
-} from "./types";
-import { BadRequest } from "../utils/routes/http-errors";
+} from "@/lib/db/types";
+import { BadRequest } from "@/lib/utils/routes/http-errors";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export async function getSources(
   userId: UserIdType,

@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 
-import { StripeService } from "@/lib/api-services/stripe-service";
+import { StripeService } from "@/lib/services/api-services/stripe-service";
 import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 
 const stripeService = StripeService.Instance;

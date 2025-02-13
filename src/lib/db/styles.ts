@@ -1,5 +1,5 @@
+import { ChatBotIdType, UserIdType, CreateStyleType } from "@/lib/db/types";
 import { prisma } from ".";
-import { ChatBotIdType, CreateStyleType, UserIdType } from "./types";
 
 export const getStyle = async (chatBotId: ChatBotIdType) => {
   return await prisma.style.findFirstOrThrow({

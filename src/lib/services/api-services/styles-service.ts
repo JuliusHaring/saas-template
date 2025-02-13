@@ -1,5 +1,5 @@
 import { createOrUpdateStyle, getStyle } from "@/lib/db/styles";
-import { ChatBotIdType, CreateStyleType, UserIdType } from "../db/types";
+import { ChatBotIdType, CreateStyleType, UserIdType } from "@/lib/db/types";
 
 class StylesService {
   private static _instance: StylesService;

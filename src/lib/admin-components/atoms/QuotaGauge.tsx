@@ -1,4 +1,7 @@
-import { Quota, QuotasTierLimits } from "@/lib/api-services/quotas-service";
+import {
+  Quota,
+  QuotasTierLimits,
+} from "@/lib/services/api-services/quotas-service";
 import { SubscriptionTier, SubscriptionTierValues } from "@/lib/db/types";
 import { GaugeComponent } from "react-gauge-component";
 

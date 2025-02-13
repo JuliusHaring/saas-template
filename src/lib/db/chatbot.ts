@@ -1,12 +1,12 @@
-import { prisma } from ".";
+import { prisma } from "@/lib/db";
 import {
   ChatBotIdType,
+  UserIdType,
   chatBotInclude,
   ChatBotType,
   CreateChatBotType,
   UpdateChatBotType,
-  UserIdType,
-} from "./types";
+} from "@/lib/db/types";
 
 export async function getUserIdOfChatbot(chatBotId: ChatBotIdType) {
   return prisma.chatBot

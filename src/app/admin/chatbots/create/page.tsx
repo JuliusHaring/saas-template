@@ -4,7 +4,7 @@ import InputError from "@/lib/admin-components/molecules/InputError";
 import Button from "@/lib/admin-components/molecules/Button";
 import Card from "@/lib/admin-components/organisms/Card";
 import { CreateChatBotType } from "@/lib/db/types";
-import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
+import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 

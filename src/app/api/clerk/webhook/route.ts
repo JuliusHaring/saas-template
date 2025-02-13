@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { UserService } from "@/lib/api-services/user-service";
+import { UserService } from "@/lib/services/api-services/user-service";
 import { BadRequest, withErrorHandling } from "@/lib/utils/routes/http-errors";
 
 const userService = UserService.Instance;
