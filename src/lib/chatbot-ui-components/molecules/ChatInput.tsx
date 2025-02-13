@@ -24,7 +24,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isWaiting }) => {
   };
 
   return (
-    <div className="flex p-4 border-t border-gray-300">
+    <div className="flex w-full max-w-full p-4 border-t border-gray-300">
       <Input
         type="text"
         value={userInput}
@@ -32,10 +32,14 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isWaiting }) => {
         onKeyDown={handleKeyDown}
         placeholder={isWaiting ? "Warten auf Antwort..." : "Nachricht..."}
         disabled={isWaiting}
-        className="flex-1"
+        className="flex-1 min-w-0 w-full"
       />
-      <Button onClick={handleSend} className="ml-2" isDisabled={isWaiting}>
-        {isWaiting ? "..." : "Senden"}
+      <Button
+        onClick={handleSend}
+        className="ml-2 w-auto shrink-0"
+        isDisabled={isWaiting}
+      >
+        Senden
       </Button>
     </div>
   );
