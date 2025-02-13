@@ -12,7 +12,7 @@ export default async function PricingTablePage({
   return (
     <>
       <Script
-        strategy="beforeInteractive"
+        strategy="lazyOnload"
         src="https://js.stripe.com/v3/pricing-table.js"
       ></Script>
 
