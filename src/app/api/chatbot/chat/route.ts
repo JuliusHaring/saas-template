@@ -57,10 +57,10 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     }
 
     // Proceed with quota check and chatbot logic
-    // await quotaService.getChatBotQuotaRemainder(
-    //   chatBotId,
-    //   Quota.MAX_CHAT_MESSAGES,
-    // );
+    await quotaService.getChatBotQuotaRemainder(
+      chatBotId,
+      Quota.MAX_CHAT_MESSAGES,
+    );
   } catch (e) {
     if (e instanceof QuotaReachedException) {
       throw TooManyRequests(`Quota reached for ChatBot ${chatBotId}`);
