@@ -43,9 +43,10 @@ model Usage {
   userId       String   @id @unique
   chatMessages Int      @default(0)
   fileCount    Int      @default(0)
+  lastResetAt  DateTime @default(now())
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade) // Cascade here
+  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ChatBot {
