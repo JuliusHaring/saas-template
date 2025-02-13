@@ -75,7 +75,7 @@ const QuotaWarning: React.FC<QuotaWarningProps> = ({ tierQuotaLimitsInfo }) => {
       setQuotaUsage(quotaUsage);
     };
     queryQuotaUsage();
-  });
+  }, []);
 
   if (
     !!quotaUsage &&

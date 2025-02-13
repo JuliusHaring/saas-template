@@ -89,7 +89,7 @@ function ChatBotGrid({
       setQuotaUsage(quotas);
     };
     getQuotas();
-  });
+  }, []);
 
   const getSourcesList = (chatbot: ChatBotType) => {
     const sources = [];

@@ -8,9 +8,13 @@ import NavbarItem from "../atoms/NavbarItem";
 import { NAVBAR_CONTENT } from "@/app/admin/constants";
 import Link from "next/link";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
-import { SignOutButton } from "@clerk/nextjs";
+import { useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const Navbar: React.FC = () => {
+  const { signOut } = useClerk();
+  const router = useRouter();
+
   return (
     <nav className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
       <div className="text-lg font-bold">
@@ -27,11 +31,17 @@ const Navbar: React.FC = () => {
           Kundenportal
         </NavbarItem>
 
-        <SignOutButton>
-          <NavbarItem href="#" icon={ArrowRightStartOnRectangleIcon}>
-            Ausloggen
-          </NavbarItem>
-        </SignOutButton>
+        <NavbarItem
+          href="#"
+          icon={ArrowRightStartOnRectangleIcon}
+          onClick={() => {
+            signOut().then(() => {
+              router.push("/");
+            });
+          }}
+        >
+          Ausloggen
+        </NavbarItem>
       </div>
     </nav>
   );
