@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FEStyleService } from "@/lib/frontend-services/style-service";
 import { MessageList } from "@/lib/chatbot-ui-components/molecules/MessagesList";
 import { ChatInput } from "@/lib/chatbot-ui-components/molecules/ChatInput";
@@ -12,6 +12,10 @@ const ChatbotUI: React.FC = () => {
   const [chatBotId, setChatBotId] = useState<string | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
+  const [isWaiting, setIsWaiting] = useState(false); // Prevent multiple sends
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [isUserScrolling, setIsUserScrolling] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -49,12 +53,10 @@ const ChatbotUI: React.FC = () => {
   }, [chatBotId]);
 
   const sendMessage = async (userMessage: string) => {
-    if (!chatBotId || !token) {
-      console.error("Missing chatBotId or token.");
-      return;
-    }
+    if (!chatBotId || !token || isWaiting) return; // Block sending while waiting
 
     setMessages((prev) => [...prev, { role: "Nutzer", text: userMessage }]);
+    setIsWaiting(true);
 
     try {
       const response = await fetch("/api/chatbot/chat", {
@@ -79,13 +81,37 @@ const ChatbotUI: React.FC = () => {
       setMessages((prev) => [...prev, { role: "Antwort", text: answer }]);
     } catch (error) {
       console.error("Error communicating with chatbot:", error);
+    } finally {
+      setIsWaiting(false);
     }
+  };
+
+  // Auto-scroll logic
+  useEffect(() => {
+    if (!isUserScrolling) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isUserScrolling]);
+
+  // Detect user scrolling manually
+  const handleScroll = () => {
+    if (!chatContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+    setIsUserScrolling(scrollTop + clientHeight < scrollHeight - 10); // Detects if user is near the bottom
   };
 
   return (
     <div className="flex flex-col h-screen">
-      <MessageList messages={messages} />
-      <ChatInput onSend={sendMessage} />
+      <div
+        ref={chatContainerRef}
+        className="flex-1 overflow-y-auto p-4 space-y-2"
+        onScroll={handleScroll}
+      >
+        <MessageList messages={messages} />
+        <div ref={messagesEndRef} />{" "}
+        {/* Keeps scrolling to the latest message */}
+      </div>
+      <ChatInput onSend={sendMessage} isWaiting={isWaiting} />
     </div>
   );
 };

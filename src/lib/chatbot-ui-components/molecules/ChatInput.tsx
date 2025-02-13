@@ -4,20 +4,21 @@ import React, { useState } from "react";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
+  isWaiting: boolean;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isWaiting }) => {
   const [userInput, setUserInput] = useState("");
 
   const handleSend = () => {
-    if (!userInput.trim()) return;
+    if (!userInput.trim() || isWaiting) return;
     onSend(userInput);
     setUserInput("");
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
-      event.preventDefault(); // Prevent form submission (if inside a form)
+      event.preventDefault();
       handleSend();
     }
   };
@@ -28,12 +29,13 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend }) => {
         type="text"
         value={userInput}
         onChange={(e) => setUserInput(e.target.value)}
-        onKeyDown={handleKeyDown} // Handle "Enter" key
-        placeholder="Nachricht..."
+        onKeyDown={handleKeyDown}
+        placeholder={isWaiting ? "Warten auf Antwort..." : "Nachricht..."}
+        disabled={isWaiting}
         className="flex-1"
       />
-      <Button onClick={handleSend} className="ml-2">
-        Senden
+      <Button onClick={handleSend} className="ml-2" isDisabled={isWaiting}>
+        {isWaiting ? "..." : "Senden"}
       </Button>
     </div>
   );
