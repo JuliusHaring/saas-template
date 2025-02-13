@@ -82,7 +82,7 @@ const EyeCatcher: React.FC = () => {
 
 const HowTo: React.FC = () => {
   return (
-    <div className="max-w-5xl mx-auto py-12">
+    <div>
       Wie geht eigentlich...
       <span className="text-blue-600 text-2xl font-bold mb-8">KnexAI</span>?
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
