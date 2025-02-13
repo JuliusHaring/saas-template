@@ -1,6 +1,12 @@
 "use client";
 
 import NavBar from "@/lib/components/landingpage/organisms/Navbar";
+import {
+  ChatBubbleBottomCenterIcon,
+  Cog6ToothIcon,
+  ComputerDesktopIcon,
+  PlusIcon,
+} from "@heroicons/react/24/outline";
 import Typical from "react-typical";
 
 export default function LandingPage() {
@@ -8,10 +14,19 @@ export default function LandingPage() {
     <div>
       <NavBar className="mb-8" />
 
-      <EyeCatcher />
+      <div className="text-xl px-40">
+        <EyeCatcher />
+
+        <Spacing />
+        <HowTo />
+      </div>
     </div>
   );
 }
+
+const Spacing: React.FC<{ amount?: number | string }> = ({ amount = 20 }) => (
+  <div className={`my-${amount}`}></div>
+);
 
 const EyeCatcher: React.FC = () => {
   const typicalElements: string[] = [
@@ -33,16 +48,80 @@ const EyeCatcher: React.FC = () => {
   ].sort(() => Math.random() - 0.5);
 
   return (
-    <div className="flex justify-center items-center text-xl">
+    <div className="flex justify-center items-center">
       <span className="inline-flex">
         Chatbots für&nbsp;
-        <p className="text-blue-600 font-semibold">
+        <span className="text-blue-600 font-semibold">
           <Typical
             steps={["", 100, ...typicalElements.flatMap((e) => [e, 2000])]}
           />
-        </p>
+        </span>
         .
       </span>
+    </div>
+  );
+};
+
+const HowTo: React.FC = () => {
+  return (
+    <div className="max-w-5xl mx-auto px-6 py-12">
+      Wie geht eigentlich...
+      <span className="text-blue-600 text-2xl font-bold mb-8">KnexAI</span>?
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
+        {/* Text & Steps */}
+        <div>
+          <ul className="space-y-6 text-lg">
+            <li className="flex flex-col">
+              <div className="flex items-center gap-3 text-xl font-semibold">
+                <PlusIcon className="h-6 w-6 text-white bg-blue-500" />
+                Erstelle ChatBots
+              </div>
+              <p className="text-gray-600 text-base mt-1">
+                Gib deinem ChatBot eine eigene Persönlichkeit!
+              </p>
+            </li>
+
+            <li className="flex flex-col">
+              <div className="flex items-center gap-3 text-xl font-semibold">
+                <Cog6ToothIcon className="h-6 w-6 text-white bg-blue-500" />
+                Konfiguriere Quellen
+              </div>
+              <p className="text-gray-600 text-base mt-1">
+                Momentan wird Webscraping, das automatisierte Auslesen deiner
+                Webseite unterstützt. In der Zukunft werden weitere Anbindungen
+                (Google Drive, Dropbox, ...) erweitert!
+              </p>
+            </li>
+
+            <li className="flex flex-col">
+              <div className="flex items-center gap-3 text-xl font-semibold">
+                <ComputerDesktopIcon className="h-6 w-6 text-white bg-blue-500" />
+                Importiere den ChatBot
+              </div>
+              <p className="text-gray-600 text-base mt-1">
+                KnexAI erstellt automatisch Skripte mit welchen du deine
+                ChatBots auf deiner Webseite importieren kannst. Dank moderner
+                Authentifizierung ist dies nur für dich möglich!
+              </p>
+            </li>
+
+            <li className="flex flex-col">
+              <div className="flex items-center gap-3 text-xl font-semibold">
+                <ChatBubbleBottomCenterIcon className="h-6 w-6 text-white bg-blue-500" />
+                Chatte los!
+              </div>
+              <p className="text-gray-600 text-base mt-1">
+                Lasse deine Kunden auf den ChatBot zugreifen!
+              </p>
+            </li>
+          </ul>
+        </div>
+
+        {/* Image Section */}
+        <div className="flex items-center justify-center">
+          {/* TODO: Add Image */}
+        </div>
+      </div>
     </div>
   );
 };
