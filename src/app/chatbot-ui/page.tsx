@@ -118,20 +118,22 @@ const ChatbotUI: React.FC = () => {
   };
 
   return (
-    <div className="fixed bottom-5 right-5 w-[300px] max-h-[400px] border border-gray-300 shadow-lg bg-white flex flex-col">
+    <div
+      className={`fixed bottom-5 right-5 w-[300px] h-${isMinimized ? "0" : "[400px]"} border border-gray-300 shadow-lg bg-white flex flex-col`}
+    >
       {/* Header with Minimize Button */}
-      <div className="flex items-center justify-between bg-blue p-3 border-b border-gray-300">
+      <div
+        className="flex items-center justify-between bg-blue-500 text-white p-3"
+        onClick={() => setIsMinimized(!isMinimized)}
+      >
         <span className="font-semibold">{chatBotName}</span>
-        <button
-          onClick={() => setIsMinimized(!isMinimized)}
-          className="text-gray-500 hover:text-gray-700 text-sm font-bold"
-        >
+        <div className="text-gray-500 hover:text-gray-700 text-sm font-bold">
           {isMinimized ? (
-            <ArrowUpIcon className="h-5 w-5 text-black" />
+            <ArrowUpIcon className="h-5 w-5 text-white" />
           ) : (
-            <ArrowDownIcon className="h-5 w-5 text-black" />
+            <ArrowDownIcon className="h-5 w-5 text-white" />
           )}
-        </button>
+        </div>
       </div>
 
       {/* Chat content (Hidden when minimized) */}
@@ -140,7 +142,7 @@ const ChatbotUI: React.FC = () => {
           <div
             ref={chatContainerRef}
             onScroll={handleScroll}
-            className="flex-1 overflow-y-auto p-2 h-[300px]"
+            className="flex-1 overflow-y-auto p-2"
           >
             <MessageList messages={messages} />
             <div ref={messagesEndRef} />
