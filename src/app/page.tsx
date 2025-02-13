@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { Element } from "react-scroll";
 import Typical from "react-typical";
+import Image from "next/image";
 
 export default function LandingPage() {
   return (
@@ -122,7 +123,12 @@ const HowTo: React.FC = () => {
 
         {/* Image Section */}
         <div className="flex items-center justify-center">
-          {/* TODO: Add Image */}
+          <Image
+            src="/images/howto_chat_window.png"
+            alt="HowTo: Chat Beispiel"
+            width={300}
+            height={300}
+          />
         </div>
       </div>
     </div>

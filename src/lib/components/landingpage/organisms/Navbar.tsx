@@ -14,7 +14,8 @@ const NavBar: React.FC<NavBarProps> = ({ className }) => {
     <nav
       className={`md:flex md:items-center md:justify-end px-6 py-4 border-b border-gray-300 gap-4 ${className}`}
     >
-      <NavbarItem href={"#"}>
+      {/* Workaround that removes <a></a> to mitigate hydration errors.  */}
+      <NavbarItem href={"#"} onClick={() => {}}>
         <Link to="howto" duration={500}>
           Anleitung
         </Link>
