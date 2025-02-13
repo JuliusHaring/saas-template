@@ -1,6 +1,6 @@
 "use client";
-import { Input, Textarea } from "@/lib/components/atoms/Input";
-import InputError from "@/lib/components/atoms/InputError";
+import { Input, Textarea } from "@/lib/components/molecules/Input";
+import InputError from "@/lib/components/molecules/InputError";
 import LoadingSpinner from "@/lib/components/atoms/LoadingSpinner";
 import Button from "@/lib/components/molecules/button";
 import Card from "@/lib/components/organisms/Card";

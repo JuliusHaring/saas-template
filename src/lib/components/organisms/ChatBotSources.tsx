@@ -1,8 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import Card from "./Card";
-import { Input } from "@/lib/components/atoms/Input";
-import InputError from "@/lib/components/atoms/InputError";
+import { Input } from "@/lib/components/molecules/Input";
+import InputError from "@/lib/components/molecules/InputError";
 import Button from "@/lib/components/molecules/button";
 import { FEChatBotService } from "@/lib/frontend-services/chatbot-service";
 import { useForm } from "react-hook-form";
