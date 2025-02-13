@@ -23,6 +23,10 @@ export class FEChatBotService {
     return fetchJson<ChatBotType>(`/api/chatbot/${chatBotId}`);
   }
 
+  public async getChatBotName(chatBotId: ChatBotIdType) {
+    return fetchJson<ChatBotType["name"]>(`/api/chatbot/${chatBotId}/name`);
+  }
+
   public async createChatBot(formValues: CreateChatBotType) {
     return fetchJson<ChatBotType>("/api/chatbot", {
       method: "POST",

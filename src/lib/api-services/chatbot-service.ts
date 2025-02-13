@@ -3,6 +3,7 @@ import {
   deleteChatBot,
   getAllowedDomainsForChatBot,
   getChatBot,
+  getChatBotName,
   getChatBots,
   getUserIdOfChatbot,
   updateChatBot as updateChatBotFunc,
@@ -32,6 +33,10 @@ export class ChatBotService {
 
   public async getChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {
     return getChatBot(userId, chatBotId);
+  }
+
+  public async getChatBotName(chatBotId: ChatBotIdType) {
+    return getChatBotName(chatBotId);
   }
 
   public async getAllowedDomainsForChatBot(

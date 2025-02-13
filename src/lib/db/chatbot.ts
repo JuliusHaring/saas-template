@@ -23,6 +23,15 @@ export async function getChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {
   });
 }
 
+export async function getChatBotName(chatBotId: ChatBotIdType) {
+  return prisma.chatBot
+    .findFirstOrThrow({
+      where: { id: chatBotId },
+      include: chatBotInclude,
+    })
+    .then((cb) => cb.name);
+}
+
 export async function getAllowedDomainsForChatBot(
   chatBotId: ChatBotIdType,
 ): Promise<string[]> {
