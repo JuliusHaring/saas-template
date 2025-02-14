@@ -46,7 +46,7 @@ const Spacing: React.FC<{ amount?: number | string }> = ({ amount = 20 }) => {
   );
 };
 
-const EyeCatcher: React.FC = () => {
+export const EyeCatcher: React.FC = () => {
   const typicalElements: string[] = [
     "Kundensupport",
     "Entertainment",
