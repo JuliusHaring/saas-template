@@ -11,7 +11,7 @@ export const EyeCatcher: React.FC = () => {
     "Kundenservice",
     "FAQ-Handling",
     "Produktberatung",
-    "Technischer Support",
+    "Technischen Support",
     "Terminplanung",
     "E-Commerce",
     "Healthcare",
