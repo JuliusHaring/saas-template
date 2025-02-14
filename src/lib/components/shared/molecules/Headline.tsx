@@ -22,7 +22,10 @@ const Headline: React.FC<
   }[level];
 
   return (
-    <Tag className={`${styles} ${block ? "block" : "inline"} ${className}`} {...props}>
+    <Tag
+      className={`${styles} ${block ? "block" : "inline"} ${className}`}
+      {...props}
+    >
       {children}
     </Tag>
   );
