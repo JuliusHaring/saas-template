@@ -9,7 +9,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier . --write",
-    "generate": "prisma db push && prisma generate"
+    "generate": "prisma db push && prisma generate",
+    "postbuild": "next-sitemap"
   },
   "dependencies": {
     "@clerk/localizations": "^3.10.6",
@@ -49,6 +50,8 @@
     "@types/turndown": "^5.0.5",
     "eslint": "^9",
     "eslint-config-next": "15.1.5",
+    "globby": "^14.1.0",
+    "next-sitemap": "^4.2.3",
     "postcss": "^8.5.1",
     "prettier": "^3.4.2",
     "prisma": "^6.3.0",
