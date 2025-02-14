@@ -14,9 +14,9 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center text-gray-600">
         <p>© {new Date().getFullYear()} KnexAI</p>
         <div className="flex space-x-6">
-          <NavbarItem href="/impressum">Impressum</NavbarItem>
-          <NavbarItem href="/kontakt">Kontakt</NavbarItem>
-          <NavbarItem href="/datenschutz">Datenschutz</NavbarItem>
+          <NavbarItem href="/footer/impressum">Impressum</NavbarItem>
+          <NavbarItem href="/footer/kontakt">Kontakt</NavbarItem>
+          <NavbarItem href="/footer/datenschutz">Datenschutz</NavbarItem>
         </div>
       </div>
     </footer>
