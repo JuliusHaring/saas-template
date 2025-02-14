@@ -1,7 +1,9 @@
 // @ts-nocheck
 "use client";
 
+import NavbarItem from "@/lib/components/admin/atoms/NavbarItem";
 import { EyeCatcher } from "@/lib/components/shared/organisms/EyeCatcher";
+import NavBar from "@/lib/components/shared/organisms/NavBar";
 import Script from "next/script";
 
 export default async function PricingTablePage({
@@ -13,8 +15,13 @@ export default async function PricingTablePage({
   const customerEmail = decodeURIComponent(rawEmail);
 
   return (
-    <div className="my-10">
-      <h1 className="text-center my-10 text-2xl font-semibold">KnexAI</h1>
+    <div>
+      <NavBar className="mb-8">
+        <NavbarItem href={"/"} className="font-semibold">
+          KnexAI
+        </NavbarItem>
+      </NavBar>
+
       <div className="text-xl">
         <EyeCatcher />
       </div>
