@@ -1,11 +1,16 @@
-import { JSX } from "react";
+import React, { JSX } from "react";
 
-const Headline: React.FC<{
-  level?: 1 | 2 | 3 | 4 | 5 | 6;
-  block?: boolean;
-  children: React.ReactNode;
-}> = ({ level = 1, block = false, children }) => {
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+const Headline: React.FC<
+  {
+    level?: 1 | 2 | 3 | 4 | 5 | 6;
+    block?: boolean;
+  } & React.HTMLAttributes<HTMLHeadingElement>
+> = ({ level = 1, block = false, children, className = "", ...props }) => {
+  // Explicitly cast to an HTMLHeadingElement type
+  const Tag = `h${level}` as keyof Pick<
+    JSX.IntrinsicElements,
+    "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+  >;
 
   const styles = {
     1: "text-3xl font-bold",
@@ -17,7 +22,9 @@ const Headline: React.FC<{
   }[level];
 
   return (
-    <Tag className={`${styles} ${block ? "block" : "inline"}`}>{children}</Tag>
+    <Tag className={`${styles} ${block ? "block" : "inline"} ${className}`} {...props}>
+      {children}
+    </Tag>
   );
 };
 
