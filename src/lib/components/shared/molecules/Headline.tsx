@@ -8,11 +8,11 @@ const Headline: React.FC<{
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
 
   const styles = {
-    1: "text-5xl font-bold",
-    2: "text-4xl font-semibold",
-    3: "text-3xl font-medium",
-    4: "text-2xl font-medium",
-    5: "text-xl font-normal",
+    1: "text-3xl font-bold",
+    2: "text-2xl font-semibold",
+    3: "text-xl font-medium",
+    4: "text-lg font-medium",
+    5: "text-lg font-normal",
     6: "text-lg font-light",
   }[level];
 
