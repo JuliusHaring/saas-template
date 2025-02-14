@@ -1,6 +1,5 @@
 "use client";
 
-import NavBar from "@/lib/components/landingpage/organisms/Navbar";
 import {
   ChatBubbleBottomCenterIcon,
   Cog6ToothIcon,
@@ -13,13 +12,14 @@ import Image from "next/image";
 import { getImportScript } from "@/lib/utils/import-script";
 import { baseUrl } from "@/lib/utils/base-url";
 import CodeView from "@/lib/components/shared/organisms/CodeView";
+import LandingNavBar from "@/lib/components/landingpage/organisms/LandingNavBar";
 
 export default function LandingPage() {
   return (
     <div>
-      <NavBar className="mb-8" />
+      <LandingNavBar />
 
-      <div className="text-xl lg:px-40 md:px-10 px-4">
+      <div className="text-xl lg:px-40 md:px-10 px-4 mt-8">
         <Element name="eyecatcher">
           <EyeCatcher />
         </Element>

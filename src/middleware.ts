@@ -1,3 +1,4 @@
+import { isDevModeEnabled } from "@/lib/utils/dev-mode";
 import {
   clerkClient,
   clerkMiddleware,
@@ -28,7 +29,10 @@ export default clerkMiddleware(async (auth, req) => {
     const paymentsUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}/stripe/pricing-table/${encodeURIComponent(email)}`;
     const isPaymentsUrl = req.nextUrl.toString() === paymentsUrl;
 
-    const hasSubscription = await checkSubscription(userId, req);
+    const hasSubscription = await checkSubscription(
+      isDevModeEnabled() ? "test" : userId,
+      req,
+    );
 
     if (hasSubscription && isPaymentsUrl) {
       return redirect(req, loggedInRedirect);

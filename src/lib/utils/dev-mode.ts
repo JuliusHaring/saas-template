@@ -1,3 +1,3 @@
 export function isDevModeEnabled() {
-  return process.env.MODE?.toLowerCase() === "dev";
+  return process.env.NEXT_PUBLIC_MODE?.toLowerCase() === "dev";
 }

@@ -2,7 +2,7 @@ import { IconType } from "@/app/admin/constants";
 import Link, { LinkProps } from "next/link";
 import React from "react";
 
-interface NavbarItemProps extends LinkProps {
+interface NavbarItemProps extends Partial<LinkProps> {
   icon?: IconType;
   onClick?: () => void;
 }
@@ -11,6 +11,7 @@ export default function NavbarItem({
   children,
   icon: Icon,
   onClick,
+  href,
   ...linkProps
 }: React.PropsWithChildren<NavbarItemProps>) {
   const content = (
@@ -23,5 +24,11 @@ export default function NavbarItem({
     </div>
   );
 
-  return onClick ? content : <Link {...linkProps}>{content}</Link>;
+  return href ? (
+    <Link href={href} {...linkProps}>
+      {content}
+    </Link>
+  ) : (
+    content
+  );
 }

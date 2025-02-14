@@ -1,22 +1,23 @@
 "use client";
 
+import { useClerk } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import {
   ArrowRightStartOnRectangleIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import { NAVBAR_CONTENT } from "@/app/admin/constants";
-import Link from "next/link";
-import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
-import { useClerk } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
 import NavbarItem from "@/lib/components/admin/atoms/NavbarItem";
+import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
+import NavBar from "@/lib/components/shared/organisms/NavBar";
+import Link from "next/link";
 
-const Navbar: React.FC = () => {
+const AdminNavBar = () => {
   const { signOut } = useClerk();
   const router = useRouter();
 
   return (
-    <nav className="md:flex md:items-center md:justify-between px-6 py-4 border-b border-gray-300">
+    <NavBar className="md:justify-between">
       <div className="text-lg font-bold">
         <Link href="/admin/chatbots">KnexAI</Link>
       </div>
@@ -30,21 +31,16 @@ const Navbar: React.FC = () => {
         <NavbarItem href="#" onClick={openBillingPortal} icon={UserCircleIcon}>
           Kundenportal
         </NavbarItem>
-
         <NavbarItem
           href="#"
           icon={ArrowRightStartOnRectangleIcon}
-          onClick={() => {
-            signOut().then(() => {
-              router.push("/");
-            });
-          }}
+          onClick={() => signOut().then(() => router.push("/"))}
         >
           Ausloggen
         </NavbarItem>
       </div>
-    </nav>
+    </NavBar>
   );
 };
 
-export default Navbar;
+export default AdminNavBar;

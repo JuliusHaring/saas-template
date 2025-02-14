@@ -24,7 +24,7 @@ const QuotasOverview: React.FC = () => {
       const qtli: QuotasTierLimitsInfo =
         await feQuotaService.getTierQuotaLimits();
 
-      if (qtli.quotasTierLimits && isDevModeEnabled()) {
+      if (isDevModeEnabled()) {
         qtli.quotasTierLimits[0].limits[1].limit = 200;
         qtli.quotasTierLimits[0].limits[2].limit = 300;
 

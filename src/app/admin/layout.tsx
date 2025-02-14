@@ -1,4 +1,4 @@
-import Navbar from "@/lib/components/admin/organisms/Navbar";
+import AdminNavbar from "@/lib/components/admin/organisms/AdminNavbar";
 import { ClerkProvider } from "@clerk/nextjs";
 import { deDE } from "@clerk/localizations";
 
@@ -9,7 +9,7 @@ export default function Layout({
 }>) {
   return (
     <ClerkProvider localization={deDE}>
-      <Navbar />
+      <AdminNavbar />
       <div className="lg:px-[15em] px-[2em] py-[2em]">{children}</div>
     </ClerkProvider>
   );
