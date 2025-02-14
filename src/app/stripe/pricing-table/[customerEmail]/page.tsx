@@ -1,5 +1,7 @@
 // @ts-nocheck
-import { EyeCatcher } from "@/app/page";
+"use client";
+
+import { EyeCatcher } from "@/lib/components/shared/organisms/EyeCatcher";
 import Script from "next/script";
 
 export default async function PricingTablePage({
