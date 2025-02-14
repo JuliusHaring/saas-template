@@ -81,7 +81,7 @@ const ChatBotEdit: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 gap-y-4">
-      <Card header={<h1 className="font-semibold">{headerTitle}</h1>}>
+      <Card header={headerTitle}>
         <form
           className="grid grid-cols-1 gap-y-4"
           onSubmit={handleSubmit(onSubmit)}

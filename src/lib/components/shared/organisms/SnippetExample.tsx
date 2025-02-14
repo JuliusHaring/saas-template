@@ -1,3 +1,4 @@
+import Headline from "@/lib/components/shared/molecules/Headline";
 import CodeView from "@/lib/components/shared/organisms/CodeView";
 import { baseUrl } from "@/lib/utils/base-url";
 import { getImportScript } from "@/lib/utils/import-script";
@@ -19,9 +20,9 @@ export const SnippetExample: React.FC = () => {
 
   return (
     <div className="space-y-4 mt-6">
-      <h2 className="text-xl font-semibold">
+      <Headline level={2}>
         Integriere deinen ChatBot mit nur einer Zeile Code!
-      </h2>
+      </Headline>
       <p>
         Kopiere einfach das von KnexAI erstellte Skript und füge es in deiner
         Webseite ein. Dein ChatBot ist dann sofort einsatzbereit!

@@ -1,11 +1,12 @@
 import NavbarItem from "@/lib/components/admin/atoms/NavbarItem";
+import Headline from "@/lib/components/shared/molecules/Headline";
 import NavBar from "@/lib/components/shared/organisms/NavBar";
 
 const DefaultNavBar: React.FC = () => {
   return (
     <NavBar>
       <NavbarItem href={"/"}>
-        <p className="font-semibold">KnexAI</p>
+        <Headline level={1}>KnexAI</Headline>
       </NavbarItem>
     </NavBar>
   );

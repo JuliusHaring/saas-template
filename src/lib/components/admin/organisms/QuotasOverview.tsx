@@ -12,7 +12,6 @@ import QuotaGauge from "@/lib/components/admin/atoms/QuotaGauge";
 import Banner from "@/lib/components/admin/molecules/Banner";
 import Card from "@/lib/components/admin/organisms/Card";
 import { isDevModeEnabled } from "@/lib/utils/dev-mode";
-
 const feQuotaService = FEQutoaService.Insance;
 
 const QuotasOverview: React.FC = () => {
@@ -44,7 +43,7 @@ const QuotasOverview: React.FC = () => {
     <div>
       <QuotaWarning tierQuotaLimitsInfo={tierQuotaLimitsInfo} />
       <div>
-        <Card header={<h1 className="font-semibold">Nutzungslimits</h1>}>
+        <Card header={"Nutzungslimits"}>
           <div className="grid sm:grid-cols-1 md:grid-cols-2">
             {tierQuotaLimitsInfo.quotasTierLimits.map((qTL, i) => {
               return (
@@ -84,13 +83,13 @@ const QuotaWarning: React.FC<QuotaWarningProps> = ({ tierQuotaLimitsInfo }) => {
     Object.values(quotaUsage).some((usage) => usage.reached)
   ) {
     return (
-      <div className="mb-2">
+      <div className="my-2">
         <Banner variant="danger">
           Sie haben ein Nutzungslimit für das Abo {tierQuotaLimitsInfo.userTier}{" "}
           erreicht. Erwägen Sie ein{" "}
           <Link
             href={``}
-            className="font-semibold hover:font-normal"
+            className="hover:font-normal"
             onClick={openBillingPortal}
           >
             Upgrade

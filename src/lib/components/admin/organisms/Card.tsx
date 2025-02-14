@@ -1,3 +1,5 @@
+import Headline from "@/lib/components/shared/molecules/Headline";
+
 export default function Card({
   header,
   children,
@@ -12,7 +14,9 @@ export default function Card({
   return (
     <div className={`border border-gray-300 divide-y divide-gray-300`}>
       {typeof header !== "undefined" && (
-        <div className="px-4 py-2 font-semibold">{header}</div>
+        <div className="px-4 py-2">
+          <Headline level={3}>{header}</Headline>
+        </div>
       )}
 
       <div

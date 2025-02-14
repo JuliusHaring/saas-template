@@ -11,6 +11,7 @@ import NavbarItem from "@/lib/components/admin/atoms/NavbarItem";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
 import NavBar from "@/lib/components/shared/organisms/NavBar";
 import Link from "next/link";
+import Headline from "@/lib/components/shared/molecules/Headline";
 
 const AdminNavBar = () => {
   const { signOut } = useClerk();
@@ -18,9 +19,9 @@ const AdminNavBar = () => {
 
   return (
     <NavBar className="md:justify-between">
-      <div className="text-lg font-bold">
-        <Link href="/admin/chatbots">KnexAI</Link>
-      </div>
+      <Link href="/admin/chatbots">
+        <Headline level={1}>KnexAI</Headline>
+      </Link>
 
       <div className="flex space-x-6">
         {NAVBAR_CONTENT.map((navbarItem, index) => (

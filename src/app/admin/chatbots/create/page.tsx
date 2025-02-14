@@ -49,7 +49,7 @@ const ChatBotCreate: React.FC = () => {
   };
 
   return (
-    <Card header={<h1 className="font-semibold">Neuen Chatbot erstellen</h1>}>
+    <Card header={"Neuen Chatbot erstellen"}>
       <form
         className="grid grid-cols-1 gap-y-4"
         onSubmit={handleSubmit(onSubmit)}

@@ -132,9 +132,7 @@ function ChatBotGrid({
 
 function chatBotCardHeader(chatbot: ChatBotType) {
   return (
-    <div className="flex items-center justify-between">
-      <span className="font-semibold">{chatbot.name}</span>
-    </div>
+    <div className="flex items-center justify-between">{chatbot.name}</div>
   );
 }
 

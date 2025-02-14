@@ -7,6 +7,7 @@ import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-servi
 import { MessageList } from "@/lib/components/chatbot-ui/molecules/MessagesList";
 import { ChatInput } from "@/lib/components/chatbot-ui/molecules/ChatInput";
 import { MessageType } from "@/lib/components/chatbot-ui/types";
+import Headline from "@/lib/components/shared/molecules/Headline";
 
 const feStyleService = FEStyleService.Instance;
 const feChatService = FEChatService.Instance;
@@ -126,7 +127,7 @@ const ChatbotUI: React.FC = () => {
         className="flex items-center justify-between bg-blue-500 text-white p-3"
         onClick={() => setIsMinimized(!isMinimized)}
       >
-        <span className="font-semibold">{chatBotName}</span>
+        <Headline level={2}>{chatBotName}</Headline>
         <div className="text-gray-500 hover:text-gray-700 text-sm font-bold">
           {isMinimized ? (
             <ArrowUpIcon className="h-5 w-5 text-white" />
