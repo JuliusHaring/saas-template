@@ -22,7 +22,7 @@ export default async function PricingTablePage({
         </NavbarItem>
       </NavBar>
 
-      <div className="text-xl">
+      <div className="text-xl mb-8">
         <EyeCatcher />
       </div>
 
