@@ -1,6 +1,6 @@
 import { StripeService } from "@/lib/services/api-services/stripe-service";
 import { BadRequest, withErrorHandling } from "@/lib/utils/routes/http-errors";
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
 const stripeService = StripeService.Instance;
@@ -10,10 +10,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
   if (!signature || !webhookSecret) {
-    return NextResponse.json(
-      { error: "Missing signature or webhook secret" },
-      { status: 400 },
-    );
+    throw BadRequest("Missing signature or webhook secret");
   }
 
   let event: Stripe.Event;
@@ -42,6 +39,8 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
       default:
         console.warn(`Unhandled event type: ${event.type}`);
     }
+
+    return { received: true };
   } catch (error) {
     throw BadRequest(`Error handling stripe event: ${error}`);
   }
