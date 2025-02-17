@@ -16,7 +16,9 @@ export const SnippetExample: React.FC = () => {
     instructions: null,
     createdAt: new Date(),
     updatedAt: new Date(),
-  }).replaceAll(baseUrl, "<URL>");
+  })
+    .replaceAll(baseUrl, "<URL>")
+    .replace("api/chatbot/integrate", "<INTEGRATION_URL>");
 
   return (
     <div className="space-y-4 mt-6">
