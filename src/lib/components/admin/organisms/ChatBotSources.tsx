@@ -50,7 +50,7 @@ const WebsiteSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
       );
     };
     fetchWebsites();
-  });
+  }, [chatBotId, setValue]);
 
   const onSubmit = async (data: { url?: string; url_exceptions?: string }) => {
     if (!data.url) return;
@@ -104,11 +104,13 @@ const WebsiteSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
         {...register("url", {
           required: "Eine URL ist erforderlich",
           pattern: {
-            value: /^(https?:\/\/)?([a-zA-Z0-9-_]+\.)+[a-zA-Z]{2,}$/i,
-            message: "Ungültige URL",
+            value: /^(https?:\/\/)[a-zA-Z0-9-_.]+\.[a-zA-Z]{2,}\/?/i,
+            message: "Die URL muss mit http:// oder https:// beginnen",
           },
         })}
       />
+      <InputError errors={errors} name="url" />
+
       <InputError errors={errors} name="url" />
 
       <Input
