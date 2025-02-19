@@ -3,7 +3,7 @@ import { BadRequest, withErrorHandling } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
 import Stripe from "stripe";
 
-const stripeService = StripeService.Instance;
+const stripeService = await StripeService.getInstance();
 
 export const POST = withErrorHandling(async (request: NextRequest) => {
   const signature = request.headers.get("stripe-signature");

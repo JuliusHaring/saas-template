@@ -12,7 +12,7 @@ import { IngestedFilesResponseType } from "@/lib/services/api-services/rag/types
 
 const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
 const ragService: IRAGService = PostGresRAGService.Instance;
-const quotaService = QuotaService.Instance;
+const quotaService = await QuotaService.getInstance();
 
 export const POST = withErrorHandling(async (request: NextRequest) => {
   const body = await request.json();

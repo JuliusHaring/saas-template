@@ -4,6 +4,7 @@ import { UserService } from "@/lib/services/api-services/user-service";
 import { NotFound, withErrorHandling } from "@/lib/utils/routes/http-errors";
 
 const userService = UserService.Instance;
+const stripeService = await StripeService.getInstance();
 
 export const POST = withErrorHandling(async () => {
   const userId = await getUserId();
@@ -14,7 +15,7 @@ export const POST = withErrorHandling(async () => {
     throw NotFound(`User ${user.id} has no Subscription`);
   }
 
-  const session = await StripeService.Instance.createBillingSession(user);
+  const session = await stripeService.createBillingSession(user);
 
   return { url: session.url };
 });

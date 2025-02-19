@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { StripeService } from "@/lib/services/api-services/stripe-service";
 import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 
-const stripeService = StripeService.Instance;
+const stripeService = await StripeService.getInstance();
 
 export const POST = withErrorHandling(async (request: NextRequest) => {
   const { userId } = await request.json();

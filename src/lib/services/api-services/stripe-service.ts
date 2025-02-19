@@ -18,44 +18,47 @@ export class StripeService {
   private static _instance: StripeService;
   private stripe: Stripe;
 
-  private productBasic!: Stripe.Product;
-  private productPremium!: Stripe.Product;
-  private productEnterprise!: Stripe.Product;
+  private productBasic?: Stripe.Product;
+  private productPremium?: Stripe.Product;
+  private productEnterprise?: Stripe.Product;
 
   private constructor() {
     this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
   }
 
-  public async init(): Promise<void> {
-    if (
-      [this.productBasic, this.productPremium, this.productEnterprise].every(
-        (p) => typeof p !== "undefined",
-      )
-    ) {
-      return;
+  public static async getInstance(): Promise<StripeService> {
+    if (!this._instance) {
+      this._instance = new this();
+      await this._instance.init();
+    }
+    return this._instance;
+  }
+
+  private async init(): Promise<void> {
+    if (this.productBasic && this.productPremium && this.productEnterprise) {
+      return; // Already initialized
     }
 
     try {
-      this.productBasic = await this.stripe.products.retrieve(
-        process.env.STRIPE_PRODUCT_BASIC_ID!,
-      );
-      this.productPremium = await this.stripe.products.retrieve(
-        process.env.STRIPE_PRODUCT_PREMIUM_ID!,
-      );
-      this.productEnterprise = await this.stripe.products.retrieve(
-        process.env.STRIPE_PRODUCT_ENTERPRISE_ID!,
-      );
+      [this.productBasic, this.productPremium, this.productEnterprise] =
+        await Promise.all([
+          this.stripe.products.retrieve(process.env.STRIPE_PRODUCT_BASIC_ID!),
+          this.stripe.products.retrieve(process.env.STRIPE_PRODUCT_PREMIUM_ID!),
+          this.stripe.products.retrieve(
+            process.env.STRIPE_PRODUCT_ENTERPRISE_ID!,
+          ),
+        ]);
     } catch (err) {
       console.error("Error initializing Stripe products:", err);
       throw new StripeProductInitException();
     }
   }
 
-  public static get Instance() {
-    return this._instance || (this._instance = new this());
-  }
-
   getProductByTier(tier: SubscriptionTier): Stripe.Product {
+    if (!this.productBasic || !this.productPremium || !this.productEnterprise) {
+      throw new StripeProductInitException();
+    }
+
     switch (tier) {
       case "BASIC":
         return this.productBasic;
@@ -64,16 +67,21 @@ export class StripeService {
       case "ENTERPRISE":
         return this.productEnterprise;
     }
-    throw Error(`Subscription ${tier} not found`);
+    throw new SubscriptionTierNotFoundException();
   }
 
   async getTierBySubscription(
     subscription: Stripe.Subscription,
   ): Promise<SubscriptionTier> {
+    if (!this.productBasic || !this.productPremium || !this.productEnterprise) {
+      throw new StripeProductInitException();
+    }
+
     const price = subscription.items.data[0]?.price;
     const product = await this.stripe.products.retrieve(
       price.product as string,
     );
+
     switch (product.id) {
       case this.productBasic.id:
         return "BASIC";
@@ -85,11 +93,6 @@ export class StripeService {
 
     throw new SubscriptionTierNotFoundException();
   }
-
-  // async getPrice(tier: SubscriptionTier) {
-  //   const priceId = this._getProductByTier(tier).default_price as Stripe.Price["id"];
-  //   return this.stripe.prices.retrieve(priceId);
-  // }
 
   constructEvent(
     body: string,
@@ -113,7 +116,7 @@ export class StripeService {
   ): Promise<string> {
     const customer = await this._getCustomerForSubscription(subscription);
 
-    if (typeof customer.email === "undefined" || !customer.email) {
+    if (!customer.email) {
       throw new StripeCustomerEmailMissingException();
     }
     return customer.email;

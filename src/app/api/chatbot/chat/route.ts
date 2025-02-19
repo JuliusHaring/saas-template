@@ -24,7 +24,7 @@ import {
 } from "@/lib/services/api-services/chat/types";
 
 const openAIChatService = OpenAIChatService.Instance;
-const quotaService = QuotaService.Instance;
+const quotaService = await QuotaService.getInstance();
 
 export const POST = withErrorHandling(async (request: NextRequest) => {
   const body = await request.json();

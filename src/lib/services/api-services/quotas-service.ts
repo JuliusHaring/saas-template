@@ -57,13 +57,17 @@ export class QuotaService {
   private stripeService: StripeService;
   private chatbotService: ChatBotService;
 
-  private constructor() {
-    this.stripeService = StripeService.Instance;
+  private constructor(stripeService: StripeService) {
+    this.stripeService = stripeService;
     this.chatbotService = ChatBotService.Instance;
   }
 
-  public static get Instance() {
-    return this._instance || (this._instance = new this());
+  public static async getInstance(): Promise<QuotaService> {
+    if (!this._instance) {
+      const stripeService = await StripeService.getInstance();
+      this._instance = new this(stripeService);
+    }
+    return this._instance;
   }
 
   private async _getTierQuotas(tier: SubscriptionTier) {
