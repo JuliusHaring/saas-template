@@ -50,7 +50,9 @@ export default function Button({
       onClick={onClick}
     >
       {typeof href === "string" ? (
-        <Link href={href}>{children}</Link>
+        <Link href={href} className="flex items-center gap-2">
+          {children}
+        </Link>
       ) : (
         children
       )}

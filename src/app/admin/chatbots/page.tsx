@@ -59,6 +59,7 @@ export default function Chatbots() {
       <QuotasOverview />
       <Button className="my-2" href="/admin/chatbots/create">
         <PlusIcon className="h-5 w-5 text-white" />
+        ChatBot Erstellen
       </Button>
       <ChatBotGrid
         chatbots={chatbots}
