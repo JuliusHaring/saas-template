@@ -2,7 +2,7 @@ import {
   Quota,
   QuotaService,
 } from "@/lib/services/api-services/quotas-service";
-import { FilesService } from "@/lib/services/api-services/rag/files";
+import { FilesService } from "@/lib/services/api-services/rag/files-service";
 import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
 import { PostGresRAGService } from "@/lib/services/api-services/rag/postgres-rag-service";
 import { RAGFile } from "@/lib/services/api-services/rag/types";
