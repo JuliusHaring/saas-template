@@ -84,7 +84,7 @@ export async function findClosest(
 
   // Perform similarity search at the SQL level
   const results = await prisma.$queryRaw<VectorFoundType[]>(Prisma.sql`
-    SELECT id, name, content, 'createdAt', 'chatBotId', vector <-> ${vectorString}::vector(1536) AS distance
+    SELECT id, name, content, isSingleFile, 'createdAt', 'chatBotId', vector <-> ${vectorString}::vector(1536) AS distance
     FROM "Document"
     WHERE vector IS NOT NULL
     ORDER BY distance DESC
@@ -95,5 +95,6 @@ export async function findClosest(
     name: r.name,
     embedding: vectorString.split(",").map((v) => parseFloat(v)),
     content: r.content,
+    isSingleFile: r.isSingleFile,
   }));
 }

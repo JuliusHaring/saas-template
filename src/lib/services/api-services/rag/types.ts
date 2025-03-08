@@ -1,10 +1,13 @@
 export class RAGFile {
   name: string;
   content: string;
+  isSingleFile: boolean = false;
 
-  constructor(name: string, content: string) {
+  constructor(name: string, content: string, isSingleFile?: boolean) {
     this.name = name;
     this.content = content;
+    this.isSingleFile =
+      typeof isSingleFile === "boolean" ? isSingleFile : false;
   }
 }
 

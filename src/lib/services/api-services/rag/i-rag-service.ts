@@ -29,8 +29,9 @@ export abstract class IRAGService {
   public async insertFiles(
     chatBotId: ChatBotIdType,
     ragFiles: RAGFile[],
+    deleteExisting: boolean = true,
   ): Promise<{ count: number }> {
-    await this.deleteFiles(chatBotId);
+    if (deleteExisting) await this.deleteFiles(chatBotId);
 
     const embeddedFiles = await Promise.all(
       ragFiles.map((ragFile) => this.embedRAGFile(ragFile)),
