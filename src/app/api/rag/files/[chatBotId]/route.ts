@@ -6,6 +6,7 @@ import { FilesService } from "@/lib/services/api-services/rag/files-service";
 import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
 import { PostGresRAGService } from "@/lib/services/api-services/rag/postgres-rag-service";
 import { RAGFile } from "@/lib/services/api-services/rag/types";
+import { getUserId } from "@/lib/utils/routes/auth";
 import {
   NotFound,
   QuotaReached,
@@ -22,7 +23,7 @@ export const POST = withErrorHandling(
     request: NextRequest,
     { params }: { params: Promise<{ chatBotId: string }> },
   ) => {
-    const userId = "user_2sJ0FW5ihrjBvSXpMZkw5f5uzyG";
+    const userId = await getUserId();
     const chatBotId = (await params).chatBotId;
 
     const formData = await request.formData();
@@ -46,8 +47,25 @@ export const POST = withErrorHandling(
     const ragFiles: RAGFile[] =
       await filesService.convertFilesToRagFiles(rawFiles);
 
-    const countObj = await ragService.insertFiles(chatBotId, ragFiles, false);
+    const countObj = await ragService.insertFiles(
+      chatBotId,
+      userId,
+      ragFiles,
+      false,
+    );
 
     return countObj;
+  },
+);
+
+export const GET = withErrorHandling(
+  async (
+    request: NextRequest,
+    { params }: { params: Promise<{ chatBotId: string }> },
+  ) => {
+    const userId = await getUserId();
+    const chatBotId = (await params).chatBotId;
+
+    return filesService.getSingleFiles(chatBotId, userId);
   },
 );

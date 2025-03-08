@@ -1,4 +1,4 @@
-import { ChatBotIdType } from "@/lib/db/types";
+import { ChatBotIdType, UserIdType } from "@/lib/db/types";
 import { IEmbeddingService } from "@/lib/services/api-services/rag/i-embedding-service";
 import { OpenAIEmbeddingService } from "@/lib/services/api-services/rag/open-ai-embedding-service";
 import {
@@ -18,6 +18,7 @@ export abstract class IRAGService {
 
   abstract _insertFiles(
     chatBotId: ChatBotIdType,
+    userId: UserIdType,
     ragFiles: RAGInsertType[],
   ): Promise<{ count: number }>;
 
@@ -28,19 +29,23 @@ export abstract class IRAGService {
 
   public async insertFiles(
     chatBotId: ChatBotIdType,
+    userId: UserIdType,
     ragFiles: RAGFile[],
     deleteExisting: boolean = true,
   ): Promise<{ count: number }> {
-    if (deleteExisting) await this.deleteFiles(chatBotId);
+    if (deleteExisting) await this.deleteFiles(chatBotId, userId);
 
     const embeddedFiles = await Promise.all(
       ragFiles.map((ragFile) => this.embedRAGFile(ragFile)),
     );
 
-    return this._insertFiles(chatBotId, embeddedFiles);
+    return this._insertFiles(chatBotId, userId, embeddedFiles);
   }
 
-  abstract deleteFiles(chatBotId: ChatBotIdType): Promise<void>;
+  abstract deleteFiles(
+    chatBotId: ChatBotIdType,
+    userId: UserIdType,
+  ): Promise<void>;
 
   abstract _findClosest(
     query: EmbeddingType,

@@ -1,5 +1,5 @@
 import { insertFile, findClosest, deleteDocuments } from "@/lib/db/pg-rag";
-import { ChatBotIdType } from "@/lib/db/types";
+import { ChatBotIdType, UserIdType } from "@/lib/db/types";
 import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
 import {
   RAGInsertType,
@@ -19,10 +19,11 @@ export class PostGresRAGService extends IRAGService {
 
   async _insertFiles(
     chatBotId: ChatBotIdType,
+    userId: UserIdType,
     ragFiles: RAGInsertType[],
   ): Promise<{ count: number }> {
     return await Promise.all(
-      ragFiles.map((rF) => insertFile(chatBotId, rF)),
+      ragFiles.map((rF) => insertFile(chatBotId, userId, rF)),
     ).then((r) => ({ count: r.length }));
   }
 
@@ -33,7 +34,10 @@ export class PostGresRAGService extends IRAGService {
     return findClosest(query, n);
   }
 
-  async deleteFiles(chatBotId: ChatBotIdType): Promise<void> {
-    await deleteDocuments(chatBotId);
+  async deleteFiles(
+    chatBotId: ChatBotIdType,
+    userId: UserIdType,
+  ): Promise<void> {
+    await deleteDocuments(chatBotId, userId);
   }
 }

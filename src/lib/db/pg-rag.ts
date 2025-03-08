@@ -5,7 +5,7 @@ import {
   RAGQueryResultType,
 } from "@/lib/services/api-services/rag/types";
 import { prisma } from "@/lib/db";
-import { ChatBotIdType } from "@/lib/db/types";
+import { ChatBotIdType, UserIdType } from "@/lib/db/types";
 
 export type DocumentType = Document & { distance: number };
 
@@ -39,12 +39,13 @@ export async function getVectorForDocument(
 
 export async function insertFile(
   chatBotId: ChatBotIdType,
+  userId: UserIdType,
   ragFile: RAGInsertType,
 ) {
   const { embedding, ...rest } = ragFile;
 
   const data: Prisma.DocumentCreateInput = Object.assign({}, rest, {
-    ChatBot: { connect: { id: chatBotId } },
+    ChatBot: { connect: { id: chatBotId, userId } },
   });
 
   const documents = await prisma.$transaction(
@@ -68,10 +69,25 @@ export async function insertFile(
   return documents;
 }
 
-export async function deleteDocuments(chatBotId: ChatBotIdType) {
+export async function deleteDocuments(
+  chatBotId: ChatBotIdType,
+  userId: UserIdType,
+) {
   return prisma.document.deleteMany({
     where: {
-      ChatBot: { id: chatBotId },
+      ChatBot: { id: chatBotId, userId },
+    },
+  });
+}
+
+export async function getSingleFiles(
+  chatBotId: ChatBotIdType,
+  userId: UserIdType,
+) {
+  return prisma.document.findMany({
+    where: {
+      ChatBot: { id: chatBotId, userId },
+      isSingleFile: true,
     },
   });
 }

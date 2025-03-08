@@ -1,3 +1,5 @@
+import { getSingleFiles } from "@/lib/db/pg-rag";
+import { ChatBotIdType, UserIdType } from "@/lib/db/types";
 import { RAGFile } from "@/lib/services/api-services/rag/types";
 const { getTextExtractor } = await import("office-text-extractor");
 
@@ -43,12 +45,15 @@ export class FilesService {
 
         const textContent = await this._extractText(file);
 
-        const now = new Date();
-        const timestamp = `${now.getFullYear()}_${String(now.getMonth() + 1).padStart(2, "0")}_${String(now.getDate()).padStart(2, "0")}__${String(now.getHours()).padStart(2, "0")}_${String(now.getMinutes()).padStart(2, "0")}`;
-        const fileNameWithDate = `${timestamp}_${file.name}`;
-
-        return new RAGFile(fileNameWithDate, textContent, true);
+        return new RAGFile(file.name, textContent, true);
       }),
     );
+  }
+
+  public async getSingleFiles(
+    chatBotId: ChatBotIdType,
+    userId: UserIdType,
+  ): Promise<RAGFile[]> {
+    return getSingleFiles(chatBotId, userId);
   }
 }

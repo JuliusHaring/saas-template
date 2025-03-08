@@ -25,7 +25,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
 
   const files = await websiteSourceCrawler.listFiles(userId!, chatBotId, n);
 
-  const ingestedFiles = await ragService.insertFiles(chatBotId, files);
+  const ingestedFiles = await ragService.insertFiles(chatBotId, userId, files);
 
   if (ingestedFiles.count > 0) {
     await quotaService.updateUserUsage(
