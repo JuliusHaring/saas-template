@@ -1,6 +1,6 @@
-import { getSingleFiles } from "@/lib/db/pg-rag";
+import { deleteSingleFile, getSingleFiles } from "@/lib/db/pg-rag";
 import { ChatBotIdType, UserIdType } from "@/lib/db/types";
-import { RAGFile } from "@/lib/services/api-services/rag/types";
+import { DocumentIdType, RAGFile } from "@/lib/services/api-services/rag/types";
 const { getTextExtractor } = await import("office-text-extractor");
 
 export class FilesService {
@@ -52,5 +52,13 @@ export class FilesService {
 
   public async getSingleFiles(chatBotId: ChatBotIdType, userId: UserIdType) {
     return getSingleFiles(chatBotId, userId);
+  }
+
+  public async deleteSingleFile(
+    chatBotId: ChatBotIdType,
+    userId: UserIdType,
+    documentId: DocumentIdType,
+  ) {
+    return deleteSingleFile(chatBotId, userId, documentId);
   }
 }

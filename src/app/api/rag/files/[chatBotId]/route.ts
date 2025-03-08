@@ -1,3 +1,4 @@
+import { ChatBotIdType } from "@/lib/db/types";
 import {
   Quota,
   QuotaService,
@@ -21,7 +22,7 @@ const filesService = FilesService.Instance;
 export const POST = withErrorHandling(
   async (
     request: NextRequest,
-    { params }: { params: Promise<{ chatBotId: string }> },
+    { params }: { params: Promise<{ chatBotId: ChatBotIdType }> },
   ) => {
     const userId = await getUserId();
     const chatBotId = (await params).chatBotId;
@@ -61,7 +62,7 @@ export const POST = withErrorHandling(
 export const GET = withErrorHandling(
   async (
     request: NextRequest,
-    { params }: { params: Promise<{ chatBotId: string }> },
+    { params }: { params: Promise<{ chatBotId: ChatBotIdType }> },
   ) => {
     const userId = await getUserId();
     const chatBotId = (await params).chatBotId;

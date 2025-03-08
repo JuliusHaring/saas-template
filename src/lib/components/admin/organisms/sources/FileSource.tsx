@@ -1,6 +1,9 @@
 import Button from "@/lib/components/admin/molecules/Button";
 import Card from "@/lib/components/admin/organisms/Card";
-import { DocumentType } from "@/lib/services/api-services/rag/types";
+import {
+  DocumentIdType,
+  DocumentType,
+} from "@/lib/services/api-services/rag/types";
 import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import { useEffect, useState, useRef } from "react";
 
@@ -38,6 +41,15 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
     }
   };
 
+  const handleDelete = async (documentId: DocumentIdType) => {
+    try {
+      await feRagService.deleteSingleFile(chatBotId, documentId);
+      fetchRagFiles();
+    } catch (error) {
+      console.error(`Error deleting file: ${error}`);
+    }
+  };
+
   return (
     <Card
       className="mt-4"
@@ -69,7 +81,12 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
                   {new Date(file.createdAt).toLocaleString("de-DE")}
                 </td>
                 <td className="border border-gray-300 p-2">
-                  <Button variant="danger">Löschen</Button>
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDelete(file.id)}
+                  >
+                    Löschen
+                  </Button>
                 </td>
               </tr>
             ))

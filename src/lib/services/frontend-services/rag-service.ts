@@ -2,6 +2,7 @@ import { ChatBotIdType } from "@/lib/db/types";
 import {
   IngestedFilesResponseType,
   DocumentType,
+  DocumentIdType,
 } from "@/lib/services/api-services/rag/types";
 import { fetchJson } from "@/lib/utils/fetch";
 
@@ -32,5 +33,15 @@ export class FERAGService {
       method: "POST",
       body: formData,
     });
+  }
+
+  public async deleteSingleFile(
+    chatBotId: ChatBotIdType,
+    documentId: DocumentIdType,
+  ) {
+    return fetchJson<DocumentType>(
+      `/api/rag/files/${chatBotId}/${documentId}`,
+      { method: "DELETE" },
+    );
   }
 }

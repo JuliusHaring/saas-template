@@ -28,6 +28,8 @@ export type IngestedFilesResponseType = { count: number };
 
 export type DocumentType = Document;
 
+export type DocumentIdType = Document["id"];
+
 export type DocumentWithEmbeddingType = Document & { distance: number };
 
 export type CreateDocumentType = Omit<Prisma.DocumentCreateInput, "ChatBot"> & {

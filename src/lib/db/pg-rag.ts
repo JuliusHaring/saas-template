@@ -5,6 +5,7 @@ import {
   RAGInsertType,
   RAGQueryResultType,
   DocumentWithEmbeddingType,
+  DocumentIdType,
 } from "@/lib/services/api-services/rag/types";
 import { prisma } from "@/lib/db";
 import { ChatBotIdType, UserIdType } from "@/lib/db/types";
@@ -82,6 +83,19 @@ export async function getSingleFiles(
     where: {
       ChatBot: { id: chatBotId, userId },
       isSingleFile: true,
+    },
+  });
+}
+
+export async function deleteSingleFile(
+  chatBotId: ChatBotIdType,
+  userId: UserIdType,
+  documentId: DocumentIdType,
+) {
+  return prisma.document.delete({
+    where: {
+      ChatBot: { id: chatBotId, userId },
+      id: documentId,
     },
   });
 }
