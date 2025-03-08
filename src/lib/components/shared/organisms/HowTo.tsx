@@ -31,9 +31,8 @@ export const HowTo: React.FC = () => {
                 Konfiguriere Quellen
               </div>
               <p className="text-gray-600 text-base mt-1">
-                Momentan wird Webscraping, das automatisierte Auslesen deiner
-                Webseite unterstützt. In der Zukunft werden weitere Anbindungen
-                (Google Drive, Dropbox, ...) erweitert!
+                Momentan werden das Hochladen von Dateien und Webscraping zur
+                automatisierten Analyse deiner Webseite unterstützt.
               </p>
             </li>
 
