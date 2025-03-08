@@ -23,6 +23,7 @@
     "cheerio": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
     "next": "15.1.5",
+    "office-text-extractor": "^3.0.3",
     "openai": "^4.79.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
