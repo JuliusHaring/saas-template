@@ -11,8 +11,12 @@ const feChatBotService = FEChatBotService.Instance;
 
 const ChatBotSources: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
   return (
-    <Card header={"DatenQuellen"}>
-      <WebsiteSource chatBotId={chatBotId} />
+    <Card header={"Daten Quellen"}>
+      {process.env.NEXT_PUBLIC_SOURCES_WEBSITE?.toLowerCase() === "true" ? (
+        <WebsiteSource chatBotId={chatBotId} />
+      ) : (
+        <></>
+      )}
     </Card>
   );
 };
