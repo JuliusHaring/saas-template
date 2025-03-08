@@ -1,3 +1,5 @@
+import { Document, Prisma } from "@prisma/client";
+
 export class RAGFile {
   name: string;
   content: string;
@@ -23,3 +25,11 @@ export type EmbeddingQueryType = RAGQueryType;
 export type EmbeddingType = number[];
 
 export type IngestedFilesResponseType = { count: number };
+
+export type DocumentType = Document;
+
+export type DocumentWithEmbeddingType = Document & { distance: number };
+
+export type CreateDocumentType = Omit<Prisma.DocumentCreateInput, "ChatBot"> & {
+  embedding: EmbeddingType;
+};

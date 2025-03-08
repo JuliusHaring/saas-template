@@ -1,19 +1,13 @@
-import { Document, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import {
   EmbeddingType,
+  DocumentType,
   RAGInsertType,
   RAGQueryResultType,
+  DocumentWithEmbeddingType,
 } from "@/lib/services/api-services/rag/types";
 import { prisma } from "@/lib/db";
 import { ChatBotIdType, UserIdType } from "@/lib/db/types";
-
-export type DocumentType = Document & { distance: number };
-
-type VectorFoundType = DocumentType & { distance: number };
-
-export type CreateDocumentType = Omit<Prisma.DocumentCreateInput, "ChatBot"> & {
-  embedding: EmbeddingType;
-};
 
 export class DocumentNotFoundException extends Error {}
 
@@ -83,7 +77,7 @@ export async function deleteDocuments(
 export async function getSingleFiles(
   chatBotId: ChatBotIdType,
   userId: UserIdType,
-) {
+): Promise<DocumentType[]> {
   return prisma.document.findMany({
     where: {
       ChatBot: { id: chatBotId, userId },
@@ -99,7 +93,9 @@ export async function findClosest(
   const vectorString = `[${queryVector.join(",")}]`; // Convert query vector to PostgreSQL vector format
 
   // Perform similarity search at the SQL level
-  const results = await prisma.$queryRaw<VectorFoundType[]>(Prisma.sql`
+  const results = await prisma.$queryRaw<
+    DocumentWithEmbeddingType[]
+  >(Prisma.sql`
     SELECT id, name, content, isSingleFile, 'createdAt', 'chatBotId', vector <-> ${vectorString}::vector(1536) AS distance
     FROM "Document"
     WHERE vector IS NOT NULL

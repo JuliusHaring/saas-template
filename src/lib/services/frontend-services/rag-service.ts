@@ -1,5 +1,8 @@
 import { ChatBotIdType } from "@/lib/db/types";
-import { IngestedFilesResponseType } from "@/lib/services/api-services/rag/types";
+import {
+  IngestedFilesResponseType,
+  DocumentType,
+} from "@/lib/services/api-services/rag/types";
 import { fetchJson } from "@/lib/utils/fetch";
 
 export class FERAGService {
@@ -15,5 +18,9 @@ export class FERAGService {
       method: "POST",
       body: JSON.stringify({ chatBotId }),
     });
+  }
+
+  public async getSingleFiles(chatBotId: ChatBotIdType) {
+    return fetchJson<DocumentType[]>(`/api/rag/files/${chatBotId}`);
   }
 }

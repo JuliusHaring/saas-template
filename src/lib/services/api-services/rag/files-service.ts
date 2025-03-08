@@ -50,10 +50,7 @@ export class FilesService {
     );
   }
 
-  public async getSingleFiles(
-    chatBotId: ChatBotIdType,
-    userId: UserIdType,
-  ): Promise<RAGFile[]> {
+  public async getSingleFiles(chatBotId: ChatBotIdType, userId: UserIdType) {
     return getSingleFiles(chatBotId, userId);
   }
 }
