@@ -25,9 +25,12 @@ export class FERAGService {
     return fetchJson<DocumentType[]>(`/api/rag/files/${chatBotId}`);
   }
 
-  public async uploadSingleFile(chatBotId: ChatBotIdType, file: File) {
+  public async uploadSingleFiles(chatBotId: ChatBotIdType, files: File[]) {
     const formData = new FormData();
-    formData.append("files", file);
+
+    files.map((file) => {
+      formData.append(`files`, file);
+    });
 
     return fetchJson(`/api/rag/files/${chatBotId}`, {
       method: "POST",

@@ -11,12 +11,18 @@ const feRagService = FERAGService.Instance;
 
 export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
   const [ragFiles, setRagFiles] = useState<DocumentType[]>([]);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchRagFiles = async () => {
     const files = await feRagService.getSingleFiles(chatBotId);
-    setRagFiles(files);
+
+    const sortedFiles = files.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+
+    setRagFiles(sortedFiles);
   };
 
   useEffect(() => {
@@ -25,16 +31,16 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files?.length) {
-      setSelectedFile(event.target.files[0]);
+      setSelectedFiles(Array.from(event.target.files)); // Store all selected files
     }
   };
 
   const handleUpload = async () => {
-    if (!selectedFile) return;
+    if (selectedFiles.length === 0) return;
 
     try {
-      await feRagService.uploadSingleFile(chatBotId, selectedFile);
-      setSelectedFile(null);
+      await feRagService.uploadSingleFiles(chatBotId, selectedFiles);
+      setSelectedFiles([]); // Clear selected files after upload
       fetchRagFiles();
     } catch (error) {
       console.error("File upload failed:", error);
@@ -58,7 +64,7 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
         fileInputRef,
         handleFileChange,
         handleUpload,
-        selectedFile,
+        selectedFiles,
       )}
     >
       {/* File list */}
@@ -107,22 +113,25 @@ const UploadFooter = (
   fileInputRef: React.RefObject<HTMLInputElement | null>,
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
   handleUpload: () => void,
-  selectedFile: File | null,
+  selectedFiles: File[],
 ) => (
   <div className="flex items-center gap-4">
     <input
       type="file"
       ref={fileInputRef}
       onChange={handleFileChange}
+      multiple // Allow multiple files
       className="hidden"
     />
     <Button onClick={() => fileInputRef.current?.click()}>
-      Datei auswählen
+      Dateien auswählen
     </Button>
     <span className="text-gray-700">
-      {selectedFile ? selectedFile.name : "Keine Datei ausgewählt"}
+      {selectedFiles.length > 0
+        ? selectedFiles.map((file) => file.name).join(", ")
+        : "Keine Dateien ausgewählt"}
     </span>
-    <Button onClick={handleUpload} isDisabled={!selectedFile}>
+    <Button onClick={handleUpload} isDisabled={selectedFiles.length === 0}>
       Hochladen
     </Button>
   </div>
