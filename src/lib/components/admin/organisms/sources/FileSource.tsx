@@ -39,26 +39,16 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
   };
 
   return (
-    <Card className="mt-4" header="Datei Upload" footer={Footer}>
-      {/* Custom file input */}
-      <div className="flex items-center gap-4 mb-4">
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          className="hidden"
-        />
-        <Button onClick={() => fileInputRef.current?.click()}>
-          Datei auswählen
-        </Button>
-        <span className="text-gray-700">
-          {selectedFile ? selectedFile.name : "Keine Datei ausgewählt"}
-        </span>
-        <Button onClick={handleUpload} isDisabled={!selectedFile}>
-          Hochladen
-        </Button>
-      </div>
-
+    <Card
+      className="mt-4"
+      header="Datei Upload"
+      footer={UploadFooter(
+        fileInputRef,
+        handleFileChange,
+        handleUpload,
+        selectedFile,
+      )}
+    >
       {/* File list */}
       <table className="w-full border-collapse border border-gray-300">
         <thead>
@@ -73,7 +63,7 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
         <tbody>
           {ragFiles.length > 0 ? (
             ragFiles.map((file) => (
-              <tr key={file.name} className="border border-gray-300">
+              <tr key={file.id} className="border border-gray-300">
                 <td className="border border-gray-300 p-2">{file.name}</td>
                 <td className="border border-gray-300 p-2">
                   {new Date(file.createdAt).toLocaleString("de-DE")}
@@ -96,4 +86,27 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
   );
 };
 
-const Footer = <>Senden</>;
+const UploadFooter = (
+  fileInputRef: React.RefObject<HTMLInputElement | null>,
+  handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
+  handleUpload: () => void,
+  selectedFile: File | null,
+) => (
+  <div className="flex items-center gap-4">
+    <input
+      type="file"
+      ref={fileInputRef}
+      onChange={handleFileChange}
+      className="hidden"
+    />
+    <Button onClick={() => fileInputRef.current?.click()}>
+      Datei auswählen
+    </Button>
+    <span className="text-gray-700">
+      {selectedFile ? selectedFile.name : "Keine Datei ausgewählt"}
+    </span>
+    <Button onClick={handleUpload} isDisabled={!selectedFile}>
+      Hochladen
+    </Button>
+  </div>
+);
