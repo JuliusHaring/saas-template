@@ -135,11 +135,11 @@ export async function findClosest(
 
   // Perform similarity search at the SQL level
   const results = await prisma.$queryRaw<FileWithEmbeddingType[]>(Prisma.sql`
-    SELECT id, name, content, 'createdAt', 'chatBotId', 'insertionSource', vector <-> ${vectorString}::vector(1536) AS distance
+    SELECT id, name, content, "createdAt", "chatBotId", "insertionSource", vector <-> ${vectorString}::vector(1536) AS distance
     FROM "File"
     WHERE vector IS NOT NULL
     AND "chatBotId" = ${chatBotId}
-    ORDER BY distance DESC
+    ORDER BY distance ASC
     LIMIT ${n};
   `);
 
