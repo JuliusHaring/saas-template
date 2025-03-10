@@ -61,7 +61,13 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
     visitedUrls.add(url);
 
     try {
-      const response = await axios.get(url);
+      const response = await axios.get(url, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (compatible; RAGBot/1.0)",
+          "Accept-Language": "en-US,en;q=0.9,de;q=0.8",
+          Accept: "text/html,application/xhtml+xml",
+        },
+      });
       const $ = cheerio.load(response.data);
 
       // Extract all links
