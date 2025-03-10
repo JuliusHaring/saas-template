@@ -1,5 +1,4 @@
 "use client";
-import ChatbotUI from "@/app/chatbot-ui/page";
 import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
 import Button from "@/lib/components/admin/molecules/Button";
 import { Input, Textarea } from "@/lib/components/admin/molecules/Input";
@@ -7,6 +6,7 @@ import InputError from "@/lib/components/admin/molecules/InputError";
 import Card from "@/lib/components/admin/organisms/Card";
 import ChatBotSources from "@/lib/components/admin/organisms/ChatBotSources";
 import { FileSource } from "@/lib/components/admin/organisms/sources/FileSource";
+import { ChatBotUI } from "@/lib/components/chatbot-ui/organisms/ChatBotUI";
 import { UpdateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { FETokenService } from "@/lib/services/frontend-services/token-service";
@@ -157,7 +157,7 @@ const ChatBotEdit: React.FC = () => {
       </Card>
 
       <Card header="Chatbot Vorschau">
-        <ChatbotUI chatBotId={params.chatBotId} token={token} />
+        <ChatBotUI chatBotId={params.chatBotId} token={token} />
       </Card>
 
       <FileSource chatBotId={params.chatBotId} />

@@ -35,7 +35,7 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
 
   useEffect(() => {
     fetchRagFiles();
-  }, [chatBotId]);
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.length) return;
