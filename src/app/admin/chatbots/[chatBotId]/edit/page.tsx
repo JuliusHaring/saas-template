@@ -5,6 +5,7 @@ import { Input, Textarea } from "@/lib/components/admin/molecules/Input";
 import InputError from "@/lib/components/admin/molecules/InputError";
 import Card from "@/lib/components/admin/organisms/Card";
 import ChatBotSources from "@/lib/components/admin/organisms/ChatBotSources";
+import { FileSource } from "@/lib/components/admin/organisms/sources/FileSource";
 import { UpdateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { useParams, useRouter } from "next/navigation";
@@ -139,6 +140,7 @@ const ChatBotEdit: React.FC = () => {
           </Button>
         </form>
       </Card>
+      <FileSource chatBotId={getValues("id")} />
       <ChatBotSources chatBotId={getValues("id")} />
     </div>
   );

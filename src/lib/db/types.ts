@@ -17,7 +17,7 @@ export const chatBotInclude = {
   Style: true,
   GDriveSource: true,
   WebsiteSource: true,
-  Documents: true,
+  Files: true,
 };
 
 export type ChatBotType = Prisma.ChatBotGetPayload<{

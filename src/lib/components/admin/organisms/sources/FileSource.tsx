@@ -1,21 +1,18 @@
 import Button from "@/lib/components/admin/molecules/Button";
 import Card from "@/lib/components/admin/organisms/Card";
-import {
-  DocumentIdType,
-  DocumentType,
-} from "@/lib/services/api-services/rag/types";
+import { FileIdType, FileType } from "@/lib/services/api-services/rag/types";
 import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import { useEffect, useState, useRef } from "react";
 
 const feRagService = FERAGService.Instance;
 
 export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
-  const [ragFiles, setRagFiles] = useState<DocumentType[]>([]);
+  const [ragFiles, setRagFiles] = useState<FileType[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchRagFiles = async () => {
-    const files = await feRagService.getSingleFiles(chatBotId);
+    const files = await feRagService.getFiles(chatBotId);
 
     const sortedFiles = files.sort(
       (a, b) =>
@@ -39,7 +36,7 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
     if (selectedFiles.length === 0) return;
 
     try {
-      await feRagService.uploadSingleFiles(chatBotId, selectedFiles);
+      await feRagService.uploadFiles(chatBotId, selectedFiles);
       setSelectedFiles([]); // Clear selected files after upload
       fetchRagFiles();
     } catch (error) {
@@ -47,9 +44,9 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
     }
   };
 
-  const handleDelete = async (documentId: DocumentIdType) => {
+  const handleDelete = async (fileId: FileIdType) => {
     try {
-      await feRagService.deleteSingleFile(chatBotId, documentId);
+      await feRagService.deleteFile(chatBotId, fileId);
       fetchRagFiles();
     } catch (error) {
       console.error(`Error deleting file: ${error}`);
@@ -59,7 +56,7 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
   return (
     <Card
       className="mt-4"
-      header="Datei Upload"
+      header="Dateien"
       footer={UploadFooter(
         fileInputRef,
         handleFileChange,

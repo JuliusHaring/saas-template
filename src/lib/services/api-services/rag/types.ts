@@ -1,15 +1,12 @@
-import { Document, Prisma } from "@prisma/client";
+import { File, Prisma } from "@prisma/client";
 
 export class RAGFile {
   name: string;
   content: string;
-  isSingleFile: boolean = false;
 
-  constructor(name: string, content: string, isSingleFile?: boolean) {
+  constructor(name: string, content: string) {
     this.name = name;
     this.content = content;
-    this.isSingleFile =
-      typeof isSingleFile === "boolean" ? isSingleFile : false;
   }
 }
 
@@ -26,12 +23,12 @@ export type EmbeddingType = number[];
 
 export type IngestedFilesResponseType = { count: number };
 
-export type DocumentType = Document;
+export type FileType = File;
 
-export type DocumentIdType = Document["id"];
+export type FileIdType = File["id"];
 
-export type DocumentWithEmbeddingType = Document & { distance: number };
+export type FileWithEmbeddingType = File & { distance: number };
 
-export type CreateDocumentType = Omit<Prisma.DocumentCreateInput, "ChatBot"> & {
+export type CreateFileType = Omit<Prisma.FileCreateInput, "ChatBot"> & {
   embedding: EmbeddingType;
 };

@@ -1,6 +1,6 @@
 import { ChatBotIdType } from "@/lib/db/types";
 import { FilesService } from "@/lib/services/api-services/rag/files-service";
-import { DocumentIdType } from "@/lib/services/api-services/rag/types";
+import { FileIdType } from "@/lib/services/api-services/rag/types";
 import { getUserId } from "@/lib/utils/routes/auth";
 import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
@@ -13,13 +13,13 @@ export const DELETE = withErrorHandling(
     {
       params,
     }: {
-      params: Promise<{ chatBotId: ChatBotIdType; documentId: DocumentIdType }>;
+      params: Promise<{ chatBotId: ChatBotIdType; fileId: FileIdType }>;
     },
   ) => {
     const userId = await getUserId();
     const chatBotId = (await params).chatBotId;
-    const documentId = (await params).documentId;
+    const fileId = (await params).fileId;
 
-    return filesService.deleteSingleFile(chatBotId, userId, documentId);
+    return filesService.deleteFile(chatBotId, userId, fileId);
   },
 );

@@ -57,7 +57,7 @@ model ChatBot {
   allowedDomains String[]       @default([])
   GDriveSource   GDriveSource?
   WebsiteSource  WebsiteSource?
-  Documents      Document[]
+  Files          File[]
   Style          Style?
 
   instructions String?
@@ -84,16 +84,15 @@ model WebsiteSource {
   url_exceptions String[]
 }
 
-model Document {
+model File {
   id        String  @id @default(dbgenerated("gen_random_uuid()"))
   chatBotId String
   ChatBot   ChatBot @relation(fields: [chatBotId], references: [id], onDelete: Cascade)
 
-  name         String
-  content      String
-  isSingleFile Boolean                      @default(false)
-  vector       Unsupported("vector(1536)")?
-  createdAt    DateTime                     @default(now())
+  name      String
+  content   String
+  vector    Unsupported("vector(1536)")?
+  createdAt DateTime                     @default(now())
 }
 
 model Style {

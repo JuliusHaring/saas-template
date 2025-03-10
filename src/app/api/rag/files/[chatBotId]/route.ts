@@ -67,6 +67,6 @@ export const GET = withErrorHandling(
     const userId = await getUserId();
     const chatBotId = (await params).chatBotId;
 
-    return filesService.getSingleFiles(chatBotId, userId);
+    return filesService.getFiles(chatBotId, userId);
   },
 );

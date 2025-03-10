@@ -10,7 +10,7 @@ export const SnippetExample: React.FC = () => {
     Style: null,
     GDriveSource: null,
     WebsiteSource: null,
-    Documents: [],
+    Files: [],
     userId: "",
     allowedDomains: [],
     instructions: null,

@@ -1,8 +1,8 @@
 import { ChatBotIdType } from "@/lib/db/types";
 import {
   IngestedFilesResponseType,
-  DocumentType,
-  DocumentIdType,
+  FileIdType,
+  FileType,
 } from "@/lib/services/api-services/rag/types";
 import { fetchJson } from "@/lib/utils/fetch";
 
@@ -21,11 +21,11 @@ export class FERAGService {
     });
   }
 
-  public async getSingleFiles(chatBotId: ChatBotIdType) {
-    return fetchJson<DocumentType[]>(`/api/rag/files/${chatBotId}`);
+  public async getFiles(chatBotId: ChatBotIdType) {
+    return fetchJson<FileType[]>(`/api/rag/files/${chatBotId}`);
   }
 
-  public async uploadSingleFiles(chatBotId: ChatBotIdType, files: File[]) {
+  public async uploadFiles(chatBotId: ChatBotIdType, files: File[]) {
     const formData = new FormData();
 
     files.map((file) => {
@@ -38,13 +38,9 @@ export class FERAGService {
     });
   }
 
-  public async deleteSingleFile(
-    chatBotId: ChatBotIdType,
-    documentId: DocumentIdType,
-  ) {
-    return fetchJson<DocumentType>(
-      `/api/rag/files/${chatBotId}/${documentId}`,
-      { method: "DELETE" },
-    );
+  public async deleteFile(chatBotId: ChatBotIdType, fileId: FileIdType) {
+    return fetchJson<FileType>(`/api/rag/files/${chatBotId}/${fileId}`, {
+      method: "DELETE",
+    });
   }
 }

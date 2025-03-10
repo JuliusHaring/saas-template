@@ -82,7 +82,6 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
       files.push({
         name: this.extractFileName(url),
         content: this.textService.convertHtmlToText(response.data),
-        isSingleFile: false,
       });
 
       // Recursively crawl the links

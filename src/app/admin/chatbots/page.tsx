@@ -123,7 +123,7 @@ function ChatBotGrid({
               />
             }
           >
-            <p>Dokumente: {chatbot.Documents.length}</p>
+            <p>Dateien: {chatbot.Files.length}</p>
             <p>Quellen: {getSourcesList(chatbot)}</p>
           </Card>
         ))}

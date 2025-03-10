@@ -1,11 +1,11 @@
 import { Prisma } from "@prisma/client";
 import {
   EmbeddingType,
-  DocumentType,
+  FileIdType,
+  FileType,
+  FileWithEmbeddingType,
   RAGInsertType,
   RAGQueryResultType,
-  DocumentWithEmbeddingType,
-  DocumentIdType,
 } from "@/lib/services/api-services/rag/types";
 import { prisma } from "@/lib/db";
 import { ChatBotIdType, UserIdType } from "@/lib/db/types";
@@ -14,12 +14,12 @@ export class DocumentNotFoundException extends Error {}
 
 export async function getVectorForDocument(
   chatBotId: ChatBotIdType,
-  documentId: string,
+  fileId: FileIdType,
 ): Promise<number[]> {
   const vectors: { vector: string }[] = await prisma.$queryRaw(Prisma.sql`
     SELECT vector::text AS vector
-    FROM "Document"
-    WHERE "chatBotId" = ${chatBotId} AND id = ${documentId};
+    FROM "File"
+    WHERE "chatBotId" = ${chatBotId} AND id = ${fileId};
   `);
 
   if (vectors.length !== 1) {
@@ -39,19 +39,19 @@ export async function insertFile(
 ) {
   const { embedding, ...rest } = ragFile;
 
-  const data: Prisma.DocumentCreateInput = Object.assign({}, rest, {
+  const data: Prisma.FileCreateInput = Object.assign({}, rest, {
     ChatBot: { connect: { id: chatBotId, userId } },
   });
 
-  const documents = await prisma.$transaction(
+  const files = await prisma.$transaction(
     async (t) => {
-      const document = await t.document.create({
+      const document = await t.file.create({
         data,
       });
 
       const vectorString = `[${embedding.join(",")}]`; // Convert vector to PostgreSQL array format
       await t.$queryRaw(Prisma.sql`
-      UPDATE "Document"
+      UPDATE "File"
       SET vector = ${vectorString}::vector(1536)
       WHERE id = ${document.id};
     `);
@@ -61,41 +61,40 @@ export async function insertFile(
     { timeout: 999999 },
   );
 
-  return documents;
+  return files;
 }
 
-export async function deleteDocuments(
+export async function getFiles(
   chatBotId: ChatBotIdType,
   userId: UserIdType,
-) {
-  return prisma.document.deleteMany({
+): Promise<FileType[]> {
+  return prisma.file.findMany({
     where: {
       ChatBot: { id: chatBotId, userId },
     },
   });
 }
 
-export async function getSingleFiles(
+export async function deleteFile(
   chatBotId: ChatBotIdType,
   userId: UserIdType,
-): Promise<DocumentType[]> {
-  return prisma.document.findMany({
+  fileId: FileIdType,
+) {
+  return prisma.file.delete({
     where: {
       ChatBot: { id: chatBotId, userId },
-      isSingleFile: true,
+      id: fileId,
     },
   });
 }
 
-export async function deleteSingleFile(
+export async function deleteFiles(
   chatBotId: ChatBotIdType,
   userId: UserIdType,
-  documentId: DocumentIdType,
 ) {
-  return prisma.document.delete({
+  return prisma.file.deleteMany({
     where: {
       ChatBot: { id: chatBotId, userId },
-      id: documentId,
     },
   });
 }
@@ -107,11 +106,9 @@ export async function findClosest(
   const vectorString = `[${queryVector.join(",")}]`; // Convert query vector to PostgreSQL vector format
 
   // Perform similarity search at the SQL level
-  const results = await prisma.$queryRaw<
-    DocumentWithEmbeddingType[]
-  >(Prisma.sql`
-    SELECT id, name, content, isSingleFile, 'createdAt', 'chatBotId', vector <-> ${vectorString}::vector(1536) AS distance
-    FROM "Document"
+  const results = await prisma.$queryRaw<FileWithEmbeddingType[]>(Prisma.sql`
+    SELECT id, name, content, 'createdAt', 'chatBotId', vector <-> ${vectorString}::vector(1536) AS distance
+    FROM "File"
     WHERE vector IS NOT NULL
     ORDER BY distance DESC
     LIMIT ${n};
@@ -121,6 +118,5 @@ export async function findClosest(
     name: r.name,
     embedding: vectorString.split(",").map((v) => parseFloat(v)),
     content: r.content,
-    isSingleFile: r.isSingleFile,
   }));
 }
