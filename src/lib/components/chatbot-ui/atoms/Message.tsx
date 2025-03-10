@@ -1,7 +1,7 @@
 import { MessageType } from "@/lib/components/chatbot-ui/types";
 import React from "react";
 
-export const Message: React.FC<MessageType> = ({ role, text }) => {
+export const Message: React.FC<MessageType> = ({ role, html }) => {
   const isUser = role === "Nutzer";
 
   return (
@@ -12,7 +12,7 @@ export const Message: React.FC<MessageType> = ({ role, text }) => {
             ? "bg-blue-500 text-right rounded-br-none"
             : "bg-gray-500 text-left rounded-bl-none"
         }`}
-        dangerouslySetInnerHTML={{ __html: text }}
+        dangerouslySetInnerHTML={{ __html: html }}
       ></div>
     </div>
   );

@@ -26,8 +26,8 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({ chatBotId, token }) => {
   const [isWaiting, setIsWaiting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
-  const [isUserScrolling, setIsUserScrolling] = useState(false);
-  const [isMinimized, setIsMinimized] = useState(false);
+  const [isUserScrolling, setIsUserScrolling] = useState<boolean>(false);
+  const [isMinimized, setIsMinimized] = useState<boolean>(false);
 
   // Auto-scroll logic
   useEffect(() => {
@@ -72,7 +72,7 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({ chatBotId, token }) => {
   const sendMessage = async (userMessage: string) => {
     if (!chatBotId || !token || isWaiting) return;
 
-    setMessages((prev) => [...prev, { role: "Nutzer", text: userMessage }]);
+    setMessages((prev) => [...prev, { role: "Nutzer", html: userMessage }]);
     setIsWaiting(true);
 
     try {
@@ -89,13 +89,13 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({ chatBotId, token }) => {
         localStorage.setItem(`session_${chatBotId}`, newSessionId);
       }
 
-      setMessages((prev) => [...prev, { role: "Antwort", text: response }]);
+      setMessages((prev) => [...prev, { role: "Antwort", html: response }]);
     } catch (error) {
       setMessages((prev) => [
         ...prev,
         {
           role: "Antwort",
-          text: "Es ist ein Fehler aufgetreten. Versuche es später nochmal!",
+          html: "Es ist ein Fehler aufgetreten. Versuche es später nochmal!",
         },
       ]);
       console.error("Error communicating with chatbot:", error);
@@ -124,7 +124,7 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({ chatBotId, token }) => {
       {!isMinimized && (
         <>
           <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-2">
-            <MessageList messages={messages} />
+            <MessageList messages={messages} isTyping={isWaiting} />
             <div ref={messagesEndRef} />
           </div>
           <ChatInput onSend={sendMessage} isWaiting={isWaiting} />
