@@ -11,7 +11,7 @@ import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
 import QuotaGauge from "@/lib/components/admin/atoms/QuotaGauge";
 import Banner from "@/lib/components/admin/molecules/Banner";
 import Card from "@/lib/components/admin/organisms/Card";
-import { isDevModeEnabled } from "@/lib/utils/dev-mode";
+
 const feQuotaService = FEQutoaService.Insance;
 
 const QuotasOverview: React.FC = () => {
@@ -22,14 +22,6 @@ const QuotasOverview: React.FC = () => {
     const queryTierQuotaLimits = async () => {
       const qtli: QuotasTierLimitsInfo =
         await feQuotaService.getTierQuotaLimits();
-
-      if (isDevModeEnabled()) {
-        qtli.quotasTierLimits[0].limits[1].limit = 200;
-        qtli.quotasTierLimits[0].limits[2].limit = 300;
-
-        qtli.quotasTierLimits[1].limits[1].limit = 200;
-        qtli.quotasTierLimits[1].limits[2].limit = 300;
-      }
 
       setTierQuotaLimitsInfo(qtli);
     };
