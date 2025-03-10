@@ -51,7 +51,7 @@ export class OpenAIChatService extends IChatService {
     ];
 
     const summaryResponse = await this.openai.chat.completions.create({
-      model: "gpt-4-turbo",
+      model: process.env.NEXT_PUBLIC_OPENAI_CHAT_COMPLETION_MODEL!,
       messages: summaryPrompt,
     });
 
@@ -90,7 +90,7 @@ export class OpenAIChatService extends IChatService {
       ];
 
       const response = await this.openai.chat.completions.create({
-        model: "gpt-4-turbo",
+        model: process.env.NEXT_PUBLIC_OPENAI_CHAT_COMPLETION_MODEL!,
         messages,
       });
 

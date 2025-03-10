@@ -22,7 +22,7 @@ export class OpenAIEmbeddingService extends IEmbeddingService {
     return this.client.embeddings
       .create({
         input: text,
-        model: "text-embedding-ada-002",
+        model: process.env.NEXT_PUBLIC_OPENAI_EMBEDDING_MODEL!,
       })
       .then((r) => r.data.map((d) => d.embedding)[0]);
   }
