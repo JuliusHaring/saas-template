@@ -59,7 +59,7 @@ export async function insertFile(
 
       return file;
     },
-    { timeout: 999999 },
+    { timeout: Number.MAX_SAFE_INTEGER, maxWait: Number.MAX_SAFE_INTEGER },
   );
 
   return files;
