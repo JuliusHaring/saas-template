@@ -112,6 +112,6 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
   }
 
   private extractFileName(url: string): string {
-    return url.replace(/[^a-zA-Z0-9]/g, "_");
+    return new URL(url).pathname;
   }
 }

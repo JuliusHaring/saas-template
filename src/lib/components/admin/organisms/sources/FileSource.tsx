@@ -135,7 +135,10 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
               </div>
 
               {/* File Name */}
-              <p className="text-sm text-center truncate w-full mt-2">
+              <p
+                className="text-sm text-center truncate w-full mt-2"
+                title={file.name}
+              >
                 {file.name}
               </p>
             </div>
