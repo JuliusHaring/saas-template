@@ -1,13 +1,12 @@
 "use client";
 
-import { Analytics } from "@vercel/analytics/react";
-import { injectSpeedInsights } from "@vercel/speed-insights";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  injectSpeedInsights();
-
   return (
     <>
+      <SpeedInsights />
       <Analytics />
       {children}
     </>
