@@ -1,28 +1,16 @@
 import { deleteFile, getFiles } from "@/lib/db/pg-rag";
 import { ChatBotIdType, UserIdType } from "@/lib/db/types";
 import { FileIdType, RAGFile } from "@/lib/services/api-services/rag/types";
+import { checkFileUploadable } from "@/lib/utils/frontend/files";
 const { getTextExtractor } = await import("office-text-extractor");
 
 export class FilesService {
   private static _instance: FilesService;
 
-  private FILE_TYPES =
-    process.env.NEXT_PUBLIC_SOURCES_FILES_TYPES?.split(",").map((t) =>
-      t.trim().toLowerCase(),
-    ) || [];
-
   private constructor() {}
 
   public static get Instance() {
     return this._instance || (this._instance = new this());
-  }
-
-  private _checkFileType(file: File): void {
-    const fileExtension = file.name.split(".").pop()?.toLowerCase();
-
-    if (!fileExtension || !this.FILE_TYPES.includes(fileExtension)) {
-      throw new Error(`File type not allowed: .${fileExtension || "unknown"}`);
-    }
   }
 
   private async _extractText(file: File): Promise<string> {
@@ -41,7 +29,7 @@ export class FilesService {
   public async convertFilesToRagFiles(files: File[]): Promise<RAGFile[]> {
     return Promise.all(
       files.map(async (file) => {
-        this._checkFileType(file);
+        checkFileUploadable(file);
 
         const textContent = await this._extractText(file);
 

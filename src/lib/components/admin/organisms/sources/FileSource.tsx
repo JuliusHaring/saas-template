@@ -2,6 +2,10 @@ import Button from "@/lib/components/admin/molecules/Button";
 import Card from "@/lib/components/admin/organisms/Card";
 import { FileIdType, FileType } from "@/lib/services/api-services/rag/types";
 import { FERAGService } from "@/lib/services/frontend-services/rag-service";
+import {
+  checkFileUploadable,
+  getAcceptableFileTypes,
+} from "@/lib/utils/frontend/files";
 import { useEffect, useState, useRef } from "react";
 
 const feRagService = FERAGService.Instance;
@@ -9,16 +13,15 @@ const feRagService = FERAGService.Instance;
 export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
   const [ragFiles, setRagFiles] = useState<FileType[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchRagFiles = async () => {
     const files = await feRagService.getFiles(chatBotId);
-
     const sortedFiles = files.sort(
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
-
     setRagFiles(sortedFiles);
   };
 
@@ -27,8 +30,20 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
   }, [chatBotId]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files?.length) {
-      setSelectedFiles(Array.from(event.target.files)); // Store all selected files
+    if (!event.target.files?.length) return;
+
+    try {
+      const newFiles = Array.from(event.target.files).map((file) => {
+        checkFileUploadable(file);
+        return file;
+      });
+
+      setSelectedFiles(newFiles);
+      setError(null);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      }
     }
   };
 
@@ -37,10 +52,11 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
 
     try {
       await feRagService.uploadFiles(chatBotId, selectedFiles);
-      setSelectedFiles([]); // Clear selected files after upload
+      setSelectedFiles([]);
       fetchRagFiles();
     } catch (error) {
       console.error("File upload failed:", error);
+      setError("Fehler beim Hochladen der Datei.");
     }
   };
 
@@ -64,7 +80,7 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
         selectedFiles,
       )}
     >
-      {/* File list */}
+      {error && <p className="text-red-500 p-2">{error}</p>}
       <table className="w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-gray-200">
@@ -111,25 +127,28 @@ const UploadFooter = (
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
   handleUpload: () => void,
   selectedFiles: File[],
-) => (
-  <div className="flex items-center gap-4">
-    <input
-      type="file"
-      ref={fileInputRef}
-      onChange={handleFileChange}
-      multiple // Allow multiple files
-      className="hidden"
-    />
-    <Button onClick={() => fileInputRef.current?.click()}>
-      Dateien auswählen
-    </Button>
-    <span className="text-gray-700">
-      {selectedFiles.length > 0
-        ? selectedFiles.map((file) => file.name).join(", ")
-        : "Keine Dateien ausgewählt"}
-    </span>
-    <Button onClick={handleUpload} isDisabled={selectedFiles.length === 0}>
-      Hochladen
-    </Button>
-  </div>
-);
+) => {
+  return (
+    <div className="flex items-center gap-4">
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        multiple
+        accept={getAcceptableFileTypes()} // Enforces file types from utils
+        className="hidden"
+      />
+      <Button onClick={() => fileInputRef.current?.click()}>
+        Dateien auswählen
+      </Button>
+      <span className="text-gray-700">
+        {selectedFiles.length > 0
+          ? selectedFiles.map((file) => file.name).join(", ")
+          : "Keine Dateien ausgewählt"}
+      </span>
+      <Button onClick={handleUpload} isDisabled={selectedFiles.length === 0}>
+        Hochladen
+      </Button>
+    </div>
+  );
+};
