@@ -8,6 +8,7 @@ import { TextService } from "@/lib/services/text-service";
 
 export class WebsiteSourceCrawler extends RAGSourceCrawler {
   private static _instance: WebsiteSourceCrawler;
+  protected insertionSource = "WebsiteSourceCrawler";
   textService: TextService;
 
   public static async getInstance() {

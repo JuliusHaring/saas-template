@@ -8,6 +8,8 @@ export abstract class RAGSourceCrawler {
   protected textService!: TextService;
   protected ragService!: IRAGService;
 
+  protected abstract insertionSource: string;
+
   protected constructor() {}
 
   protected async init() {
@@ -24,16 +26,14 @@ export abstract class RAGSourceCrawler {
     userId: UserIdType,
     chatBotId: string,
   ): Promise<RAGFile[]> {
-    const insertionSource = this.constructor.name;
-
     await this.ragService.deleteFilesFromSource(
       chatBotId,
       userId,
-      insertionSource,
+      this.insertionSource,
     );
 
     return this._listFiles(userId, chatBotId).then((files) => {
-      files.map((f) => (f.insertionSource = insertionSource));
+      files.map((f) => (f.insertionSource = this.insertionSource));
       return files;
     });
   }
