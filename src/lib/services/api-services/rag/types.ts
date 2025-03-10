@@ -1,8 +1,11 @@
 import { File, Prisma } from "@prisma/client";
 
+export type InsertionIdType = File["insertionId"];
+
 export class RAGFile {
   name: string;
   content: string;
+  insertionId!: InsertionIdType;
 
   constructor(name: string, content: string) {
     this.name = name;
@@ -10,13 +13,15 @@ export class RAGFile {
   }
 }
 
+export type RAGFileType = Omit<RAGFile, "complete" | "isComplete">;
+
 export type RAGInsertType = RAGFile & {
   embedding: EmbeddingType;
 };
 
 export type RAGQueryType = string;
 
-export type RAGQueryResultType = RAGInsertType;
+export type RAGQueryResultType = RAGFileType;
 
 export type EmbeddingQueryType = RAGQueryType;
 export type EmbeddingType = number[];

@@ -8,17 +8,19 @@ import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
 import { PostGresRAGService } from "@/lib/services/api-services/rag/postgres-rag-service";
 
 export abstract class IChatService {
-  private promptService: PromptService;
-  private ragService: IRAGService;
-  private chatbotService: ChatBotService;
-  private historyStorageService: IHistoryStorageService;
+  private promptService!: PromptService;
+  private ragService!: IRAGService;
+  private chatbotService!: ChatBotService;
+  private historyStorageService!: IHistoryStorageService;
 
   protected defaultNoResponseMessage = ``;
   protected defaultErrorMessage = ``;
 
-  protected constructor() {
+  protected constructor() {}
+
+  protected async init() {
     this.promptService = PromptService.Instance;
-    this.ragService = PostGresRAGService.Instance;
+    this.ragService = await PostGresRAGService.getInstance();
     this.chatbotService = ChatBotService.Instance;
     this.historyStorageService = InMemoryChatHistoryStorageService.Instance;
   }

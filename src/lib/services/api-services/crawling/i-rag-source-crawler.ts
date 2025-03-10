@@ -12,12 +12,9 @@ export abstract class RAGSourceCrawler {
   abstract _listFiles(
     userId: UserIdType,
     chatBotId: string,
-    n: number,
   ): Promise<RAGFile[]>;
 
-  public async listFiles(userId: UserIdType, chatBotId: string, n: number) {
-    const files = await this._listFiles(userId, chatBotId, n);
-
-    return files.splice(0, n);
+  public async listFiles(userId: UserIdType, chatBotId: string) {
+    return this._listFiles(userId, chatBotId);
   }
 }

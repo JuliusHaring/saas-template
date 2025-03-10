@@ -11,7 +11,7 @@ import { NextRequest } from "next/server";
 import { IngestedFilesResponseType } from "@/lib/services/api-services/rag/types";
 
 const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
-const ragService: IRAGService = PostGresRAGService.Instance;
+const ragService: IRAGService = await PostGresRAGService.getInstance();
 const quotaService = await QuotaService.getInstance();
 
 export const POST = withErrorHandling(async (request: NextRequest) => {
@@ -20,10 +20,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
 
   const { chatBotId } = body;
 
-  let n = await quotaService.getUserQuotaRemainder(userId, Quota.MAX_FILES);
-  n = Math.max(0, n);
-
-  const files = await websiteSourceCrawler.listFiles(userId!, chatBotId, n);
+  const files = await websiteSourceCrawler.listFiles(userId!, chatBotId);
 
   const ingestedFiles = await ragService.insertFiles(chatBotId, userId, files);
 

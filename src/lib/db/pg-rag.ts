@@ -10,9 +10,9 @@ import {
 import { prisma } from "@/lib/db";
 import { ChatBotIdType, UserIdType } from "@/lib/db/types";
 
-export class DocumentNotFoundException extends Error {}
+export class FileNotFoundException extends Error {}
 
-export async function getVectorForDocument(
+export async function getVectorForFile(
   chatBotId: ChatBotIdType,
   fileId: FileIdType,
 ): Promise<number[]> {
@@ -23,7 +23,7 @@ export async function getVectorForDocument(
   `);
 
   if (vectors.length !== 1) {
-    throw new DocumentNotFoundException();
+    throw new FileNotFoundException();
   }
 
   const vectorString = vectors[0].vector as unknown as string;
@@ -45,7 +45,7 @@ export async function insertFile(
 
   const files = await prisma.$transaction(
     async (t) => {
-      const document = await t.file.create({
+      const file = await t.file.create({
         data,
       });
 
@@ -53,10 +53,10 @@ export async function insertFile(
       await t.$queryRaw(Prisma.sql`
       UPDATE "File"
       SET vector = ${vectorString}::vector(1536)
-      WHERE id = ${document.id};
+      WHERE id = ${file.id};
     `);
 
-      return document;
+      return file;
     },
     { timeout: 999999 },
   );
@@ -107,7 +107,7 @@ export async function findClosest(
 
   // Perform similarity search at the SQL level
   const results = await prisma.$queryRaw<FileWithEmbeddingType[]>(Prisma.sql`
-    SELECT id, name, content, 'createdAt', 'chatBotId', vector <-> ${vectorString}::vector(1536) AS distance
+    SELECT id, name, content, 'createdAt', 'chatBotId', 'insertionId', vector <-> ${vectorString}::vector(1536) AS distance
     FROM "File"
     WHERE vector IS NOT NULL
     ORDER BY distance DESC
@@ -118,5 +118,6 @@ export async function findClosest(
     name: r.name,
     embedding: vectorString.split(",").map((v) => parseFloat(v)),
     content: r.content,
+    insertionId: r.insertionId,
   }));
 }

@@ -1,22 +1,13 @@
 import { ChatBotIdType } from "@/lib/db/types";
-import {
-  Quota,
-  QuotaService,
-} from "@/lib/services/api-services/quotas-service";
 import { FilesService } from "@/lib/services/api-services/rag/files-service";
 import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
 import { PostGresRAGService } from "@/lib/services/api-services/rag/postgres-rag-service";
 import { RAGFile } from "@/lib/services/api-services/rag/types";
 import { getUserId } from "@/lib/utils/routes/auth";
-import {
-  NotFound,
-  QuotaReached,
-  withErrorHandling,
-} from "@/lib/utils/routes/http-errors";
+import { NotFound, withErrorHandling } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
 
-const ragService: IRAGService = PostGresRAGService.Instance;
-const quotaService = await QuotaService.getInstance();
+const ragService: IRAGService = await PostGresRAGService.getInstance();
 const filesService = FilesService.Instance;
 
 export const POST = withErrorHandling(
@@ -34,26 +25,10 @@ export const POST = withErrorHandling(
       throw NotFound("No files attached");
     }
 
-    const quotaRemainder = await quotaService.getUserQuotaRemainder(
-      userId,
-      Quota.MAX_FILES,
-    );
-
-    if (rawFiles.length > quotaRemainder) {
-      throw QuotaReached(
-        `Tried to upload ${rawFiles.length} files, only ${quotaRemainder} are left in the quota`,
-      );
-    }
-
     const ragFiles: RAGFile[] =
       await filesService.convertFilesToRagFiles(rawFiles);
 
-    const countObj = await ragService.insertFiles(
-      chatBotId,
-      userId,
-      ragFiles,
-      false,
-    );
+    const countObj = await ragService.insertFiles(chatBotId, userId, ragFiles);
 
     return countObj;
   },

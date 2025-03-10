@@ -23,7 +23,7 @@ import {
   ChatResponseType,
 } from "@/lib/services/api-services/chat/types";
 
-const openAIChatService = OpenAIChatService.Instance;
+const openAIChatService = await OpenAIChatService.getInstance();
 const quotaService = await QuotaService.getInstance();
 
 export const POST = withErrorHandling(async (request: NextRequest) => {

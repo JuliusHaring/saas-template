@@ -1,4 +1,9 @@
 import { ChatBotIdType, UserIdType } from "@/lib/db/types";
+import {
+  Quota,
+  QuotaReachedException,
+  QuotaService,
+} from "@/lib/services/api-services/quotas-service";
 import { IEmbeddingService } from "@/lib/services/api-services/rag/i-embedding-service";
 import { OpenAIEmbeddingService } from "@/lib/services/api-services/rag/open-ai-embedding-service";
 import {
@@ -8,12 +13,17 @@ import {
   RAGQueryResultType,
   RAGQueryType,
 } from "@/lib/services/api-services/rag/types";
+import { v4 as uuid } from "uuid";
 
 export abstract class IRAGService {
-  protected embeddingService: IEmbeddingService;
+  protected embeddingService!: IEmbeddingService;
+  protected quotaService!: QuotaService;
   private MAX_CHUNK_LENGTH: number = 6000;
 
-  protected constructor() {
+  protected constructor() {}
+
+  protected async init() {
+    this.quotaService = await QuotaService.getInstance();
     this.embeddingService = OpenAIEmbeddingService.Instance;
   }
 
@@ -32,9 +42,11 @@ export abstract class IRAGService {
     chatBotId: ChatBotIdType,
     userId: UserIdType,
     ragFiles: RAGFile[],
-    deleteExisting: boolean = true,
   ): Promise<{ count: number }> {
-    if (deleteExisting) await this.deleteFiles(chatBotId, userId);
+    const n = await this.quotaService.getUserQuotaRemainder(
+      userId,
+      Quota.MAX_FILES,
+    );
 
     const splitFiles: RAGFile[] = [];
     for (const file of ragFiles) {
@@ -42,9 +54,16 @@ export abstract class IRAGService {
       splitFiles.push(...chunks);
     }
 
+    if (splitFiles.length > n) {
+      throw new QuotaReachedException(Quota.MAX_FILES);
+    }
+
     const embeddedFiles = await Promise.all(
       splitFiles.map((ragFile) => this.embedRAGFile(ragFile)),
     );
+
+    const insertionId = uuid();
+    embeddedFiles.map((f) => (f.insertionId = insertionId));
 
     return this._insertFiles(chatBotId, userId, embeddedFiles);
   }

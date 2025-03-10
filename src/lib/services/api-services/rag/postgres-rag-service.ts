@@ -13,8 +13,11 @@ export class PostGresRAGService extends IRAGService {
     super();
   }
 
-  public static get Instance() {
-    return this._instance || (this._instance = new this());
+  public static async getInstance() {
+    if (typeof this._instance !== "undefined") return this._instance;
+    this._instance = new this();
+    await this._instance.init();
+    return this._instance;
   }
 
   async _insertFiles(
