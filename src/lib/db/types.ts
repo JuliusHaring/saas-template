@@ -1,3 +1,4 @@
+import { FileIdType } from "@/lib/services/api-services/rag/types";
 import {
   ChatBot,
   GDriveSource,
@@ -55,3 +56,10 @@ export type SubscriptionType = Subscription;
 export type SubscriptionTier = PrismaSubscriptionTier;
 
 export const SubscriptionTierValues = Object.values($Enums.SubscriptionTier);
+
+export type FilesDeleteFromInsertionSourceType = {
+  chatBotId: ChatBotIdType;
+  fileId: FileIdType;
+};
+
+export type BatchPayload = Prisma.BatchPayload;

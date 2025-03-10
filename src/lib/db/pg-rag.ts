@@ -65,6 +65,19 @@ export async function insertFile(
   return files;
 }
 
+export async function getFile(
+  chatBotId: ChatBotIdType,
+  userId: UserIdType,
+  fileId: FileIdType,
+) {
+  return prisma.file.findFirstOrThrow({
+    where: {
+      ChatBot: { id: chatBotId, userId },
+      id: fileId,
+    },
+  });
+}
+
 export async function getFiles(
   chatBotId: ChatBotIdType,
   userId: UserIdType,

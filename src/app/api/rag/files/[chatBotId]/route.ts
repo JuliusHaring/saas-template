@@ -1,4 +1,7 @@
-import { ChatBotIdType } from "@/lib/db/types";
+import {
+  ChatBotIdType,
+  FilesDeleteFromInsertionSourceType,
+} from "@/lib/db/types";
 import { FilesService } from "@/lib/services/api-services/rag/files-service";
 import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
 import { PostGresRAGService } from "@/lib/services/api-services/rag/postgres-rag-service";
@@ -45,3 +48,16 @@ export const GET = withErrorHandling(
     return filesService.getFiles(chatBotId, userId);
   },
 );
+
+export const DELETE = withErrorHandling(async (request: NextRequest) => {
+  const userId = await getUserId();
+  const body: FilesDeleteFromInsertionSourceType = await request.json();
+
+  const file = await filesService.getFile(body.chatBotId, userId, body.fileId);
+
+  return await filesService.deleteFilesFromSource(
+    body.chatBotId,
+    userId,
+    file.insertionSource,
+  );
+});

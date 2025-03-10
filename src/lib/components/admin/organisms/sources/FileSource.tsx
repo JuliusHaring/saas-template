@@ -12,6 +12,7 @@ import {
   TrashIcon,
   PlusIcon,
   ArrowPathIcon,
+  FolderMinusIcon,
 } from "@heroicons/react/24/outline";
 
 const feRagService = FERAGService.Instance;
@@ -79,6 +80,15 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
     }
   };
 
+  const handleDeleteInsetionSource = async (fileId: FileIdType) => {
+    try {
+      await feRagService.deleteFilesWithSameInsertionSource(chatBotId, fileId);
+      fetchRagFiles();
+    } catch (error) {
+      console.error(`Error deleting file: ${error}`);
+    }
+  };
+
   return (
     <Card
       header="Dateien"
@@ -101,13 +111,23 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
               className="relative flex flex-col items-center p-3"
             >
               {/* Delete button in top-right corner */}
-              <Button
-                className="absolute top-1 right-1 p-1 h-6 w-6 px-1! py-1!"
-                variant="danger"
-                onClick={() => handleDelete(file.id)}
-              >
-                <TrashIcon className="h-4 w-4" />
-              </Button>
+              <div className="absolute top-1 right-1">
+                <Button
+                  className="h-6 w-6 px-1! py-1!"
+                  variant="danger"
+                  onClick={() => handleDelete(file.id)}
+                >
+                  <TrashIcon className="h-4 w-4" />
+                </Button>
+                &nbsp;
+                <Button
+                  className="h-6 w-6 px-1! py-1!"
+                  variant="danger"
+                  onClick={() => handleDeleteInsetionSource(file.id)}
+                >
+                  <FolderMinusIcon className="h-4 w-4" />
+                </Button>
+              </div>
 
               {/* File Icon */}
               <div className="w-12 h-12 text-gray-500">
@@ -150,6 +170,7 @@ const UploadFooter = (
       <Button
         onClick={() => fileInputRef.current?.click()}
         className="flex items-center gap-2"
+        isDisabled={isUploading}
       >
         <PlusIcon className="w-5 h-5" />
         Dateien auswählen

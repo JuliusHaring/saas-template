@@ -1,6 +1,15 @@
-import { deleteFile, getFiles } from "@/lib/db/pg-rag";
+import {
+  deleteFile,
+  deleteFilesFromSource,
+  getFile,
+  getFiles,
+} from "@/lib/db/pg-rag";
 import { ChatBotIdType, UserIdType } from "@/lib/db/types";
-import { FileIdType, RAGFile } from "@/lib/services/api-services/rag/types";
+import {
+  FileIdType,
+  InsertionSourceType,
+  RAGFile,
+} from "@/lib/services/api-services/rag/types";
 import { checkFileUploadable } from "@/lib/utils/frontend/files";
 const { getTextExtractor } = await import("office-text-extractor");
 
@@ -42,11 +51,27 @@ export class FilesService {
     return getFiles(chatBotId, userId);
   }
 
+  public async getFile(
+    chatBotId: ChatBotIdType,
+    userId: UserIdType,
+    fileId: FileIdType,
+  ) {
+    return getFile(chatBotId, userId, fileId);
+  }
+
   public async deleteFile(
     chatBotId: ChatBotIdType,
     userId: UserIdType,
     fileId: FileIdType,
   ) {
     return deleteFile(chatBotId, userId, fileId);
+  }
+
+  public async deleteFilesFromSource(
+    chatBotId: ChatBotIdType,
+    userId: UserIdType,
+    insertionSource: InsertionSourceType,
+  ) {
+    return deleteFilesFromSource(chatBotId, userId, insertionSource);
   }
 }

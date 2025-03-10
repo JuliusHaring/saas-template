@@ -1,4 +1,8 @@
-import { ChatBotIdType } from "@/lib/db/types";
+import {
+  ChatBotIdType,
+  BatchPayload,
+  FilesDeleteFromInsertionSourceType,
+} from "@/lib/db/types";
 import {
   IngestedFilesResponseType,
   FileIdType,
@@ -41,6 +45,20 @@ export class FERAGService {
   public async deleteFile(chatBotId: ChatBotIdType, fileId: FileIdType) {
     return fetchJson<FileType>(`/api/rag/files/${chatBotId}/${fileId}`, {
       method: "DELETE",
+    });
+  }
+
+  public async deleteFilesWithSameInsertionSource(
+    chatBotId: ChatBotIdType,
+    fileId: FileIdType,
+  ) {
+    const body: FilesDeleteFromInsertionSourceType = {
+      chatBotId,
+      fileId,
+    };
+    return fetchJson<BatchPayload>(`/api/rag/files/${chatBotId}`, {
+      method: "DELETE",
+      body: JSON.stringify(body),
     });
   }
 }
