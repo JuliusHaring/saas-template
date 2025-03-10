@@ -3,7 +3,7 @@ import { sign, verify } from "jsonwebtoken";
 
 export function signToken(chatBotId: ChatBotIdType, allowedDomains: string[]) {
   return sign({ chatBotId, allowedDomains }, process.env.JWT_SECRET!, {
-    expiresIn: "5m",
+    expiresIn: "24h",
   });
 }
 
