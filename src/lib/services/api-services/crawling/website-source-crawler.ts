@@ -32,7 +32,7 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
     const regexPatterns = url_exceptions.map((pattern) => new RegExp(pattern));
 
     const files: RAGFile[] = [];
-    await this.crawlWebsite(
+    await this._crawlWebsite(
       url,
       regexPatterns,
       visitedUrls,
@@ -44,7 +44,7 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
     return files;
   }
 
-  private async crawlWebsite(
+  private async _crawlWebsite(
     url: string,
     urlExceptions: RegExp[],
     visitedUrls: Set<string>,
@@ -86,7 +86,7 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
 
       // Recursively crawl the links
       for (const link of links) {
-        await this.crawlWebsite(
+        await this._crawlWebsite(
           link,
           urlExceptions,
           visitedUrls,
