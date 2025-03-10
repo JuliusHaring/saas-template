@@ -13,15 +13,19 @@ import {
   PlusIcon,
   ArrowPathIcon,
   FolderMinusIcon,
+  BookOpenIcon,
 } from "@heroicons/react/24/outline";
+import { TextService } from "@/lib/services/text-service";
 
 const feRagService = FERAGService.Instance;
+const textService = TextService.Instance;
 
 export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
   const [ragFiles, setRagFiles] = useState<FileType[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [previewContent, setPreviewContent] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const fetchRagFiles = async () => {
@@ -53,6 +57,11 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
         setError(error.message);
       }
     }
+  };
+
+  const handlePreview = (content: FileType["content"]) => {
+    const html = textService.convertMarkdownToHtml(content);
+    setPreviewContent(html);
   };
 
   const handleUpload = async () => {
@@ -90,66 +99,80 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
   };
 
   return (
-    <Card
-      header="Dateien"
-      footer={UploadFooter(
-        fileInputRef,
-        handleFileChange,
-        handleUpload,
-        selectedFiles,
-        isUploading,
-      )}
-    >
-      {error && <p className="text-red-500 p-2">{error}</p>}
+    <div>
+      <PreviewWindow
+        previewContent={previewContent}
+        setPreviewContent={setPreviewContent}
+      />
 
-      {/* Responsive grid container */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
-        {ragFiles.length > 0 ? (
-          ragFiles.map((file) => (
-            <div
-              key={file.id}
-              className="relative flex flex-col items-center p-3"
-            >
-              {/* Delete button in top-right corner */}
-              <div className="absolute top-1 right-1">
-                <Button
-                  className="h-6 w-6 px-1! py-1!"
-                  variant="danger"
-                  onClick={() => handleDelete(file.id)}
-                >
-                  <TrashIcon className="h-4 w-4" />
-                </Button>
-                &nbsp;
-                <Button
-                  className="h-6 w-6 px-1! py-1!"
-                  variant="danger"
-                  onClick={() => handleDeleteInsetionSource(file.id)}
-                >
-                  <FolderMinusIcon className="h-4 w-4" />
-                </Button>
-              </div>
-
-              {/* File Icon */}
-              <div className="w-12 h-12 text-gray-500">
-                {getFileIconType(file.insertionSource, file.name)}
-              </div>
-
-              {/* File Name */}
-              <p
-                className="text-sm text-center truncate w-full mt-2"
-                title={file.name}
-              >
-                {file.name}
-              </p>
-            </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-500 col-span-full">
-            Keine Dateien vorhanden
-          </p>
+      <Card
+        header="Dateien"
+        footer={UploadFooter(
+          fileInputRef,
+          handleFileChange,
+          handleUpload,
+          selectedFiles,
+          isUploading,
         )}
-      </div>
-    </Card>
+      >
+        {error && <p className="text-red-500 p-2">{error}</p>}
+
+        {/* Responsive grid container */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+          {ragFiles.length > 0 ? (
+            ragFiles.map((file) => (
+              <div
+                key={file.id}
+                className="relative flex flex-col items-center p-3"
+              >
+                {/* Delete button in top-right corner */}
+                <div className="absolute top-1 right-1">
+                  <Button
+                    className="h-6 w-6 px-1! py-1!"
+                    onClick={() => handlePreview(file.content)}
+                  >
+                    <BookOpenIcon className="h-4 w-4" />
+                  </Button>
+                  &nbsp;
+                  <Button
+                    className="h-6 w-6 px-1! py-1!"
+                    variant="danger"
+                    onClick={() => handleDelete(file.id)}
+                  >
+                    <TrashIcon className="h-4 w-4" />
+                  </Button>
+                  &nbsp;
+                  <Button
+                    className="h-6 w-6 px-1! py-1!"
+                    variant="danger"
+                    onClick={() => handleDeleteInsetionSource(file.id)}
+                  >
+                    <FolderMinusIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                {/* File Icon */}
+                <div className="w-12 h-12 text-gray-500">
+                  {getFileIconType(file.insertionSource, file.name)}
+                </div>
+
+                {/* File Name */}
+                <p
+                  className="text-sm text-center truncate w-full mt-2"
+                  title={file.name}
+                >
+                  {file.name}
+                </p>
+              </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-500 col-span-full">
+              Keine Dateien vorhanden
+            </p>
+          )}
+        </div>
+      </Card>
+    </div>
   );
 };
 
@@ -192,5 +215,32 @@ const UploadFooter = (
         Hochladen
       </Button>
     </div>
+  );
+};
+
+const PreviewWindow: React.FC<{
+  previewContent: string | null;
+  setPreviewContent: (previewContent: string | null) => void;
+}> = ({ previewContent, setPreviewContent }) => {
+  return (
+    <>
+      {previewContent && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white shadow-xl max-w-3xl max-h-[80vh] overflow-auto p-6 relative">
+            <Button
+              variant="danger"
+              className="absolute top-2 right-2"
+              onClick={() => setPreviewContent(null)}
+            >
+              Schließen
+            </Button>
+            <div
+              dangerouslySetInnerHTML={{ __html: previewContent }}
+              className="mt-10"
+            />
+          </div>
+        </div>
+      )}
+    </>
   );
 };
