@@ -4,7 +4,7 @@ import * as cheerio from "cheerio";
 import { UserIdType } from "@/lib/db/types";
 import { RAGSourceCrawler } from "@/lib/services/api-services/crawling/i-rag-source-crawler";
 import { RAGFile } from "@/lib/services/api-services/rag/types";
-import { TextService } from "@/lib/services/api-services/text-service";
+import { TextService } from "@/lib/services/text-service";
 
 export class WebsiteSourceCrawler extends RAGSourceCrawler {
   private static _instance: WebsiteSourceCrawler;

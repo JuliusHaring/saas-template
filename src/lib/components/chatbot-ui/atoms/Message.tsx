@@ -12,9 +12,8 @@ export const Message: React.FC<MessageType> = ({ role, text }) => {
             ? "bg-blue-500 text-right rounded-br-none"
             : "bg-gray-500 text-left rounded-bl-none"
         }`}
-      >
-        {text}
-      </div>
+        dangerouslySetInnerHTML={{ __html: text }}
+      ></div>
     </div>
   );
 };

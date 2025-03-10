@@ -2,7 +2,7 @@ import { UserIdType } from "@/lib/db/types";
 import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
 import { PostGresRAGService } from "@/lib/services/api-services/rag/postgres-rag-service";
 import { RAGFile } from "@/lib/services/api-services/rag/types";
-import { TextService } from "@/lib/services/api-services/text-service";
+import { TextService } from "@/lib/services/text-service";
 
 export abstract class RAGSourceCrawler {
   protected textService!: TextService;

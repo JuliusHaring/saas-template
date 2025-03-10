@@ -22,6 +22,7 @@
     "axios": "^1.7.9",
     "cheerio": "^1.0.0",
     "jsonwebtoken": "^9.0.2",
+    "marked": "^15.0.7",
     "next": "15.1.5",
     "office-text-extractor": "^3.0.3",
     "openai": "^4.79.4",

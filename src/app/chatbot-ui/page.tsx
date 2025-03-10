@@ -139,7 +139,7 @@ const ChatbotUI: React.FC<ChatbotUIProps> = ({
         className="flex items-center justify-between bg-blue-500 text-white p-3 cursor-pointer"
         onClick={() => setIsMinimized(!isMinimized)}
       >
-        <Headline level={2}>{chatBotName}</Headline>
+        <Headline level={3}>{chatBotName}</Headline>
         {isMinimized ? (
           <ArrowUpIcon className="h-5 w-5 text-white" />
         ) : (
