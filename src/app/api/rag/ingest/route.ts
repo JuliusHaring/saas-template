@@ -10,7 +10,7 @@ import { withErrorHandling } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
 import { IngestedFilesResponseType } from "@/lib/services/api-services/rag/types";
 
-const websiteSourceCrawler = WebsiteSourceCrawler.Instance;
+const websiteSourceCrawler = await WebsiteSourceCrawler.getInstance();
 const ragService: IRAGService = await PostGresRAGService.getInstance();
 const quotaService = await QuotaService.getInstance();
 

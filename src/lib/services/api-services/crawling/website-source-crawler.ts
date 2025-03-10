@@ -10,8 +10,12 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
   private static _instance: WebsiteSourceCrawler;
   textService: TextService;
 
-  public static get Instance() {
-    return this._instance || (this._instance = new this());
+  public static async getInstance() {
+    if (typeof this._instance !== "undefined") return this._instance;
+
+    this._instance = new this();
+    this._instance.init();
+    return this._instance;
   }
 
   private constructor() {
@@ -82,6 +86,7 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
       files.push({
         name: this.extractFileName(url),
         content: this.textService.convertHtmlToText(response.data),
+        insertionSource: WebsiteSourceCrawler.name,
       });
 
       // Recursively crawl the links

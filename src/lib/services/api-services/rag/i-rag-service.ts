@@ -12,8 +12,14 @@ import {
   EmbeddingType,
   RAGQueryResultType,
   RAGQueryType,
+  InsertionSourceType,
 } from "@/lib/services/api-services/rag/types";
-import { v4 as uuid } from "uuid";
+
+export class InvalidRAGFileException extends Error {
+  constructor(ragFile: RAGFile) {
+    super(`Invalid RAGFile: ${ragFile.name}`);
+  }
+}
 
 export abstract class IRAGService {
   protected embeddingService!: IEmbeddingService;
@@ -62,8 +68,11 @@ export abstract class IRAGService {
       splitFiles.map((ragFile) => this.embedRAGFile(ragFile)),
     );
 
-    const insertionId = uuid();
-    embeddedFiles.map((f) => (f.insertionId = insertionId));
+    embeddedFiles.map((f) => {
+      if (typeof f.insertionSource === "undefined") {
+        throw new InvalidRAGFileException(f);
+      }
+    });
 
     return this._insertFiles(chatBotId, userId, embeddedFiles);
   }
@@ -75,7 +84,13 @@ export abstract class IRAGService {
       [];
 
     parts.forEach((part, index) => {
-      chunks.push(new RAGFile(`${file.name}_chunk_${index + 1}`, part));
+      chunks.push(
+        new RAGFile(
+          `${file.name}_chunk_${index + 1}`,
+          part,
+          file.insertionSource,
+        ),
+      );
     });
 
     return chunks;
@@ -84,6 +99,12 @@ export abstract class IRAGService {
   abstract deleteFiles(
     chatBotId: ChatBotIdType,
     userId: UserIdType,
+  ): Promise<void>;
+
+  abstract deleteFilesFromSource(
+    chatBotId: ChatBotIdType,
+    userId: UserIdType,
+    insertionSource: InsertionSourceType,
   ): Promise<void>;
 
   abstract _findClosest(

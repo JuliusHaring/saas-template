@@ -45,7 +45,7 @@ export class FilesService {
 
         const textContent = await this._extractText(file);
 
-        return new RAGFile(file.name, textContent);
+        return new RAGFile(file.name, textContent, FilesService.name);
       }),
     );
   }

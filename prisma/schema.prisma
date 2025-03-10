@@ -89,11 +89,11 @@ model File {
   chatBotId String
   ChatBot   ChatBot @relation(fields: [chatBotId], references: [id], onDelete: Cascade)
 
-  name        String
-  content     String
-  vector      Unsupported("vector(1536)")?
-  createdAt   DateTime                     @default(now())
-  insertionId String
+  name            String
+  content         String
+  vector          Unsupported("vector(1536)")?
+  createdAt       DateTime                     @default(now())
+  insertionSource String
 }
 
 model Style {

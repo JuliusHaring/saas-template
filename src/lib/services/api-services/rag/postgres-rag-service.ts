@@ -1,10 +1,16 @@
-import { insertFile, findClosest, deleteFiles } from "@/lib/db/pg-rag";
+import {
+  insertFile,
+  findClosest,
+  deleteFiles,
+  deleteFilesFromSource,
+} from "@/lib/db/pg-rag";
 import { ChatBotIdType, UserIdType } from "@/lib/db/types";
 import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
 import {
   RAGInsertType,
   EmbeddingType,
   RAGQueryResultType,
+  InsertionSourceType,
 } from "@/lib/services/api-services/rag/types";
 
 export class PostGresRAGService extends IRAGService {
@@ -42,5 +48,13 @@ export class PostGresRAGService extends IRAGService {
     userId: UserIdType,
   ): Promise<void> {
     await deleteFiles(chatBotId, userId);
+  }
+
+  async deleteFilesFromSource(
+    chatBotId: ChatBotIdType,
+    userId: UserIdType,
+    insertionSource: InsertionSourceType,
+  ): Promise<void> {
+    await deleteFilesFromSource(chatBotId, userId, insertionSource);
   }
 }

@@ -1,15 +1,22 @@
 import { File, Prisma } from "@prisma/client";
 
-export type InsertionIdType = File["insertionId"];
+export type InsertionSourceType = File["insertionSource"];
 
 export class RAGFile {
   name: string;
   content: string;
-  insertionId!: InsertionIdType;
+  insertionSource!: InsertionSourceType;
 
-  constructor(name: string, content: string) {
+  constructor(
+    name: string,
+    content: string,
+    insertionSource: InsertionSourceType | undefined = undefined,
+  ) {
     this.name = name;
     this.content = content;
+
+    if (typeof insertionSource !== "undefined")
+      this.insertionSource = insertionSource;
   }
 }
 

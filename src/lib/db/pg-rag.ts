@@ -4,6 +4,7 @@ import {
   FileIdType,
   FileType,
   FileWithEmbeddingType,
+  InsertionSourceType,
   RAGInsertType,
   RAGQueryResultType,
 } from "@/lib/services/api-services/rag/types";
@@ -99,6 +100,19 @@ export async function deleteFiles(
   });
 }
 
+export async function deleteFilesFromSource(
+  chatBotId: ChatBotIdType,
+  userId: UserIdType,
+  insertionSource: InsertionSourceType,
+) {
+  return prisma.file.deleteMany({
+    where: {
+      ChatBot: { id: chatBotId, userId },
+      insertionSource,
+    },
+  });
+}
+
 export async function findClosest(
   queryVector: EmbeddingType,
   n: number = 5,
@@ -107,7 +121,7 @@ export async function findClosest(
 
   // Perform similarity search at the SQL level
   const results = await prisma.$queryRaw<FileWithEmbeddingType[]>(Prisma.sql`
-    SELECT id, name, content, 'createdAt', 'chatBotId', 'insertionId', vector <-> ${vectorString}::vector(1536) AS distance
+    SELECT id, name, content, 'createdAt', 'chatBotId', 'insertionSource', vector <-> ${vectorString}::vector(1536) AS distance
     FROM "File"
     WHERE vector IS NOT NULL
     ORDER BY distance DESC
@@ -118,6 +132,6 @@ export async function findClosest(
     name: r.name,
     embedding: vectorString.split(",").map((v) => parseFloat(v)),
     content: r.content,
-    insertionId: r.insertionId,
+    insertionSource: r.insertionSource,
   }));
 }
