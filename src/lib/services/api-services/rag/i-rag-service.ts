@@ -64,6 +64,12 @@ export abstract class IRAGService {
       throw new QuotaReachedException(Quota.MAX_FILES);
     }
 
+    await this.quotaService.updateUserUsage(
+      userId,
+      Quota.MAX_FILES,
+      splitFiles.length,
+    );
+
     const embeddedFiles = await Promise.all(
       splitFiles.map((ragFile) => this.embedRAGFile(ragFile)),
     );
