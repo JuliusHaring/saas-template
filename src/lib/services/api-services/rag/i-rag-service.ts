@@ -14,6 +14,7 @@ import {
   RAGQueryType,
   InsertionSourceType,
 } from "@/lib/services/api-services/rag/types";
+import { getFileExtension } from "@/lib/utils/frontend/files";
 
 export class InvalidRAGFileException extends Error {
   constructor(ragFile: RAGFile) {
@@ -89,10 +90,12 @@ export abstract class IRAGService {
       file.content.match(new RegExp(`.{1,${this.MAX_CHUNK_LENGTH}}`, "gs")) ||
       [];
 
+    if (parts.length === 1) return [file];
+
     parts.forEach((part, index) => {
       chunks.push(
         new RAGFile(
-          `${file.name}_chunk_${index + 1}`,
+          `${file.name}_chunk_${index + 1}.${getFileExtension(file.name)}`,
           part,
           file.insertionSource,
         ),

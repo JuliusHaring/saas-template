@@ -5,14 +5,21 @@ import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import {
   checkFileUploadable,
   getAcceptableFileTypes,
+  getFileIconType,
 } from "@/lib/utils/frontend/files";
 import { useEffect, useState, useRef } from "react";
+import {
+  TrashIcon,
+  PlusIcon,
+  ArrowPathIcon,
+} from "@heroicons/react/24/outline";
 
 const feRagService = FERAGService.Instance;
 
 export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
   const [ragFiles, setRagFiles] = useState<FileType[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [isUploading, setIsUploading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -50,6 +57,8 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
   const handleUpload = async () => {
     if (selectedFiles.length === 0) return;
 
+    setIsUploading(true);
+
     try {
       await feRagService.uploadFiles(chatBotId, selectedFiles);
       setSelectedFiles([]);
@@ -58,6 +67,7 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
       console.error("File upload failed:", error);
       setError("Fehler beim Hochladen der Datei.");
     }
+    setIsUploading(false);
   };
 
   const handleDelete = async (fileId: FileIdType) => {
@@ -71,53 +81,51 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
 
   return (
     <Card
-      className="mt-4"
       header="Dateien"
       footer={UploadFooter(
         fileInputRef,
         handleFileChange,
         handleUpload,
         selectedFiles,
+        isUploading,
       )}
     >
       {error && <p className="text-red-500 p-2">{error}</p>}
-      <table className="w-full border-collapse border border-gray-300">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="border border-gray-300 p-2 text-left">Dateiname</th>
-            <th className="border border-gray-300 p-2 text-left">
-              Erstellt am
-            </th>
-            <th className="border border-gray-300 p-2 text-left">Aktion</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ragFiles.length > 0 ? (
-            ragFiles.map((file) => (
-              <tr key={file.id} className="border border-gray-300">
-                <td className="border border-gray-300 p-2">{file.name}</td>
-                <td className="border border-gray-300 p-2">
-                  {new Date(file.createdAt).toLocaleString("de-DE")}
-                </td>
-                <td className="border border-gray-300 p-2">
-                  <Button
-                    variant="danger"
-                    onClick={() => handleDelete(file.id)}
-                  >
-                    Löschen
-                  </Button>
-                </td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={3} className="text-center p-4 text-gray-500">
-                Keine Dateien vorhanden
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+
+      {/* Responsive grid container */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+        {ragFiles.length > 0 ? (
+          ragFiles.map((file) => (
+            <div
+              key={file.id}
+              className="relative flex flex-col items-center p-3"
+            >
+              {/* Delete button in top-right corner */}
+              <Button
+                className="absolute top-1 right-1 p-1 h-6 w-6 px-1! py-1!"
+                variant="danger"
+                onClick={() => handleDelete(file.id)}
+              >
+                <TrashIcon className="h-4 w-4" />
+              </Button>
+
+              {/* File Icon */}
+              <div className="w-12 h-12 text-gray-500">
+                {getFileIconType(file.insertionSource, file.name)}
+              </div>
+
+              {/* File Name */}
+              <p className="text-sm text-center truncate w-full mt-2">
+                {file.name}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-500 col-span-full">
+            Keine Dateien vorhanden
+          </p>
+        )}
+      </div>
     </Card>
   );
 };
@@ -127,9 +135,10 @@ const UploadFooter = (
   handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
   handleUpload: () => void,
   selectedFiles: File[],
+  isUploading: boolean,
 ) => {
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex flex-wrap items-center gap-4">
       <input
         type="file"
         ref={fileInputRef}
@@ -138,7 +147,11 @@ const UploadFooter = (
         accept={getAcceptableFileTypes()} // Enforces file types from utils
         className="hidden"
       />
-      <Button onClick={() => fileInputRef.current?.click()}>
+      <Button
+        onClick={() => fileInputRef.current?.click()}
+        className="flex items-center gap-2"
+      >
+        <PlusIcon className="w-5 h-5" />
         Dateien auswählen
       </Button>
       <span className="text-gray-700">
@@ -146,7 +159,12 @@ const UploadFooter = (
           ? selectedFiles.map((file) => file.name).join(", ")
           : "Keine Dateien ausgewählt"}
       </span>
-      <Button onClick={handleUpload} isDisabled={selectedFiles.length === 0}>
+      <Button
+        onClick={handleUpload}
+        isDisabled={selectedFiles.length === 0 || isUploading}
+        className="flex items-center gap-2"
+      >
+        <ArrowPathIcon className="w-5 h-5" />
         Hochladen
       </Button>
     </div>

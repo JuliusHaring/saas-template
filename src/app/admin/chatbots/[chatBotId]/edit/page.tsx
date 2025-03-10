@@ -8,14 +8,13 @@ import ChatBotSources from "@/lib/components/admin/organisms/ChatBotSources";
 import { FileSource } from "@/lib/components/admin/organisms/sources/FileSource";
 import { UpdateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const feChatBotService = FEChatBotService.Instance;
 
 const ChatBotEdit: React.FC = () => {
-  const router = useRouter();
   const params = useParams<{ chatBotId: string }>();
   const [headerTitle, setHeaderTitle] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -77,7 +76,6 @@ const ChatBotEdit: React.FC = () => {
       updateChatBot,
     );
     setHeaderTitle(updatedChatBot.name);
-    router.push(`/admin/chatbots`);
   };
 
   return (
@@ -105,8 +103,11 @@ const ChatBotEdit: React.FC = () => {
             label="Erlaubte Domains (durch Komma getrennt)"
             {...register("allowedDomains", {
               validate: (value) => {
-                if (!value.trim()) return "Erlaubte Domains sind erforderlich";
-                const domains = value.split(",").map((domain) => domain.trim());
+                // if (!value.trim()) return "Erlaubte Domains sind erforderlich";
+                const domains = value
+                  .split(",")
+                  .map((domain) => domain.trim())
+                  .filter((domain) => domain.length > 0);
                 for (const domain of domains) {
                   if (
                     !/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/.test(
