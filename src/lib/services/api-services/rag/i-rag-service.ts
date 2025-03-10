@@ -11,6 +11,7 @@ import {
 
 export abstract class IRAGService {
   protected embeddingService: IEmbeddingService;
+  private MAX_CHUNK_LENGTH: number = 6000;
 
   protected constructor() {
     this.embeddingService = OpenAIEmbeddingService.Instance;
@@ -35,11 +36,30 @@ export abstract class IRAGService {
   ): Promise<{ count: number }> {
     if (deleteExisting) await this.deleteFiles(chatBotId, userId);
 
+    const splitFiles: RAGFile[] = [];
+    for (const file of ragFiles) {
+      const chunks = this._splitContent(file);
+      splitFiles.push(...chunks);
+    }
+
     const embeddedFiles = await Promise.all(
-      ragFiles.map((ragFile) => this.embedRAGFile(ragFile)),
+      splitFiles.map((ragFile) => this.embedRAGFile(ragFile)),
     );
 
     return this._insertFiles(chatBotId, userId, embeddedFiles);
+  }
+
+  private _splitContent(file: RAGFile): RAGFile[] {
+    const chunks: RAGFile[] = [];
+    const parts =
+      file.content.match(new RegExp(`.{1,${this.MAX_CHUNK_LENGTH}}`, "gs")) ||
+      [];
+
+    parts.forEach((part, index) => {
+      chunks.push(new RAGFile(`${file.name}_chunk_${index + 1}`, part));
+    });
+
+    return chunks;
   }
 
   abstract deleteFiles(
