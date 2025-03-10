@@ -14,7 +14,7 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
     if (typeof this._instance !== "undefined") return this._instance;
 
     this._instance = new this();
-    this._instance.init();
+    await this._instance.init();
     return this._instance;
   }
 
