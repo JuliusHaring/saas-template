@@ -2,7 +2,6 @@ import {
   JsonWebTokenError,
   NotBeforeError,
   TokenExpiredError,
-  verify,
 } from "jsonwebtoken";
 import {
   Quota,
@@ -22,6 +21,7 @@ import {
   ChatRequestType,
   ChatResponseType,
 } from "@/lib/services/api-services/chat/types";
+import { verifyToken } from "@/lib/utils/backend/token";
 
 const openAIChatService = await OpenAIChatService.getInstance();
 const quotaService = await QuotaService.getInstance();
@@ -41,10 +41,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
 
   try {
     // Verify the signed token
-    const decoded = verify(token, process.env.JWT_SECRET!) as {
-      chatBotId: string;
-      allowedDomains: string[];
-    };
+    const decoded = verifyToken(token);
 
     if (decoded.chatBotId !== chatBotId) {
       throw Forbidden("Invalid chatbot ID");

@@ -1,6 +1,6 @@
 import { ChatBotService } from "@/lib/services/api-services/chatbot-service";
+import { signToken } from "@/lib/utils/backend/token";
 import { isDevModeEnabled } from "@/lib/utils/dev-mode";
-import { sign } from "jsonwebtoken";
 
 const chatbotService = ChatBotService.Instance;
 
@@ -20,9 +20,7 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   // Generate a signed JWT token (expires in 5 minutes)
-  const token = sign({ chatBotId, allowedDomains }, process.env.JWT_SECRET!, {
-    expiresIn: "5m",
-  });
+  const token = signToken(chatBotId, allowedDomains);
 
   // Return the script with the signed token
   const scriptContent = `

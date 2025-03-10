@@ -1,4 +1,5 @@
 "use client";
+import ChatbotUI from "@/app/chatbot-ui/page";
 import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
 import Button from "@/lib/components/admin/molecules/Button";
 import { Input, Textarea } from "@/lib/components/admin/molecules/Input";
@@ -8,28 +9,30 @@ import ChatBotSources from "@/lib/components/admin/organisms/ChatBotSources";
 import { FileSource } from "@/lib/components/admin/organisms/sources/FileSource";
 import { UpdateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
+import { FETokenService } from "@/lib/services/frontend-services/token-service";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const feChatBotService = FEChatBotService.Instance;
+const feTokenService = FETokenService.Instance;
 
 const ChatBotEdit: React.FC = () => {
   const params = useParams<{ chatBotId: string }>();
   const [headerTitle, setHeaderTitle] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [token, setToken] = useState<string>();
 
   const {
     register,
     handleSubmit,
     setValue,
-    getValues,
     formState: { errors, isValid },
   } = useForm<{
     id: string;
     name: string;
     instructions: string;
-    allowedDomains: string; // Handle it as a comma-separated string in the form
+    allowedDomains: string;
   }>({
     mode: "onChange",
     defaultValues: {
@@ -55,7 +58,18 @@ const ChatBotEdit: React.FC = () => {
     if (params.chatBotId) getChatBot();
   }, [params.chatBotId, setValue]);
 
-  if (isLoading) return <LoadingSpinner />;
+  useEffect(() => {
+    const signToken = async () => {
+      setToken(
+        await feTokenService.signToken(params.chatBotId, [
+          window.location.href,
+        ]),
+      );
+    };
+    signToken();
+  }, [params.chatBotId, token]);
+
+  if (isLoading || !token) return <LoadingSpinner />;
 
   const onSubmit = async (data: {
     name: string;
@@ -141,8 +155,13 @@ const ChatBotEdit: React.FC = () => {
           </Button>
         </form>
       </Card>
-      <FileSource chatBotId={getValues("id")} />
-      <ChatBotSources chatBotId={getValues("id")} />
+
+      <Card header="Chatbot Vorschau">
+        <ChatbotUI chatBotId={params.chatBotId} token={token} />
+      </Card>
+
+      <FileSource chatBotId={params.chatBotId} />
+      <ChatBotSources chatBotId={params.chatBotId} />
     </div>
   );
 };

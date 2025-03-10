@@ -13,46 +13,75 @@ const feStyleService = FEStyleService.Instance;
 const feChatService = FEChatService.Instance;
 const feChatBotService = FEChatBotService.Instance;
 
-const ChatbotUI: React.FC = () => {
+interface ChatbotUIProps {
+  chatBotId?: string;
+  token?: string;
+}
+
+const ChatbotUI: React.FC<ChatbotUIProps> = ({
+  chatBotId: propChatBotId,
+  token: propToken,
+}) => {
   const [messages, setMessages] = useState<MessageType[]>([]);
-  const [chatBotId, setChatBotId] = useState<string | null>(null);
+  const [chatBotId, setChatBotId] = useState<string | null>(
+    propChatBotId || null,
+  );
   const [chatBotName, setChatBotName] = useState<string>("Chatbot");
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [isWaiting, setIsWaiting] = useState(false); // Prevent multiple sends
+  const [token, setToken] = useState<string | null>(propToken || null);
+  const [isWaiting, setIsWaiting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [isUserScrolling, setIsUserScrolling] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
 
+  // Auto-scroll logic
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("chatBotId");
-    const authToken = params.get("token");
-
-    if (id) {
-      setChatBotId(id);
-      setToken(authToken);
-
-      const storedSessionId = localStorage.getItem(`session_${id}`);
-      if (storedSessionId) {
-        setSessionId(storedSessionId);
-      }
-
-      const loadChatBotName = async () => {
-        const chatBotName = await feChatBotService.getChatBotName(chatBotId!);
-        setChatBotName(chatBotName);
-      };
-      loadChatBotName();
-    } else {
-      console.error("Missing chatBotId in the query string");
+    if (!isUserScrolling) {
+      chatContainerRef.current?.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
     }
+  }, [messages, isUserScrolling]);
+
+  // Detect user scrolling manually
+  const handleScroll = () => {
+    if (!chatContainerRef.current) return;
+    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
+    setIsUserScrolling(scrollTop + clientHeight < scrollHeight - 10); // Detects if user is near the bottom
+  };
+
+  useEffect(() => {
+    if (!propChatBotId) {
+      // Fallback to reading from URL parameters if not provided via props
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("chatBotId");
+      const authToken = params.get("token");
+
+      if (id) {
+        setChatBotId(id);
+        setToken(authToken);
+      } else {
+        console.error("Missing chatBotId in the query string");
+      }
+    }
+  }, [propChatBotId]);
+
+  useEffect(() => {
+    if (!chatBotId) return;
+
+    const loadChatBotName = async () => {
+      const name = await feChatBotService.getChatBotName(chatBotId);
+      setChatBotName(name);
+    };
+    loadChatBotName();
   }, [chatBotId]);
 
   useEffect(() => {
-    const loadStyles = async () => {
-      if (!chatBotId) return;
+    if (!chatBotId) return;
 
+    const loadStyles = async () => {
       try {
         const style = await feStyleService.getStyle(chatBotId);
         const styleTag = document.createElement("style");
@@ -67,7 +96,7 @@ const ChatbotUI: React.FC = () => {
   }, [chatBotId]);
 
   const sendMessage = async (userMessage: string) => {
-    if (!chatBotId || !token || isWaiting) return; // Block sending while waiting
+    if (!chatBotId || !token || isWaiting) return;
 
     setMessages((prev) => [...prev, { role: "Nutzer", text: userMessage }]);
     setIsWaiting(true);
@@ -92,7 +121,7 @@ const ChatbotUI: React.FC = () => {
         ...prev,
         {
           role: "Antwort",
-          text: "Es ist ein Fehler aufgetreten. Versuche es bitte später nochmal!",
+          text: "Es ist ein Fehler aufgetreten. Versuche es später nochmal!",
         },
       ]);
       console.error("Error communicating with chatbot:", error);
@@ -101,55 +130,29 @@ const ChatbotUI: React.FC = () => {
     }
   };
 
-  // Auto-scroll logic
-  useEffect(() => {
-    if (!isUserScrolling) {
-      chatContainerRef.current?.scrollTo({
-        top: chatContainerRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [messages, isUserScrolling]);
-
-  // Detect user scrolling manually
-  const handleScroll = () => {
-    if (!chatContainerRef.current) return;
-    const { scrollTop, scrollHeight, clientHeight } = chatContainerRef.current;
-    setIsUserScrolling(scrollTop + clientHeight < scrollHeight - 10); // Detects if user is near the bottom
-  };
-
   return (
     <div
-      className={`fixed bottom-5 right-5 w-[300px] h-${isMinimized ? "0" : "[400px]"} border border-gray-300 shadow-lg bg-white flex flex-col`}
+      className="border border-gray-300 shadow-lg bg-white flex flex-col"
+      onScroll={handleScroll}
     >
-      {/* Header with Minimize Button */}
       <div
-        className="flex items-center justify-between bg-blue-500 text-white p-3"
+        className="flex items-center justify-between bg-blue-500 text-white p-3 cursor-pointer"
         onClick={() => setIsMinimized(!isMinimized)}
       >
         <Headline level={2}>{chatBotName}</Headline>
-        <div className="text-gray-500 hover:text-gray-700 text-sm font-bold">
-          {isMinimized ? (
-            <ArrowUpIcon className="h-5 w-5 text-white" />
-          ) : (
-            <ArrowDownIcon className="h-5 w-5 text-white" />
-          )}
-        </div>
+        {isMinimized ? (
+          <ArrowUpIcon className="h-5 w-5 text-white" />
+        ) : (
+          <ArrowDownIcon className="h-5 w-5 text-white" />
+        )}
       </div>
 
-      {/* Chat content (Hidden when minimized) */}
       {!isMinimized && (
         <>
-          <div
-            ref={chatContainerRef}
-            onScroll={handleScroll}
-            className="flex-1 overflow-y-auto p-2"
-          >
+          <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-2">
             <MessageList messages={messages} />
             <div ref={messagesEndRef} />
           </div>
-
-          {/* Chat input - stays at the bottom */}
           <ChatInput onSend={sendMessage} isWaiting={isWaiting} />
         </>
       )}

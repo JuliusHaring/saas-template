@@ -13,7 +13,7 @@ export class OpenAIChatService extends IChatService {
   }
 
   public static async getInstance() {
-    if (typeof this._instance === "undefined") return this._instance;
+    if (typeof this._instance !== "undefined") return this._instance;
 
     this._instance = new this();
     await this._instance.init();
