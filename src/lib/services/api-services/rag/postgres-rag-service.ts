@@ -37,10 +37,11 @@ export class PostGresRAGService extends IRAGService {
   }
 
   _findClosest(
+    chatBotId: ChatBotIdType,
     query: EmbeddingType,
     n?: number,
   ): Promise<RAGQueryResultType[]> {
-    return findClosest(query, n);
+    return findClosest(chatBotId, query, n);
   }
 
   async deleteFiles(

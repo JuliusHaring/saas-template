@@ -117,15 +117,17 @@ export abstract class IRAGService {
   ): Promise<void>;
 
   abstract _findClosest(
+    chatBotId: ChatBotIdType,
     query: EmbeddingType,
     n?: number,
   ): Promise<RAGQueryResultType[]>;
 
   public async findClosest(
+    chatBotId: ChatBotIdType,
     query: RAGQueryType,
     n?: number,
   ): Promise<RAGQueryResultType[]> {
     const embedding = await this.embeddingService.embedText(query);
-    return this._findClosest(embedding, n);
+    return this._findClosest(chatBotId, embedding, n);
   }
 }

@@ -127,6 +127,7 @@ export async function deleteFilesFromSource(
 }
 
 export async function findClosest(
+  chatBotId: ChatBotIdType,
   queryVector: EmbeddingType,
   n: number = 5,
 ): Promise<RAGQueryResultType[]> {
@@ -137,6 +138,7 @@ export async function findClosest(
     SELECT id, name, content, 'createdAt', 'chatBotId', 'insertionSource', vector <-> ${vectorString}::vector(1536) AS distance
     FROM "File"
     WHERE vector IS NOT NULL
+    AND "chatBotId" = ${chatBotId}
     ORDER BY distance DESC
     LIMIT ${n};
   `);

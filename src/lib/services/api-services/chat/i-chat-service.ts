@@ -54,7 +54,7 @@ export abstract class IChatService {
       1,
     );
 
-    const sources = await this.ragService.findClosest(userMessage);
+    const sources = await this.ragService.findClosest(chatBotId, userMessage);
     const prompt = this.promptService.generateChatPrompt(sources, userMessage);
 
     const userId = await this.chatbotService.getUserIdOfChatbot(chatBotId);
