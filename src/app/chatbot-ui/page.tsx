@@ -132,7 +132,7 @@ const ChatbotUI: React.FC<ChatbotUIProps> = ({
 
   return (
     <div
-      className="border border-gray-300 shadow-lg bg-white flex flex-col"
+      className={`border border-gray-300 shadow-lg bg-white flex flex-col ${!isMinimized ? "h-150" : ""}`}
       onScroll={handleScroll}
     >
       <div

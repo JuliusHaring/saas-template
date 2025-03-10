@@ -4,6 +4,10 @@ import { ChatBotService } from "@/lib/services/api-services/chatbot-service";
 import { IHistoryStorageService } from "@/lib/services/api-services/memory/i-history-storage-service";
 import { InMemoryChatHistoryStorageService } from "@/lib/services/api-services/memory/in-memory-history-storage-service";
 import { PromptService } from "@/lib/services/api-services/prompt-service";
+import {
+  Quota,
+  QuotaService,
+} from "@/lib/services/api-services/quotas-service";
 import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
 import { PostGresRAGService } from "@/lib/services/api-services/rag/postgres-rag-service";
 
@@ -12,6 +16,7 @@ export abstract class IChatService {
   private ragService!: IRAGService;
   private chatbotService!: ChatBotService;
   private historyStorageService!: IHistoryStorageService;
+  private quotaService!: QuotaService;
 
   protected defaultNoResponseMessage = ``;
   protected defaultErrorMessage = ``;
@@ -23,6 +28,7 @@ export abstract class IChatService {
     this.ragService = await PostGresRAGService.getInstance();
     this.chatbotService = ChatBotService.Instance;
     this.historyStorageService = InMemoryChatHistoryStorageService.Instance;
+    this.quotaService = await QuotaService.getInstance();
   }
 
   abstract _chatWithThread(
@@ -37,6 +43,17 @@ export abstract class IChatService {
     sessionId: string,
     userMessage: string,
   ) {
+    await this.quotaService.getChatBotQuotaRemainder(
+      chatBotId,
+      Quota.MAX_CHAT_MESSAGES,
+    );
+
+    await this.quotaService.updateChatbotUsage(
+      chatBotId,
+      Quota.MAX_CHAT_MESSAGES,
+      1,
+    );
+
     const sources = await this.ragService.findClosest(userMessage);
     const prompt = this.promptService.generateChatPrompt(sources, userMessage);
 
@@ -48,6 +65,7 @@ export abstract class IChatService {
     );
 
     const preCalculationTimestamp = Date.now();
+
     const answer = await this._chatWithThread(
       sessionId,
       prompt,
@@ -66,6 +84,7 @@ export abstract class IChatService {
       content: answer.response,
       timestamp: Date.now(),
     });
+
     return answer.response;
   }
 }

@@ -4,15 +4,9 @@ import {
   TokenExpiredError,
 } from "jsonwebtoken";
 import {
-  Quota,
-  QuotaReachedException,
-  QuotaService,
-} from "@/lib/services/api-services/quotas-service";
-import {
   withErrorHandling,
   BadRequest,
   Forbidden,
-  TooManyRequests,
 } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -24,7 +18,6 @@ import {
 import { verifyToken } from "@/lib/utils/backend/token";
 
 const openAIChatService = await OpenAIChatService.getInstance();
-const quotaService = await QuotaService.getInstance();
 
 export const POST = withErrorHandling(async (request: NextRequest) => {
   const body = await request.json();
@@ -52,16 +45,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     if (!decoded.allowedDomains.some((domain) => referer.includes(domain))) {
       throw Forbidden("Unauthorized website");
     }
-
-    // Proceed with quota check and chatbot logic
-    await quotaService.getChatBotQuotaRemainder(
-      chatBotId,
-      Quota.MAX_CHAT_MESSAGES,
-    );
   } catch (e) {
-    if (e instanceof QuotaReachedException) {
-      throw TooManyRequests(`Quota reached for ChatBot ${chatBotId}`);
-    }
     if (e instanceof TokenExpiredError) {
       throw Forbidden("Token has expired, please refresh the page.");
     }
@@ -80,7 +64,6 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     sessionId,
     userMessage,
   );
-  await quotaService.updateChatbotUsage(chatBotId, Quota.MAX_CHAT_MESSAGES, 1);
 
   return { response, sessionId } as ChatResponseType;
 });
