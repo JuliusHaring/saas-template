@@ -35,7 +35,7 @@ export enum Quota {
 export type QuotaUsageType = Record<
   Quota,
   { limit: number; used: number; reached: boolean; remaining: number }
->;
+> & { lastResetAt: Date };
 
 export type QuotasTierLimits = {
   quota: Quota;
@@ -136,15 +136,24 @@ export class QuotaService {
     const quotas = await this.getUserQuotas(userId);
     const usage = (await getOrCreateUserUsage(userId))!;
 
-    const quotaUsage: QuotaUsageType = Object.fromEntries(
-      Object.entries(quotas).map(([key, limit]) => {
-        const quotaKey = key as Quota;
-        const used = usage[quotaKey] ?? 0;
-        const reached = used >= limit;
-        const remaining = Math.max(limit - used, 0);
-        return [quotaKey, { limit, used, reached, remaining }];
-      }),
-    ) as QuotaUsageType;
+    const quotaUsage: QuotaUsageType = {
+      lastResetAt: usage.lastResetAt,
+      ...Object.values(Quota).reduce(
+        (acc, quotaKey) => {
+          const limit = quotas[quotaKey] ?? 0;
+          const used = usage[quotaKey] ?? 0;
+          const reached = used >= limit;
+          const remaining = Math.max(limit - used, 0);
+
+          acc[quotaKey] = { limit, used, reached, remaining };
+          return acc;
+        },
+        {} as Record<
+          Quota,
+          { limit: number; used: number; reached: boolean; remaining: number }
+        >,
+      ),
+    };
 
     return quotaUsage;
   }

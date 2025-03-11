@@ -13,7 +13,10 @@ export class FEQutoaService {
   }
 
   public async getQuotas() {
-    return fetchJson<QuotaUsageType>("/api/quotas");
+    return fetchJson<QuotaUsageType>("/api/quotas").then((q) => {
+      q.lastResetAt = new Date(q.lastResetAt);
+      return q;
+    });
   }
 
   public async getTierQuotaLimits() {

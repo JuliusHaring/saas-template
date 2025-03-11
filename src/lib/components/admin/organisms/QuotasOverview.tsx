@@ -2,42 +2,46 @@ import { useEffect, useState } from "react";
 
 import Link from "next/link";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
-import {
-  QuotasTierLimitsInfo,
-  QuotaUsageType,
-} from "@/lib/services/api-services/quotas-service";
+import { QuotaUsageType } from "@/lib/services/api-services/quotas-service";
 import { FEQutoaService } from "@/lib/services/frontend-services/quota-service";
 import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
-import QuotaGauge from "@/lib/components/admin/atoms/QuotaGauge";
 import Banner from "@/lib/components/admin/molecules/Banner";
 import Card from "@/lib/components/admin/organisms/Card";
 
 const feQuotaService = FEQutoaService.Insance;
 
 const QuotasOverview: React.FC = () => {
-  const [tierQuotaLimitsInfo, setTierQuotaLimitsInfo] =
-    useState<QuotasTierLimitsInfo>();
+  const [quotaUsage, setQuotaUsage] = useState<QuotaUsageType>();
 
   useEffect(() => {
     const queryTierQuotaLimits = async () => {
-      const qtli: QuotasTierLimitsInfo =
-        await feQuotaService.getTierQuotaLimits();
+      // const qtli: QuotasTierLimitsInfo =
+      //   await feQuotaService.getTierQuotaLimits();
+      const quotaUsage = await feQuotaService.getQuotas();
 
-      setTierQuotaLimitsInfo(qtli);
+      // setTierQuotaLimitsInfo(qtli);
+      setQuotaUsage(quotaUsage);
     };
     queryTierQuotaLimits();
   }, []);
 
-  if (!tierQuotaLimitsInfo?.userTier || !tierQuotaLimitsInfo.quotasTierLimits)
-    return <LoadingSpinner />;
+  if (!quotaUsage) return <LoadingSpinner />;
+
+  function getResetDateString() {
+    const resetDate = new Date(quotaUsage!.lastResetAt);
+    resetDate.setMonth(resetDate.getMonth() + 1);
+    return resetDate.toLocaleDateString("de-DE", {
+      day: "numeric",
+      month: "long",
+    });
+  }
 
   return (
     <div>
-      <QuotaWarning tierQuotaLimitsInfo={tierQuotaLimitsInfo} />
-      <div>
-        <Card header={"Nutzungslimits"}>
-          <div className="grid sm:grid-cols-1 md:grid-cols-2">
-            {tierQuotaLimitsInfo.quotasTierLimits.map((qTL, i) => {
+      <QuotaWarning quotaUsage={quotaUsage} />
+      <Card header={"Nutzungslimits (bis " + getResetDateString() + ")"}>
+        <div className="grid sm:grid-cols-1 md:grid-cols-2">
+          {/* {tierQuotaLimitsInfo.quotasTierLimits.map((qTL, i) => {
               return (
                 <QuotaGauge
                   key={i}
@@ -45,10 +49,20 @@ const QuotasOverview: React.FC = () => {
                   quotasTierLimits={qTL}
                 />
               );
-            })}
-          </div>
-        </Card>
-      </div>
+            })} */}
+
+          <p>
+            Nachrichten:{" "}
+            <span className="font-bold">{quotaUsage?.chatMessages.used}</span> /{" "}
+            {quotaUsage?.chatMessages.limit}
+          </p>
+          <p>
+            Dateien:{" "}
+            <span className="font-bold">{quotaUsage?.fileCount.used}</span> /{" "}
+            {quotaUsage?.fileCount.limit}
+          </p>
+        </div>
+      </Card>
     </div>
   );
 };
@@ -56,29 +70,20 @@ const QuotasOverview: React.FC = () => {
 export default QuotasOverview;
 
 interface QuotaWarningProps {
-  tierQuotaLimitsInfo: QuotasTierLimitsInfo;
+  quotaUsage: QuotaUsageType;
 }
 
-const QuotaWarning: React.FC<QuotaWarningProps> = ({ tierQuotaLimitsInfo }) => {
-  const [quotaUsage, setQuotaUsage] = useState<QuotaUsageType>();
-
-  useEffect(() => {
-    const queryQuotaUsage = async () => {
-      const quotaUsage = await feQuotaService.getQuotas();
-      setQuotaUsage(quotaUsage);
-    };
-    queryQuotaUsage();
-  }, []);
-
+const QuotaWarning: React.FC<QuotaWarningProps> = ({ quotaUsage }) => {
   if (
     !!quotaUsage &&
-    Object.values(quotaUsage).some((usage) => usage.reached)
+    Object.values(quotaUsage as Omit<QuotaUsageType, "lastResetAt">).some(
+      (usage) => usage.reached,
+    )
   ) {
     return (
       <div className="my-2">
         <Banner variant="danger">
-          Sie haben ein Nutzungslimit für das Abo {tierQuotaLimitsInfo.userTier}{" "}
-          erreicht. Erwägen Sie ein{" "}
+          Sie haben ein Nutzungslimit erreicht. Erwägen Sie ein{" "}
           <Link
             href={``}
             className="hover:font-normal"
