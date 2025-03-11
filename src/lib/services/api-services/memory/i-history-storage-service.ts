@@ -5,21 +5,33 @@ export interface ChatMessage {
 }
 
 export abstract class IHistoryStorageService {
-  protected maxHistoryTokens: number;
+  protected maxHistorySize: number;
   protected cleanupIntervalMs: number;
 
-  constructor(
-    maxHistoryTokens: number = 20000,
-    cleanupIntervalDays: number = 7,
-  ) {
-    this.maxHistoryTokens = maxHistoryTokens;
+  constructor(maxHistorySize: number = 6, cleanupIntervalDays: number = 7) {
+    this.maxHistorySize = maxHistorySize;
     this.cleanupIntervalMs = cleanupIntervalDays * 24 * 60 * 60 * 1000;
+  }
+
+  private _trimHistory(sessionId: string): void {
+    const history = this.getHistory(sessionId);
+    this._setHistory(sessionId, history.slice(-this.maxHistorySize));
   }
 
   /**
    * Adds a message to the chat history.
    */
-  abstract addMessage(sessionId: string, message: ChatMessage): void;
+  protected abstract _addMessage(sessionId: string, message: ChatMessage): void;
+
+  protected abstract _setHistory(
+    sessionId: string,
+    history: ChatMessage[],
+  ): void;
+
+  public addMessage(sessionId: string, message: ChatMessage): void {
+    this._trimHistory(sessionId);
+    this._addMessage(sessionId, message);
+  }
 
   /**
    * Retrieves chat history for a session.

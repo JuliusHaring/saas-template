@@ -8,11 +8,10 @@ export class InMemoryChatHistoryStorageService extends IHistoryStorageService {
   private chatHistory: Map<string, ChatMessage[]> = new Map();
 
   private constructor(
-    maxHistoryTokens: number = 20000,
+    maxHistorySize: number = 5,
     cleanupIntervalDays: number = 7,
   ) {
-    super(maxHistoryTokens, cleanupIntervalDays);
-    this.startCleanupRoutine();
+    super(maxHistorySize, cleanupIntervalDays);
   }
 
   public static get Instance() {
@@ -24,16 +23,17 @@ export class InMemoryChatHistoryStorageService extends IHistoryStorageService {
   /**
    * Adds a message to the chat history, ensuring LIFO constraints.
    */
-  public addMessage(sessionId: string, message: ChatMessage): void {
+  protected _addMessage(sessionId: string, message: ChatMessage): void {
     if (!this.chatHistory.has(sessionId)) {
       this.chatHistory.set(sessionId, []);
     }
 
     const sessionHistory = this.chatHistory.get(sessionId)!;
     sessionHistory.push(message);
+  }
 
-    // Trim history if token count exceeds max allowed
-    this.trimHistory(sessionId);
+  protected _setHistory(sessionId: string, history: ChatMessage[]): void {
+    this.chatHistory.set(sessionId, history);
   }
 
   /**
@@ -48,23 +48,6 @@ export class InMemoryChatHistoryStorageService extends IHistoryStorageService {
    */
   public clearHistory(sessionId: string): void {
     this.chatHistory.delete(sessionId);
-  }
-
-  /**
-   * Trims chat history to maintain LIFO and token limit.
-   */
-  private trimHistory(sessionId: string): void {
-    const sessionHistory = this.chatHistory.get(sessionId);
-    if (!sessionHistory) return;
-
-    let tokenCount = sessionHistory.reduce(
-      (sum, msg) => sum + msg.content.length,
-      0,
-    );
-    while (tokenCount > this.maxHistoryTokens && sessionHistory.length > 1) {
-      const removed = sessionHistory.shift(); // Remove oldest entry
-      tokenCount -= removed!.content.length;
-    }
   }
 
   /**

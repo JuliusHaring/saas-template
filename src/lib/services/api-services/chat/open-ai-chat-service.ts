@@ -21,44 +21,6 @@ export class OpenAIChatService extends IChatService {
   }
 
   /**
-   * Trims chat history to avoid excessive token usage.
-   */
-  private trimChatHistory(
-    history: { role: "user" | "assistant"; content: string }[],
-  ): {
-    role: "user" | "assistant";
-    content: string;
-  }[] {
-    if (history.length > this.maxHistoryLength) {
-      return history.slice(-this.maxHistoryLength);
-    }
-    return history;
-  }
-
-  /**
-   * Summarizes older chat messages into a single condensed message.
-   */
-  private async summarizeOldMessages(
-    history: { role: "user" | "assistant"; content: string }[],
-  ): Promise<string> {
-    const summaryPrompt: OpenAI.ChatCompletionMessageParam[] = [
-      {
-        role: "assistant",
-        content:
-          "Summarize the following conversation while preserving key context:",
-      },
-      ...history.slice(0, history.length - this.maxHistoryLength),
-    ];
-
-    const summaryResponse = await this.openai.chat.completions.create({
-      model: process.env.NEXT_PUBLIC_OPENAI_CHAT_COMPLETION_MODEL!,
-      messages: summaryPrompt,
-    });
-
-    return summaryResponse.choices[0].message.content || "";
-  }
-
-  /**
    * Handles user chat with a dynamically set system prompt.
    */
   async _chatWithThread(
@@ -68,24 +30,9 @@ export class OpenAIChatService extends IChatService {
     systemPrompt: string,
   ): Promise<ChatResponseType> {
     try {
-      const trimmedHistory = this.trimChatHistory(chatHistory);
-      let summarizedHistory = "";
-
-      if (chatHistory.length > this.maxHistoryLength) {
-        summarizedHistory = await this.summarizeOldMessages(chatHistory);
-      }
-
       const messages: OpenAI.ChatCompletionMessageParam[] = [
         { role: "system", content: systemPrompt },
-        ...(summarizedHistory
-          ? [
-              {
-                role: "assistant",
-                content: summarizedHistory,
-              } as OpenAI.ChatCompletionMessageParam,
-            ]
-          : []),
-        ...trimmedHistory,
+        ...chatHistory,
         { role: "user", content: promptMessage },
       ];
 
