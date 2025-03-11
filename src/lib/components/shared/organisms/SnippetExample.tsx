@@ -1,24 +1,10 @@
 import Headline from "@/lib/components/shared/molecules/Headline";
 import CodeView from "@/lib/components/shared/organisms/CodeView";
-import { IngestionStatusEnum } from "@/lib/db/types";
 import { baseUrl } from "@/lib/utils/base-url";
 import { getImportScript } from "@/lib/utils/import-script";
 
 export const SnippetExample: React.FC = () => {
-  const script = getImportScript({
-    id: "<ID>",
-    name: "Test ChatBot",
-    Style: null,
-    GDriveSource: null,
-    WebsiteSource: null,
-    Files: [],
-    userId: "",
-    allowedDomains: [],
-    instructions: null,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    ingestionStatus: IngestionStatusEnum.READY,
-  })
+  const script = getImportScript("<ID>")
     .replaceAll(baseUrl, "<URL>")
     .replace("api/chatbot/integrate", "<INTEGRATION_URL>");
 

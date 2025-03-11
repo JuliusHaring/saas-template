@@ -3,7 +3,6 @@ import { QuotaUsageType } from "@/lib/services/api-services/quotas-service";
 import { ChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { FEQutoaService } from "@/lib/services/frontend-services/quota-service";
-import { getImportScript } from "@/lib/utils/import-script";
 import {
   CodeBracketSquareIcon,
   TrashIcon,
@@ -15,6 +14,7 @@ import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
 import Button from "@/lib/components/admin/molecules/Button";
 import Card from "@/lib/components/admin/organisms/Card";
 import QuotasOverview from "@/lib/components/admin/organisms/QuotasOverview";
+import { getImportScript } from "@/lib/utils/import-script";
 
 const feChatBotService = FEChatBotService.Instance;
 const feQuotaService = FEQutoaService.Insance;
@@ -128,7 +128,7 @@ function ChatBotCardFooter({
   handleDelete: () => void;
 }) {
   const handleCopyToClipboard = () => {
-    const script = getImportScript(chatbot);
+    const script = getImportScript(chatbot.id);
     navigator.clipboard.writeText(script).then(
       () => {
         alert("Script copied to clipboard!");

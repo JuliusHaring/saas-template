@@ -7,10 +7,12 @@ import Card from "@/lib/components/admin/organisms/Card";
 import ChatBotSources from "@/lib/components/admin/organisms/ChatBotSources";
 import { FileSource } from "@/lib/components/admin/organisms/sources/FileSource";
 import { ChatBotUI } from "@/lib/components/chatbot-ui/organisms/ChatBotUI";
+import CodeView from "@/lib/components/shared/organisms/CodeView";
 import { IngestionStatusEnum, UpdateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import { FETokenService } from "@/lib/services/frontend-services/token-service";
+import { getImportScript } from "@/lib/utils/import-script";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -173,6 +175,10 @@ const ChatBotEdit: React.FC = () => {
             Ändern
           </Button>
         </form>
+      </Card>
+
+      <Card header="Chatbot Import">
+        <CodeView code={getImportScript(getValues("id"))} />
       </Card>
 
       <Card header="Chatbot Vorschau">
