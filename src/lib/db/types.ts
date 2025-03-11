@@ -37,6 +37,8 @@ export type CreateWebsiteSourceType = Omit<
 
 export type ChatBotIdType = ChatBot["id"];
 
+export type ChatBotPublicType = Pick<ChatBot, "name" | "initialMessage">;
+
 export type UserIdType = User["id"];
 
 export type StyleType = Prisma.StyleGetPayload<true>;

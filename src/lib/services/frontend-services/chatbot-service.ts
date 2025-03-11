@@ -4,6 +4,7 @@ import {
   CreateChatBotType,
   UpdateChatBotType,
   WebsiteSourceType,
+  ChatBotPublicType,
 } from "@/lib/db/types";
 import { fetchJson } from "@/lib/utils/fetch";
 
@@ -23,8 +24,8 @@ export class FEChatBotService {
     return fetchJson<ChatBotType>(`/api/chatbot/${chatBotId}`);
   }
 
-  public async getChatBotName(chatBotId: ChatBotIdType) {
-    return fetchJson<ChatBotType["name"]>(`/api/chatbot/${chatBotId}/name`);
+  public async getChatBotPublic(chatBotId: ChatBotIdType) {
+    return fetchJson<ChatBotPublicType>(`/api/chatbot/${chatBotId}/public`);
   }
 
   public async createChatBot(formValues: CreateChatBotType) {

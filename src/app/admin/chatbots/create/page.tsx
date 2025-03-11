@@ -20,12 +20,14 @@ const ChatBotCreate: React.FC = () => {
   } = useForm<{
     name: string;
     instructions: string;
+    initialMessage: string;
     allowedDomains: string; // Handle it as a comma-separated string in the form
   }>({
     mode: "onChange",
     defaultValues: {
       name: "",
       instructions: "",
+      initialMessage: "",
       allowedDomains: "",
     },
   });
@@ -33,11 +35,13 @@ const ChatBotCreate: React.FC = () => {
   const onSubmit = async (data: {
     name: string;
     instructions: string;
+    initialMessage: string;
     allowedDomains: string;
   }) => {
     const newChatBot: CreateChatBotType = {
       name: data.name,
       instructions: data.instructions,
+      initialMessage: data.initialMessage,
       allowedDomains: data.allowedDomains
         .split(",")
         .map((domain) => domain.trim())
@@ -66,6 +70,19 @@ const ChatBotCreate: React.FC = () => {
           })}
         />
         <InputError errors={errors} name="name" />
+
+        <Input
+          type="text"
+          label="Erste Nachrichte"
+          {...register("initialMessage", {
+            required: "Erste Nachricht ist erforderlich",
+            minLength: {
+              value: 10,
+              message: "Mindestens 10 Zeichen erforderlich",
+            },
+          })}
+        />
+        <InputError errors={errors} name="initialMessage" />
 
         <Input
           type="text"

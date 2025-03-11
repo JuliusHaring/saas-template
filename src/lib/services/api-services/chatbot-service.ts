@@ -3,7 +3,7 @@ import {
   deleteChatBot,
   getAllowedDomainsForChatBot,
   getChatBot,
-  getChatBotName,
+  getChatBotPublic,
   getChatBots,
   getUserIdOfChatbot,
   updateChatBot as updateChatBotFunc,
@@ -35,8 +35,8 @@ export class ChatBotService {
     return getChatBot(userId, chatBotId);
   }
 
-  public async getChatBotName(chatBotId: ChatBotIdType) {
-    return getChatBotName(chatBotId);
+  public async getChatBotPublic(chatBotId: ChatBotIdType) {
+    return getChatBotPublic(chatBotId);
   }
 
   public async getAllowedDomainsForChatBot(
@@ -53,10 +53,7 @@ export class ChatBotService {
     userId: UserIdType,
     createChatbot: CreateChatBotType,
   ): Promise<ChatBotType> {
-    return createChatBot(userId, {
-      name: createChatbot.name,
-      instructions: createChatbot?.instructions,
-    });
+    return createChatBot(userId, createChatbot);
   }
 
   public async deleteChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {

@@ -7,6 +7,7 @@ import {
   CreateChatBotType,
   UpdateChatBotType,
   IngestionStatusEnum,
+  ChatBotPublicType,
 } from "@/lib/db/types";
 
 export async function getUserIdOfChatbot(chatBotId: ChatBotIdType) {
@@ -24,13 +25,18 @@ export async function getChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {
   });
 }
 
-export async function getChatBotName(chatBotId: ChatBotIdType) {
+export async function getChatBotPublic(
+  chatBotId: ChatBotIdType,
+): Promise<ChatBotPublicType> {
   return prisma.chatBot
     .findFirstOrThrow({
       where: { id: chatBotId },
       include: chatBotInclude,
     })
-    .then((cb) => cb.name);
+    .then((cb) => ({
+      name: cb.name,
+      initialMessage: cb.initialMessage,
+    }));
 }
 
 export async function getAllowedDomainsForChatBot(

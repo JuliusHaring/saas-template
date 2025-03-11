@@ -8,7 +8,8 @@ import { MessageList } from "@/lib/components/chatbot-ui/molecules/MessagesList"
 import { ChatInput } from "@/lib/components/chatbot-ui/molecules/ChatInput";
 import { MessageType } from "@/lib/components/chatbot-ui/types";
 import Headline from "@/lib/components/shared/molecules/Headline";
-import { ChatBotIdType } from "@/lib/db/types";
+import { ChatBotIdType, ChatBotPublicType } from "@/lib/db/types";
+import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
 
 const feStyleService = FEStyleService.Instance;
 const feChatService = FEChatService.Instance;
@@ -21,7 +22,7 @@ interface ChatBotUIProps {
 
 export const ChatBotUI: React.FC<ChatBotUIProps> = ({ chatBotId, token }) => {
   const [messages, setMessages] = useState<MessageType[]>([]);
-  const [chatBotName, setChatBotName] = useState<string>("Chatbot");
+  const [chatBotPublic, setChatBotPublic] = useState<ChatBotPublicType>();
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [isWaiting, setIsWaiting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -48,8 +49,8 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({ chatBotId, token }) => {
 
   useEffect(() => {
     const loadChatBotName = async () => {
-      const name = await feChatBotService.getChatBotName(chatBotId);
-      setChatBotName(name);
+      const cbPublic = await feChatBotService.getChatBotPublic(chatBotId);
+      setChatBotPublic(cbPublic);
     };
     loadChatBotName();
   }, [chatBotId]);
@@ -104,6 +105,8 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({ chatBotId, token }) => {
     }
   };
 
+  if (!chatBotPublic) return <LoadingSpinner />;
+
   return (
     <div
       className={`border border-gray-300 shadow-lg bg-white flex flex-col ${!isMinimized ? "h-150" : ""}`}
@@ -113,7 +116,7 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({ chatBotId, token }) => {
         className="flex items-center justify-between bg-blue-500 text-white p-3 cursor-pointer"
         onClick={() => setIsMinimized(!isMinimized)}
       >
-        <Headline level={3}>{chatBotName}</Headline>
+        <Headline level={3}>{chatBotPublic.name}</Headline>
         {isMinimized ? (
           <ArrowUpIcon className="h-5 w-5 text-white" />
         ) : (
@@ -124,7 +127,11 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({ chatBotId, token }) => {
       {!isMinimized && (
         <>
           <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-2">
-            <MessageList messages={messages} isTyping={isWaiting} />
+            <MessageList
+              messages={messages}
+              isTyping={isWaiting}
+              initialMessage={chatBotPublic.initialMessage}
+            />
             <div ref={messagesEndRef} />
           </div>
           <ChatInput onSend={sendMessage} isWaiting={isWaiting} />

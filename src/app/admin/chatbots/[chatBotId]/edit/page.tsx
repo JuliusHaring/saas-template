@@ -39,6 +39,7 @@ const ChatBotEdit: React.FC = () => {
     id: string;
     name: string;
     instructions: string;
+    initialMessage: string;
     allowedDomains: string;
   }>({
     mode: "onChange",
@@ -46,6 +47,7 @@ const ChatBotEdit: React.FC = () => {
       id: "",
       name: "",
       instructions: "",
+      initialMessage: "",
       allowedDomains: "",
     },
   });
@@ -58,6 +60,7 @@ const ChatBotEdit: React.FC = () => {
       setValue("id", chatbot.id);
       setValue("name", chatbot.name);
       setValue("instructions", chatbot.instructions || "");
+      setValue("initialMessage", chatbot.initialMessage);
       setValue("allowedDomains", chatbot.allowedDomains?.join(", ") || ""); // Convert array to string
       setIsLoading(false);
       setIngestionStatus(chatbot.ingestionStatus);
@@ -132,6 +135,19 @@ const ChatBotEdit: React.FC = () => {
             })}
           />
           <InputError errors={errors} name="name" />
+
+          <Input
+            type="text"
+            label="Erste Nachrichte"
+            {...register("initialMessage", {
+              required: "Erste Nachricht ist erforderlich",
+              minLength: {
+                value: 10,
+                message: "Mindestens 10 Zeichen erforderlich",
+              },
+            })}
+          />
+          <InputError errors={errors} name="initialMessage" />
 
           <Input
             type="text"
