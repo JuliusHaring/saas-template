@@ -3,14 +3,12 @@ import { QuotaUsageType } from "@/lib/services/api-services/quotas-service";
 import { ChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { FEQutoaService } from "@/lib/services/frontend-services/quota-service";
-import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import { getImportScript } from "@/lib/utils/import-script";
 import {
   CodeBracketSquareIcon,
   TrashIcon,
   PencilSquareIcon,
   PlusIcon,
-  ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
@@ -20,11 +18,9 @@ import QuotasOverview from "@/lib/components/admin/organisms/QuotasOverview";
 
 const feChatBotService = FEChatBotService.Instance;
 const feQuotaService = FEQutoaService.Insance;
-const feRAGService = FERAGService.Instance;
 
 export default function Chatbots() {
   const [chatbots, setChatbots] = useState<ChatBotType[]>();
-  const [isIngesting, setIsIngesting] = useState<boolean>(false);
 
   useEffect(() => {
     const getChatBots = async () => {
@@ -39,7 +35,6 @@ export default function Chatbots() {
     getChatBots();
   }, []);
 
-  if (isIngesting) return <LoadingSpinner />;
   if (typeof chatbots === "undefined") return <LoadingSpinner />;
 
   const handleDelete = async (chatbot: ChatBotType) => {
@@ -61,12 +56,7 @@ export default function Chatbots() {
         <PlusIcon className="h-5 w-5 text-white" />
         ChatBot Erstellen
       </Button>
-      <ChatBotGrid
-        chatbots={chatbots}
-        handleDelete={handleDelete}
-        setIsIngesting={setIsIngesting}
-        setChatbots={setChatbots}
-      />
+      <ChatBotGrid chatbots={chatbots} handleDelete={handleDelete} />
     </div>
   );
 }
@@ -74,13 +64,9 @@ export default function Chatbots() {
 function ChatBotGrid({
   chatbots,
   handleDelete,
-  setIsIngesting,
-  setChatbots,
 }: {
   chatbots: ChatBotType[];
   handleDelete: (chatbot: ChatBotType) => void;
-  setIsIngesting: (isIngesting: boolean) => void;
-  setChatbots: (chatbots: ChatBotType[]) => void;
 }) {
   const [quotaUsage, setQuotaUsage] = useState<QuotaUsageType>();
 
@@ -117,9 +103,6 @@ function ChatBotGrid({
               <ChatBotCardFooter
                 chatbot={chatbot}
                 handleDelete={() => handleDelete(chatbot)}
-                quotaUsage={quotaUsage}
-                setIsIngesting={setIsIngesting}
-                setChatbots={setChatbots}
               />
             }
           >
@@ -140,15 +123,9 @@ function chatBotCardHeader(chatbot: ChatBotType) {
 function ChatBotCardFooter({
   chatbot,
   handleDelete,
-  quotaUsage,
-  setIsIngesting,
-  setChatbots,
 }: {
   chatbot: ChatBotType;
   handleDelete: () => void;
-  quotaUsage: QuotaUsageType;
-  setIsIngesting: (isIngesting: boolean) => void;
-  setChatbots: (chatbots: ChatBotType[]) => void;
 }) {
   const handleCopyToClipboard = () => {
     const script = getImportScript(chatbot);
@@ -162,27 +139,8 @@ function ChatBotCardFooter({
     );
   };
 
-  const hasSources = () => {
-    return !!chatbot.GDriveSource || !!chatbot.WebsiteSource;
-  };
-
-  const ingestFiles = async () => {
-    setIsIngesting(true);
-    await feRAGService.ingestFiles(chatbot.id);
-    const chatbots = await feChatBotService.getChatBots();
-    setChatbots(chatbots);
-    setIsIngesting(false);
-  };
-
   return (
     <div className="flex items-center justify-end gap-2">
-      <Button
-        isDisabled={quotaUsage?.fileCount?.reached || !hasSources()}
-        onClick={ingestFiles}
-      >
-        <ArrowPathIcon className="h-5 w-5 text-white" />
-      </Button>
-
       <Button onClick={handleCopyToClipboard} className="flex items-center">
         <CodeBracketSquareIcon className="h-5 w-5 text-white" />
       </Button>
