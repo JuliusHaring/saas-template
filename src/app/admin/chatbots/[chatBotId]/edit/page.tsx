@@ -177,13 +177,19 @@ const ChatBotEdit: React.FC = () => {
         </form>
       </Card>
 
-      <Card header="Chatbot Import">
-        <CodeView code={getImportScript(getValues("id"))} />
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-6 gap-4">
+        <div className="xl:col-span-4 lg:col-span-3">
+          <Card header="Chatbot Import">
+            <CodeView code={getImportScript(getValues("id"))} />
+          </Card>
+        </div>
 
-      <Card header="Chatbot Vorschau">
-        <ChatBotUI chatBotId={params.chatBotId} token={token} />
-      </Card>
+        <div className="xl:col-span-2 lg:col-span-3">
+          <Card header="Chatbot Vorschau">
+            <ChatBotUI chatBotId={params.chatBotId} token={token} />
+          </Card>
+        </div>
+      </div>
 
       <FileSource chatBotId={params.chatBotId} />
       <ChatBotSources
