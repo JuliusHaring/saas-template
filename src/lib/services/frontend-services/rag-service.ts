@@ -2,6 +2,7 @@ import {
   ChatBotIdType,
   BatchPayload,
   FilesDeleteFromInsertionSourceType,
+  IngestionStatusEnum,
 } from "@/lib/db/types";
 import {
   IngestedFilesResponseType,
@@ -19,14 +20,24 @@ export class FERAGService {
   }
 
   public async ingestFiles(chatBotId: ChatBotIdType) {
-    return fetchJson<IngestedFilesResponseType>(`/api/rag/ingest`, {
-      method: "POST",
-      body: JSON.stringify({ chatBotId }),
-    });
+    return fetchJson<IngestedFilesResponseType>(
+      `/api/rag/${chatBotId}/ingest`,
+      {
+        method: "POST",
+      },
+    );
+  }
+
+  public async getIngestionStatus(
+    chatBotId: ChatBotIdType,
+  ): Promise<IngestionStatusEnum> {
+    return fetchJson<string>(`/api/rag/${chatBotId}/ingest/status`).then(
+      (v) => v as IngestionStatusEnum,
+    );
   }
 
   public async getFiles(chatBotId: ChatBotIdType) {
-    return fetchJson<FileType[]>(`/api/rag/files/${chatBotId}`);
+    return fetchJson<FileType[]>(`/api/rag/${chatBotId}/files`);
   }
 
   public async uploadFiles(chatBotId: ChatBotIdType, files: File[]) {
@@ -36,14 +47,14 @@ export class FERAGService {
       formData.append(`files`, file);
     });
 
-    return fetchJson(`/api/rag/files/${chatBotId}`, {
+    return fetchJson(`/api/rag/${chatBotId}/files`, {
       method: "POST",
       body: formData,
     });
   }
 
   public async deleteFile(chatBotId: ChatBotIdType, fileId: FileIdType) {
-    return fetchJson<FileType>(`/api/rag/files/${chatBotId}/${fileId}`, {
+    return fetchJson<FileType>(`/api/rag/${chatBotId}/files/${fileId}`, {
       method: "DELETE",
     });
   }
@@ -56,7 +67,7 @@ export class FERAGService {
       chatBotId,
       fileId,
     };
-    return fetchJson<BatchPayload>(`/api/rag/files/${chatBotId}`, {
+    return fetchJson<BatchPayload>(`/api/rag/${chatBotId}/files`, {
       method: "DELETE",
       body: JSON.stringify(body),
     });

@@ -49,6 +49,13 @@ model Usage {
   User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+enum IngestionStatus {
+  READY
+  RUNNING
+  ABORTED
+  LIMITED
+}
+
 model ChatBot {
   userId String
   User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -65,6 +72,8 @@ model ChatBot {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  ingestionStatus IngestionStatus @default(READY)
 }
 
 model GDriveSource {

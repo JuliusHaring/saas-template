@@ -63,3 +63,5 @@ export type FilesDeleteFromInsertionSourceType = {
 };
 
 export type BatchPayload = Prisma.BatchPayload;
+
+export { IngestionStatus as IngestionStatusEnum } from "@prisma/client";

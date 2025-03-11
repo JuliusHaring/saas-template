@@ -3,6 +3,7 @@ import React from "react";
 interface BannerProps {
   variant?: "danger" | "success" | "warning" | "info";
   children: React.ReactNode;
+  className?: string;
 }
 
 const variantClasses = {
@@ -12,9 +13,17 @@ const variantClasses = {
   info: "bg-blue-100 text-blue-800 border-blue-400",
 };
 
-const Banner: React.FC<BannerProps> = ({ variant = "info", children }) => {
+const Banner: React.FC<BannerProps> = ({
+  variant = "info",
+  children,
+  className,
+}) => {
   return (
-    <div className={`border-1 p-4 ${variantClasses[variant]}`}>{children}</div>
+    <div
+      className={`border-1 p-4 ${variantClasses[variant]} ${!!className && className}`}
+    >
+      {children}
+    </div>
   );
 };
 

@@ -1,4 +1,5 @@
-import { ChatBotIdType, UserIdType } from "@/lib/db/types";
+import { getIngestionStatus, setIngestionStatus } from "@/lib/db/chatbot";
+import { ChatBotIdType, IngestionStatusEnum, UserIdType } from "@/lib/db/types";
 import {
   Quota,
   QuotaReachedException,
@@ -43,6 +44,21 @@ export abstract class IRAGService {
   private async embedRAGFile(ragFile: RAGFile): Promise<RAGInsertType> {
     const embedding = await this.embeddingService.embedText(ragFile.content);
     return Object.assign({}, ragFile, { embedding });
+  }
+
+  public async setIngestionStatus(
+    chatBotId: ChatBotIdType,
+    userId: UserIdType,
+    ingestionStatus: IngestionStatusEnum,
+  ) {
+    return setIngestionStatus(chatBotId, userId, ingestionStatus);
+  }
+
+  public async getIngestionStatus(
+    chatBotId: ChatBotIdType,
+    userId: UserIdType,
+  ) {
+    return getIngestionStatus(chatBotId, userId);
   }
 
   public async insertFiles(

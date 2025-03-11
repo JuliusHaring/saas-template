@@ -1,5 +1,6 @@
 import Headline from "@/lib/components/shared/molecules/Headline";
 import CodeView from "@/lib/components/shared/organisms/CodeView";
+import { IngestionStatusEnum } from "@/lib/db/types";
 import { baseUrl } from "@/lib/utils/base-url";
 import { getImportScript } from "@/lib/utils/import-script";
 
@@ -16,6 +17,7 @@ export const SnippetExample: React.FC = () => {
     instructions: null,
     createdAt: new Date(),
     updatedAt: new Date(),
+    ingestionStatus: IngestionStatusEnum.READY,
   })
     .replaceAll(baseUrl, "<URL>")
     .replace("api/chatbot/integrate", "<INTEGRATION_URL>");

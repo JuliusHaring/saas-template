@@ -6,6 +6,7 @@ import {
   ChatBotType,
   CreateChatBotType,
   UpdateChatBotType,
+  IngestionStatusEnum,
 } from "@/lib/db/types";
 
 export async function getUserIdOfChatbot(chatBotId: ChatBotIdType) {
@@ -84,4 +85,24 @@ export async function deleteChatBot(
     where: { userId, id: chatBotId },
     include: chatBotInclude,
   });
+}
+
+export async function setIngestionStatus(
+  chatBotId: ChatBotIdType,
+  userId: UserIdType,
+  ingestionStatus: IngestionStatusEnum,
+) {
+  return prisma.chatBot.update({
+    where: { id: chatBotId, userId },
+    data: { ingestionStatus },
+  });
+}
+
+export async function getIngestionStatus(
+  chatBotId: ChatBotIdType,
+  userId: UserIdType,
+): Promise<IngestionStatusEnum> {
+  return prisma.chatBot
+    .findFirstOrThrow({ where: { id: chatBotId, userId } })
+    .then((cb) => cb.ingestionStatus);
 }

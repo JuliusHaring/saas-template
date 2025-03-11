@@ -7,8 +7,9 @@ import Card from "@/lib/components/admin/organisms/Card";
 import ChatBotSources from "@/lib/components/admin/organisms/ChatBotSources";
 import { FileSource } from "@/lib/components/admin/organisms/sources/FileSource";
 import { ChatBotUI } from "@/lib/components/chatbot-ui/organisms/ChatBotUI";
-import { UpdateChatBotType } from "@/lib/db/types";
+import { IngestionStatusEnum, UpdateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
+import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import { FETokenService } from "@/lib/services/frontend-services/token-service";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -16,6 +17,7 @@ import { useForm } from "react-hook-form";
 
 const feChatBotService = FEChatBotService.Instance;
 const feTokenService = FETokenService.Instance;
+const feRagService = FERAGService.Instance;
 
 const ChatBotEdit: React.FC = () => {
   const params = useParams<{ chatBotId: string }>();
@@ -23,10 +25,13 @@ const ChatBotEdit: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [token, setToken] = useState<string>();
 
+  const [ingestionStatus, setIngestionStatus] = useState<IngestionStatusEnum>();
+
   const {
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors, isValid },
   } = useForm<{
     id: string;
@@ -53,10 +58,20 @@ const ChatBotEdit: React.FC = () => {
       setValue("instructions", chatbot.instructions || "");
       setValue("allowedDomains", chatbot.allowedDomains?.join(", ") || ""); // Convert array to string
       setIsLoading(false);
+      setIngestionStatus(chatbot.ingestionStatus);
     };
 
     if (params.chatBotId) getChatBot();
   }, [params.chatBotId, setValue]);
+
+  useEffect(() => {
+    const intervalId = setInterval(async () => {
+      const status = await feRagService.getIngestionStatus(getValues("id"));
+      setIngestionStatus(status);
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, [ingestionStatus]);
 
   useEffect(() => {
     const signToken = async () => {
@@ -70,6 +85,10 @@ const ChatBotEdit: React.FC = () => {
   }, [params.chatBotId, token]);
 
   if (isLoading || !token) return <LoadingSpinner />;
+
+  if (ingestionStatus === "RUNNING") {
+    return <LoadingSpinner />;
+  }
 
   const onSubmit = async (data: {
     name: string;
@@ -161,7 +180,11 @@ const ChatBotEdit: React.FC = () => {
       </Card>
 
       <FileSource chatBotId={params.chatBotId} />
-      <ChatBotSources chatBotId={params.chatBotId} />
+      <ChatBotSources
+        chatBotId={params.chatBotId}
+        setIngestionStatus={setIngestionStatus}
+        ingestionStatus={ingestionStatus!}
+      />
     </div>
   );
 };
