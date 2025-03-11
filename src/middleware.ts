@@ -8,16 +8,28 @@ import { NextRequest, NextResponse } from "next/server";
 const isProtectedRoute = createRouteMatcher(["/admin(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
-  const defaultRedirect = "/";
-  const loggedInRedirect = "/admins/chatbots";
-
   if (isProtectedRoute(req)) {
     await auth.protect();
   }
 
+  const defaultRedirect = "/";
+  const isDefaultUrl = req.nextUrl.pathname === defaultRedirect;
+  const loggedInRedirect = "/admin/chatbots";
+
+  const isPageUrl =
+    ["/_next", "/api"].every(
+      (path) => !req.nextUrl.pathname.startsWith(path),
+    ) &&
+    (["/admin", "/stripe"].some((path) =>
+      req.nextUrl.pathname.startsWith(path),
+    ) ||
+      req.nextUrl.pathname === defaultRedirect);
+
+  if (!isPageUrl) return NextResponse.next();
+
   const userId = (await auth()).userId;
 
-  if (userId && isProtectedRoute(req)) {
+  if (isPageUrl && !!userId) {
     const email = (await (await clerkClient()).users.getUser(userId))
       .primaryEmailAddress?.emailAddress;
 
@@ -37,6 +49,10 @@ export default clerkMiddleware(async (auth, req) => {
     if (!hasSubscription && !isPaymentsUrl) {
       return redirect(req, paymentsUrl);
     }
+  }
+
+  if (isPageUrl && !userId && !isDefaultUrl) {
+    return redirect(req, defaultRedirect);
   }
 });
 
