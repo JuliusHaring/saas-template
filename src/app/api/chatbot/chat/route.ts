@@ -29,7 +29,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     parentDomain,
   }: ChatRequestType = body;
 
-  if (!chatBotId || !userMessage || !token) {
+  if (!chatBotId || !userMessage || !token || !parentDomain) {
     throw BadRequest("Missing required fields");
   }
 
@@ -43,7 +43,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
 
     if (!decoded.allowedDomains.includes(parentDomain)) {
       throw Forbidden(
-        `Unauthorized referer: ${parentDomain}. Allowed are: ${decoded.allowedDomains.join(", ")}`,
+        `Unauthorized parentDomain: ${parentDomain}. Allowed are: ${decoded.allowedDomains.join(", ")}`,
       );
     }
   } catch (e) {

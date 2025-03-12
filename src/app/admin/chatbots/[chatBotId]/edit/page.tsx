@@ -82,7 +82,7 @@ const ChatBotEdit: React.FC = () => {
     const signToken = async () => {
       setToken(
         await feTokenService.signToken(params.chatBotId, [
-          window.location.href,
+          window.location.hostname,
         ]),
       );
     };
@@ -204,7 +204,11 @@ const ChatBotEdit: React.FC = () => {
 
         <div className="xl:col-span-2 lg:col-span-3">
           <Card header="Chatbot Vorschau">
-            <ChatBotUI chatBotId={params.chatBotId} token={token} />
+            <ChatBotUI
+              chatBotId={params.chatBotId}
+              token={token}
+              parentDomain={new URL(process.env.NEXT_PUBLIC_BASE_URL!).hostname}
+            />
           </Card>
         </div>
       </div>

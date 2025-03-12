@@ -31,16 +31,10 @@ export async function GET(request: Request): Promise<Response> {
       const chatBotId = "${chatBotId}";
       const apiUrl = script.getAttribute("api-url");
       const token = "${token}";
+      const parentDomain = window.location.hostname;
 
       if (!chatBotId || !apiUrl) {
         console.error("Missing required attributes");
-        return;
-      }
-
-      // Validate domain
-      const allowedDomains = ${JSON.stringify(allowedDomains)};
-      if (!allowedDomains.some(domain => window.location.hostname.includes(domain))) {
-        console.error("Unauthorized domain trying to load chatbot: " + window.location.hostname);
         return;
       }
 
@@ -52,10 +46,10 @@ export async function GET(request: Request): Promise<Response> {
       chatbotContainer.style.left = "0";
       chatbotContainer.style.position = "fixed";
       chatbotContainer.style.zIndex = "9999";
-      chatbotContainer.src = \`\${apiUrl}/chatbot-ui?chatBotId=\${chatBotId}&token=\${token}\`;
+      chatbotContainer.src = \`\${apiUrl}/chatbot-ui?chatBotId=\${chatBotId}&token=\${token}&parentDomain=\${encodeURIComponent(parentDomain)}\`;
       document.body.appendChild(chatbotContainer);
     })();
-  `;
+`;
 
   return new Response(scriptContent, {
     headers: {

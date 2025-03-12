@@ -18,9 +18,14 @@ const feChatBotService = FEChatBotService.Instance;
 interface ChatBotUIProps {
   chatBotId: ChatBotIdType;
   token: string;
+  parentDomain: string;
 }
 
-export const ChatBotUI: React.FC<ChatBotUIProps> = ({ chatBotId, token }) => {
+export const ChatBotUI: React.FC<ChatBotUIProps> = ({
+  chatBotId,
+  token,
+  parentDomain,
+}) => {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [chatBotPublic, setChatBotPublic] = useState<ChatBotPublicType>();
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -77,10 +82,6 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({ chatBotId, token }) => {
     setIsWaiting(true);
 
     try {
-      const parentDomain = new URL(
-        window.top?.location.hostname || window.location.hostname,
-      ).hostname;
-
       const { response, sessionId: newSessionId } =
         await feChatService.sendMessage({
           chatBotId,
