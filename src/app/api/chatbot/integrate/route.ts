@@ -40,6 +40,14 @@ export async function GET(request: Request): Promise<Response> {
 
       // Create chatbot container
       const chatbotContainer = document.createElement("iframe");
+      chatbotContainer.style.top = 0;
+      chatbotContainer.style.bottom = 0;
+      chatbotContainer.style.right = 0;
+      chatbotContainer.style.left = 0;
+      chatbotContainer.style.width = "100%";
+      chatbotContainer.style.height = "100%";
+      chatbotContainer.style.overflow = "auto";
+      chatbotContainer.style.position = "fixed";
       chatbotContainer.src = \`\${apiUrl}/chatbot-ui?chatBotId=\${chatBotId}&token=\${token}&parentDomain=\${encodeURIComponent(parentDomain)}\`;
       document.body.appendChild(chatbotContainer);
     })();

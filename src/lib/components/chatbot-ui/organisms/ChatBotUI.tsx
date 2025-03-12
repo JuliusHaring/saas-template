@@ -117,21 +117,21 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
 
   return (
     <div
-      className={`z-9999 flex flex-col ${isExternal && `fixed bottom-5 right-5`} bg-white transition-all duration-300 ${
-        isMinimized
-          ? "w-[50px] h-[50px]"
-          : `${isExternal && "w-[350px]"} h-[500px]`
-      }`}
+      className={`z-999 flex flex-col bg-white transition-all duration-300 border border-gray-300 ${
+        !isMinimized && `${isExternal && "w-[350px]"} h-[500px]`
+      } ${isExternal && `fixed bottom-5 right-5`}`}
     >
       <div
-        className="flex items-center justify-between bg-blue-500 text-white p-3 cursor-pointer"
+        className="bg-blue-500 p-3 flex items-center justify-between text-white"
         onClick={() => setIsMinimized(!isMinimized)}
       >
-        <Headline level={3}>{isMinimized ? "" : chatBotPublic.name}</Headline>
         {isMinimized ? (
           <ArrowUpIcon className="h-5 w-5 text-white" />
         ) : (
-          <ArrowDownIcon className="h-5 w-5 text-white" />
+          <>
+            <Headline level={3}>{chatBotPublic.name}</Headline>
+            <ArrowDownIcon className="h-5 w-5 text-white" />
+          </>
         )}
       </div>
 
