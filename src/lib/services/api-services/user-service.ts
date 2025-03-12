@@ -1,6 +1,12 @@
+import { comparePassword, hashPassword } from "@/lib/auth/password";
 import { prisma } from "@/lib/db";
-import { UserIdType } from "@/lib/db/types";
-import { getUser } from "@/lib/db/user";
+import { LoginData, UserIdType } from "@/lib/db/types";
+import {
+  createUser,
+  getUser,
+  getUserByEmail,
+  UserAlreadyExistsException,
+} from "@/lib/db/user";
 
 export class UserService {
   private static _instance: UserService;
@@ -14,22 +20,27 @@ export class UserService {
     return getUser(userId);
   }
 
-  async createOrUpdateUser(id: UserIdType, email: UserIdType) {
-    return prisma.user.upsert({
-      where: { id },
-      update: {
-        email,
-      },
-      create: {
-        id,
-        email,
-      },
-    });
+  async logIn(loginData: LoginData) {
+    const user = await getUserByEmail(loginData.email);
+    const passwordsMatch = await comparePassword(
+      loginData.password,
+      user!.password,
+    );
+
+    if (!passwordsMatch) {
+      throw new Error(`Invalid credentials`);
+    }
+    return user!.id;
   }
 
-  async deleteUser(id: UserIdType) {
-    await prisma.user.delete({
-      where: { id },
-    });
+  async signUp(loginData: LoginData) {
+    const user = await getUserByEmail(loginData.email, false);
+    if (!!user) {
+      throw new UserAlreadyExistsException();
+    }
+
+    const passwordHash = await hashPassword(loginData.password);
+
+    return createUser(loginData.email, passwordHash);
   }
 }

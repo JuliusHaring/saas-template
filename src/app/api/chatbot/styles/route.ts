@@ -25,7 +25,7 @@ export const GET = withErrorHandling(async (request: NextRequest) => {
 });
 
 export const POST = withErrorHandling(async (request: NextRequest) => {
-  const userId = await getUserId();
+  const userId = await getUserId(request);
   const {
     chatBotId,
     createStyle,

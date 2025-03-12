@@ -16,7 +16,7 @@ export const DELETE = withErrorHandling(
       params: Promise<{ chatBotId: ChatBotIdType; fileId: FileIdType }>;
     },
   ) => {
-    const userId = await getUserId();
+    const userId = await getUserId(request);
     const chatBotId = (await params).chatBotId;
     const fileId = (await params).fileId;
 

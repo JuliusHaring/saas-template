@@ -1,11 +1,13 @@
+import { getSession } from "@/lib/auth/session";
 import { Forbidden } from "@/lib/utils/routes/http-errors";
-import { auth } from "@clerk/nextjs/server";
+import { NextRequest } from "next/server";
 
-export async function getUserId() {
-  return auth().then((authValue) => {
-    if (authValue.userId === null) {
-      throw Forbidden("User not logged in");
-    }
-    return authValue.userId;
-  });
+export async function getUserId(req: NextRequest): Promise<string> {
+  const session = await getSession(req);
+
+  if (!session?.userId) {
+    throw Forbidden("User is not logged in");
+  }
+
+  return session.userId;
 }

@@ -18,7 +18,7 @@ export const POST = withErrorHandling(
     request: NextRequest,
     { params }: { params: Promise<{ chatBotId: ChatBotIdType }> },
   ) => {
-    const userId = await getUserId();
+    const userId = await getUserId(request);
     const chatBotId = (await params).chatBotId;
 
     const formData = await request.formData();
@@ -47,7 +47,7 @@ export const GET = withErrorHandling(
     request: NextRequest,
     { params }: { params: Promise<{ chatBotId: ChatBotIdType }> },
   ) => {
-    const userId = await getUserId();
+    const userId = await getUserId(request);
     const chatBotId = (await params).chatBotId;
 
     return filesService.getFiles(chatBotId, userId);
@@ -55,7 +55,7 @@ export const GET = withErrorHandling(
 );
 
 export const DELETE = withErrorHandling(async (request: NextRequest) => {
-  const userId = await getUserId();
+  const userId = await getUserId(request);
   const body: FilesDeleteFromInsertionSourceType = await request.json();
 
   const file = await filesService.getFile(body.chatBotId, userId, body.fileId);

@@ -16,7 +16,7 @@ export const POST = withErrorHandling(
     request: NextRequest,
     { params }: { params: Promise<{ chatBotId: string }> },
   ) => {
-    const userId = await getUserId();
+    const userId = await getUserId(request);
     const chatBotId = (await params).chatBotId;
 
     const timeoutPromise = new Promise<never>((_, reject) =>

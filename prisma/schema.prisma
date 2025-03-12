@@ -10,8 +10,9 @@ datasource db {
 }
 
 model User {
-  id    String @id @unique
-  email String
+  id       String @id @unique @default(uuid())
+  email    String @unique
+  password String
 
   subscriptionId String?       @unique
   Subscription   Subscription?

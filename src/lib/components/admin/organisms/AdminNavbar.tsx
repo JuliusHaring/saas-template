@@ -1,6 +1,5 @@
 "use client";
 
-import { useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import {
   ArrowRightStartOnRectangleIcon,
@@ -14,7 +13,6 @@ import Link from "next/link";
 import Headline from "@/lib/components/shared/molecules/Headline";
 
 const AdminNavBar = () => {
-  const { signOut } = useClerk();
   const router = useRouter();
 
   return (
@@ -32,11 +30,7 @@ const AdminNavBar = () => {
         <NavbarItem href="#" onClick={openBillingPortal} icon={UserCircleIcon}>
           Kundenportal
         </NavbarItem>
-        <NavbarItem
-          href="#"
-          icon={ArrowRightStartOnRectangleIcon}
-          onClick={() => signOut().then(() => router.push("/"))}
-        >
+        <NavbarItem href="#" icon={ArrowRightStartOnRectangleIcon}>
           Ausloggen
         </NavbarItem>
       </div>

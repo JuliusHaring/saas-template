@@ -39,7 +39,13 @@ export type ChatBotIdType = ChatBot["id"];
 
 export type ChatBotPublicType = Pick<ChatBot, "name" | "initialMessage">;
 
+export type UserType = User;
 export type UserIdType = User["id"];
+
+export type LoginData = {
+  email: User["email"];
+  password: User["password"];
+};
 
 export type StyleType = Prisma.StyleGetPayload<true>;
 

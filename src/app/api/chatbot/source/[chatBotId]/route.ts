@@ -10,7 +10,7 @@ export const DELETE = withErrorHandling(
     request: NextRequest,
     { params }: { params: Promise<{ chatBotId: string }> },
   ) => {
-    const userId = await getUserId();
+    const userId = await getUserId(request);
     const chatBotId = (await params).chatBotId;
 
     if (!chatBotId) {
