@@ -33,8 +33,15 @@ export async function setSession(
   return res;
 }
 
-export async function clearSession(res: NextResponse) {
-  const session = await getSession(new NextRequest(res.url));
+export async function clearSession(req: NextRequest) {
+  const session = await getSession(req);
   session.destroy();
-  return res;
+  return NextResponse.json(
+    {},
+    {
+      headers: {
+        "Set-Cookie": `${sessionOptions.cookieName}=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict; Secure`,
+      },
+    },
+  );
 }

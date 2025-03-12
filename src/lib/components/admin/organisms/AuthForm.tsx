@@ -88,14 +88,14 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
           {type === "login" ? (
             <>
               Noch kein Konto?{" "}
-              <a href="/admin/auth/signup" className="text-blue-600">
+              <a href="/auth/signup" className="text-blue-600">
                 Registrieren
               </a>
             </>
           ) : (
             <>
               Bereits ein Konto?{" "}
-              <a href="/admin/auth/login" className="text-blue-600">
+              <a href="/auth/login" className="text-blue-600">
                 Login
               </a>
             </>
