@@ -33,14 +33,14 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
 
     const { url, url_exceptions } = websiteSource;
 
-    const visitedUrls = new Set<string>();
+    const visitedSites = new Set<string>();
     const regexPatterns = url_exceptions.map((pattern) => new RegExp(pattern));
 
     const files: RAGFile[] = [];
     await this._crawlWebsite(
       url,
       regexPatterns,
-      visitedUrls,
+      visitedSites,
       files,
       new URL(url).hostname,
       n,
@@ -52,14 +52,15 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
   private async _crawlWebsite(
     url: string,
     urlExceptions: RegExp[],
-    visitedUrls: Set<string>,
+    visitedSites: Set<string>,
     files: RAGFile[],
     baseHostname: string,
     n: number,
   ) {
-    if (visitedUrls.size >= n) return;
-    if (visitedUrls.has(url)) return;
-    visitedUrls.add(url);
+    const fileName = this.extractFileName(url);
+    if (visitedSites.size >= n) return;
+    if (visitedSites.has(fileName)) return;
+    visitedSites.add(fileName);
 
     try {
       const response = await axios.get(url, {
@@ -91,28 +92,31 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
 
       // Save the current page content as a file
       files.push({
-        name: this.extractFileName(url),
+        name: fileName,
         content: this.textService.convertHtmlToText(response.data),
         insertionSource: WebsiteSourceCrawler.name,
       });
 
       // Recursively crawl the links
-      for (const link of links) {
-        await this._crawlWebsite(
-          link,
-          urlExceptions,
-          visitedUrls,
-          files,
-          baseHostname,
-          n,
-        );
-      }
+      await Promise.all(
+        links.map((link) =>
+          this._crawlWebsite(
+            link,
+            urlExceptions,
+            visitedSites,
+            files,
+            baseHostname,
+            n,
+          ),
+        ),
+      );
     } catch (error) {
       console.error(`Failed to fetch ${url}:`, error);
     }
   }
 
   private extractFileName(url: string): string {
-    return new URL(url).pathname;
+    const parsedUrl = new URL(url);
+    return parsedUrl.pathname + parsedUrl.search;
   }
 }

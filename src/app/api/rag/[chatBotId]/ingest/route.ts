@@ -19,28 +19,39 @@ export const POST = withErrorHandling(
     const userId = await getUserId();
     const chatBotId = (await params).chatBotId;
 
+    const timeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error("Operation timed out")), 55000),
+    );
+
     try {
-      await ragService.setIngestionStatus(
-        chatBotId,
-        userId,
-        IngestionStatusEnum.RUNNING,
-      );
+      return await Promise.race([
+        (async () => {
+          await ragService.setIngestionStatus(
+            chatBotId,
+            userId,
+            IngestionStatusEnum.RUNNING,
+          );
 
-      const files = await websiteSourceCrawler.listFiles(userId!, chatBotId);
+          const files = await websiteSourceCrawler.listFiles(
+            userId!,
+            chatBotId,
+          );
+          const ingestedFiles = await ragService.insertFiles(
+            chatBotId,
+            userId,
+            files,
+          );
 
-      const ingestedFiles = await ragService.insertFiles(
-        chatBotId,
-        userId,
-        files,
-      );
+          await ragService.setIngestionStatus(
+            chatBotId,
+            userId,
+            IngestionStatusEnum.READY,
+          );
 
-      await ragService.setIngestionStatus(
-        chatBotId,
-        userId,
-        IngestionStatusEnum.READY,
-      );
-
-      return ingestedFiles as IngestedFilesResponseType;
+          return ingestedFiles as IngestedFilesResponseType;
+        })(),
+        timeoutPromise,
+      ]);
     } catch (e) {
       if (e instanceof QuotaReachedException) {
         await ragService.setIngestionStatus(
