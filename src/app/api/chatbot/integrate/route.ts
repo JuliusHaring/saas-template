@@ -14,7 +14,9 @@ export async function GET(request: Request): Promise<Response> {
 
   let allowedDomains =
     await chatbotService.getAllowedDomainsForChatBot(chatBotId);
-  allowedDomains = isDevModeEnabled() ? [...allowedDomains, "localhost"] : allowedDomains;
+  allowedDomains = isDevModeEnabled()
+    ? [...allowedDomains, "localhost"]
+    : allowedDomains;
   if (!allowedDomains) {
     return new Response("Chatbot not found", { status: 404 });
   }

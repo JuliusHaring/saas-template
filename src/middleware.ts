@@ -7,54 +7,70 @@ import { NextRequest, NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher(["/admin(.*)"]);
 
-export default clerkMiddleware(async (auth, req) => {
-  if (isProtectedRoute(req)) {
-    await auth.protect();
-  }
+export default clerkMiddleware(
+  async (auth, req) => {
+    if (
+      ["/chatbot-ui", "/api/chatbot/integrate"].some((pathname) =>
+        req.nextUrl.pathname.startsWith(pathname),
+      )
+    ) {
+      console.log(`Returning next for: ${req.nextUrl.pathname}`);
+      return NextResponse.next();
+    }
 
-  const defaultRedirect = "/";
-  const isDefaultUrl = req.nextUrl.pathname === defaultRedirect;
-  const loggedInRedirect = "/admin/chatbots";
+    if (isProtectedRoute(req)) {
+      console.log(`Protecting route for: ${req.nextUrl.pathname}`);
+      await auth.protect();
+    }
 
-  const isPageUrl =
-    ["/_next", "/api"].every(
-      (path) => !req.nextUrl.pathname.startsWith(path),
-    ) &&
-    (["/admin", "/stripe"].some((path) =>
-      req.nextUrl.pathname.startsWith(path),
-    ) ||
-      req.nextUrl.pathname === defaultRedirect);
+    const defaultRedirect = "/";
+    const isDefaultUrl = req.nextUrl.pathname === defaultRedirect;
+    const loggedInRedirect = "/admin/chatbots";
 
-  if (!isPageUrl) return NextResponse.next();
+    const isPageUrl =
+      ["/_next", "/api"].every(
+        (path) => !req.nextUrl.pathname.startsWith(path),
+      ) &&
+      (["/admin", "/stripe"].some((path) =>
+        req.nextUrl.pathname.startsWith(path),
+      ) ||
+        req.nextUrl.pathname === defaultRedirect);
 
-  const userId = (await auth()).userId;
+    if (!isPageUrl) {
+      console.log(`Returning next for: ${req.nextUrl.pathname}`);
+      return NextResponse.next();
+    }
 
-  if (isPageUrl && !!userId) {
-    const email = (await (await clerkClient()).users.getUser(userId))
-      .primaryEmailAddress?.emailAddress;
+    const userId = (await auth()).userId;
 
-    if (!email) {
+    if (isPageUrl && !!userId) {
+      const email = (await (await clerkClient()).users.getUser(userId))
+        .primaryEmailAddress?.emailAddress;
+
+      if (!email) {
+        return redirect(req, defaultRedirect);
+      }
+
+      const paymentsUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}/stripe/pricing-table/${encodeURIComponent(email)}`;
+      const isPaymentsUrl = req.nextUrl.toString() === paymentsUrl;
+
+      const hasSubscription = await checkSubscription(userId, req);
+
+      if (hasSubscription && isPaymentsUrl) {
+        return redirect(req, loggedInRedirect);
+      }
+
+      if (!hasSubscription && !isPaymentsUrl) {
+        return redirect(req, paymentsUrl);
+      }
+    }
+
+    if (isPageUrl && !userId && !isDefaultUrl) {
       return redirect(req, defaultRedirect);
     }
-
-    const paymentsUrl = `${req.nextUrl.protocol}//${req.nextUrl.host}/stripe/pricing-table/${encodeURIComponent(email)}`;
-    const isPaymentsUrl = req.nextUrl.toString() === paymentsUrl;
-
-    const hasSubscription = await checkSubscription(userId, req);
-
-    if (hasSubscription && isPaymentsUrl) {
-      return redirect(req, loggedInRedirect);
-    }
-
-    if (!hasSubscription && !isPaymentsUrl) {
-      return redirect(req, paymentsUrl);
-    }
-  }
-
-  if (isPageUrl && !userId && !isDefaultUrl) {
-    return redirect(req, defaultRedirect);
-  }
-});
+  },
+  // { debug: isDevModeEnabled() },
+);
 
 async function checkSubscription(
   userId: string,
@@ -84,5 +100,6 @@ async function checkSubscription(
 }
 
 function redirect(req: NextRequest, url: string): NextResponse {
+  console.log(`Redirecting to: ${url}`);
   return NextResponse.redirect(new URL(url, req.nextUrl.origin));
 }
