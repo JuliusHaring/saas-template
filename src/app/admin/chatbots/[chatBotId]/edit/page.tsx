@@ -98,11 +98,13 @@ const ChatBotEdit: React.FC = () => {
   const onSubmit = async (data: {
     name: string;
     instructions: string;
+    initialMessage: string;
     allowedDomains: string;
   }) => {
     const updateChatBot: UpdateChatBotType = {
       name: data.name,
       instructions: data.instructions,
+      initialMessage: data.initialMessage,
       allowedDomains: data.allowedDomains
         .split(",")
         .map((domain) => domain.trim())
