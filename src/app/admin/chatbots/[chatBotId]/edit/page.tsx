@@ -208,6 +208,7 @@ const ChatBotEdit: React.FC = () => {
               chatBotId={params.chatBotId}
               token={token}
               parentDomain={new URL(process.env.NEXT_PUBLIC_BASE_URL!).hostname}
+              isExternal={false}
             />
           </Card>
         </div>

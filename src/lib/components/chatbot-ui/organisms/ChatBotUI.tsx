@@ -19,12 +19,14 @@ interface ChatBotUIProps {
   chatBotId: ChatBotIdType;
   token: string;
   parentDomain: string;
+  isExternal?: boolean;
 }
 
 export const ChatBotUI: React.FC<ChatBotUIProps> = ({
   chatBotId,
   token,
   parentDomain,
+  isExternal = true,
 }) => {
   const [messages, setMessages] = useState<MessageType[]>([]);
   const [chatBotPublic, setChatBotPublic] = useState<ChatBotPublicType>();
@@ -33,7 +35,7 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const [isUserScrolling, setIsUserScrolling] = useState<boolean>(false);
-  const [isMinimized, setIsMinimized] = useState<boolean>(false);
+  const [isMinimized, setIsMinimized] = useState<boolean>(isExternal);
 
   // Auto-scroll logic
   useEffect(() => {
@@ -115,14 +117,17 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
 
   return (
     <div
-      className={`border border-gray-300 shadow-lg bg-white flex flex-col ${!isMinimized ? "h-150" : ""}`}
-      onScroll={handleScroll}
+      className={`z-9999 flex flex-col ${isExternal && `fixed bottom-5 right-5`} bg-white transition-all duration-300 ${
+        isMinimized
+          ? "w-[50px] h-[50px]"
+          : `${isExternal && "w-[350px]"} h-[500px]`
+      }`}
     >
       <div
         className="flex items-center justify-between bg-blue-500 text-white p-3 cursor-pointer"
         onClick={() => setIsMinimized(!isMinimized)}
       >
-        <Headline level={3}>{chatBotPublic.name}</Headline>
+        <Headline level={3}>{isMinimized ? "" : chatBotPublic.name}</Headline>
         {isMinimized ? (
           <ArrowUpIcon className="h-5 w-5 text-white" />
         ) : (
@@ -132,7 +137,11 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
 
       {!isMinimized && (
         <>
-          <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-2">
+          <div
+            ref={chatContainerRef}
+            className="flex-1 overflow-y-auto p-2"
+            onScroll={handleScroll}
+          >
             <MessageList
               messages={messages}
               isTyping={isWaiting}
