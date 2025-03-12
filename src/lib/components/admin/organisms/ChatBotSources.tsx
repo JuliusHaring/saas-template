@@ -33,6 +33,10 @@ const ChatBotSources: React.FC<{
         return (
           <Banner className={className} variant="warning">
             Bei der letzten Nutzung wurde ein Nutzungslimit erreicht.
+            Möglicherweise sind nicht alle gecrawlten Inhalte vollständig
+            erfasst worden. Bitte prüfen Sie die vorhandenen Daten und erhöhen
+            Sie gegebenenfalls Ihr Nutzungslimit, um eine vollständige Erfassung
+            sicherzustellen.
           </Banner>
         );
     }

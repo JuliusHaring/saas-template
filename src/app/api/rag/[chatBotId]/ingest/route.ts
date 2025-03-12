@@ -32,14 +32,15 @@ export const POST = withErrorHandling(
             IngestionStatusEnum.RUNNING,
           );
 
-          const files = await websiteSourceCrawler.listFiles(
+          const listedFiles = await websiteSourceCrawler.listFiles(
             userId!,
             chatBotId,
           );
           const ingestedFiles = await ragService.insertFiles(
             chatBotId,
             userId,
-            files,
+            listedFiles.files,
+            false,
           );
 
           await ragService.setIngestionStatus(
@@ -48,7 +49,21 @@ export const POST = withErrorHandling(
             IngestionStatusEnum.READY,
           );
 
-          return ingestedFiles as IngestedFilesResponseType;
+          if (ingestedFiles.limitReached || listedFiles.limitReached) {
+            await ragService.setIngestionStatus(
+              chatBotId,
+              userId,
+              IngestionStatusEnum.LIMITED,
+            );
+          } else {
+            await ragService.setIngestionStatus(
+              chatBotId,
+              userId,
+              IngestionStatusEnum.READY,
+            );
+          }
+
+          return { count: ingestedFiles.count } as IngestedFilesResponseType;
         })(),
         timeoutPromise,
       ]);

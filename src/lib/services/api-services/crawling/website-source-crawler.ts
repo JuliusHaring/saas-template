@@ -27,14 +27,17 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
   async _listFiles(
     userId: UserIdType,
     chatBotId: string,
-    n: number = Number.MAX_SAFE_INTEGER,
-  ): Promise<RAGFile[]> {
+    n: number,
+  ): Promise<{ files: RAGFile[]; limitReached: boolean }> {
     const websiteSource = await getWebsiteSource(userId, chatBotId);
 
     const { url, url_exceptions } = websiteSource;
 
     const visitedSites = new Set<string>();
     const regexPatterns = url_exceptions.map((pattern) => new RegExp(pattern));
+
+    let limitReached = false;
+    const setLimitReached = () => (limitReached = true);
 
     const files: RAGFile[] = [];
     await this._crawlWebsite(
@@ -44,9 +47,10 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
       files,
       new URL(url).hostname,
       n,
+      setLimitReached,
     );
 
-    return files;
+    return { files, limitReached };
   }
 
   private async _crawlWebsite(
@@ -56,9 +60,13 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
     files: RAGFile[],
     baseHostname: string,
     n: number,
+    setLimitReached: () => void,
   ) {
     const fileName = this.extractFileName(url);
-    if (visitedSites.size >= n) return;
+    if (visitedSites.size >= n) {
+      setLimitReached();
+      return;
+    }
     if (visitedSites.has(fileName)) return;
     visitedSites.add(fileName);
 
@@ -107,6 +115,7 @@ export class WebsiteSourceCrawler extends RAGSourceCrawler {
             files,
             baseHostname,
             n,
+            setLimitReached,
           ),
         ),
       );

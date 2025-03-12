@@ -65,30 +65,37 @@ export abstract class IRAGService {
     chatBotId: ChatBotIdType,
     userId: UserIdType,
     ragFiles: RAGFile[],
-  ): Promise<{ count: number }> {
+    raiseLimit: boolean,
+  ): Promise<{ count: number; limitReached: boolean }> {
     const n = await this.quotaService.getUserQuotaRemainder(
       userId,
       Quota.MAX_FILES,
     );
+    let limitReached = false;
 
-    const splitFiles: RAGFile[] = [];
+    let insertableFiles: RAGFile[] = [];
     for (const file of ragFiles) {
       const chunks = this._splitContent(file);
-      splitFiles.push(...chunks);
+      insertableFiles.push(...chunks);
     }
 
-    if (splitFiles.length > n) {
+    if (raiseLimit && insertableFiles.length > n) {
       throw new QuotaReachedException(Quota.MAX_FILES);
+    }
+
+    if (insertableFiles.length > n) {
+      limitReached = true;
+      insertableFiles = insertableFiles.slice(0, n);
     }
 
     await this.quotaService.updateUserUsage(
       userId,
       Quota.MAX_FILES,
-      splitFiles.length,
+      insertableFiles.length,
     );
 
     const embeddedFiles = await Promise.all(
-      splitFiles.map((ragFile) => this.embedRAGFile(ragFile)),
+      insertableFiles.map((ragFile) => this.embedRAGFile(ragFile)),
     );
 
     embeddedFiles.map((f) => {
@@ -97,7 +104,10 @@ export abstract class IRAGService {
       }
     });
 
-    return this._insertFiles(chatBotId, userId, embeddedFiles);
+    return this._insertFiles(chatBotId, userId, embeddedFiles).then((res) => ({
+      count: res.count,
+      limitReached,
+    }));
   }
 
   private _splitContent(file: RAGFile): RAGFile[] {

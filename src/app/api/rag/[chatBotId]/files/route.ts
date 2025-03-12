@@ -31,7 +31,12 @@ export const POST = withErrorHandling(
     const ragFiles: RAGFile[] =
       await filesService.convertFilesToRagFiles(rawFiles);
 
-    const countObj = await ragService.insertFiles(chatBotId, userId, ragFiles);
+    const countObj = await ragService.insertFiles(
+      chatBotId,
+      userId,
+      ragFiles,
+      true,
+    );
 
     return countObj;
   },
