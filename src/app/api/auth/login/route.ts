@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const userId = await userService.logIn(loginData);
-    return setSession(req, new NextResponse("Login successful"), userId);
+    return await setSession(req, new NextResponse("Login successful"), userId);
   } catch (e) {
     console.error(e);
     return new NextResponse("Invalid credentials", { status: 401 });

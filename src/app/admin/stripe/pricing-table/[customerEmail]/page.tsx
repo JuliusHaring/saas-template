@@ -1,7 +1,5 @@
 // @ts-nocheck
 "use client";
-
-import DefaultNavBar from "@/lib/components/shared/organisms/DefaultNavBar";
 import { EyeCatcher } from "@/lib/components/shared/organisms/EyeCatcher";
 import Script from "next/script";
 
@@ -14,9 +12,7 @@ export default async function PricingTablePage({
   const customerEmail = decodeURIComponent(rawEmail);
 
   return (
-    <div>
-      <DefaultNavBar />
-
+    <div className="w-full">
       <div className="text-xl my-8">
         <EyeCatcher />
       </div>

@@ -1,5 +1,4 @@
 import { comparePassword, hashPassword } from "@/lib/auth/password";
-import { prisma } from "@/lib/db";
 import { LoginData, UserIdType } from "@/lib/db/types";
 import {
   createUser,

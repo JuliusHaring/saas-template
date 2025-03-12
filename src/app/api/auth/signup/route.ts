@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const user = await userService.signUp(loginData);
-    return setSession(req, new NextResponse("User registered"), user.id);
+    return await setSession(req, new NextResponse("User registered"), user.id);
   } catch (e) {
     console.error(e);
     return new NextResponse("E-Mail ist bereits registriert", { status: 400 });

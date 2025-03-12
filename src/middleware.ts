@@ -1,23 +1,22 @@
 import { getSession } from "@/lib/auth/session";
 import { UserIdType } from "@/lib/db/types";
 import { fetchJson } from "@/lib/utils/fetch";
-import { hasSubscribers } from "diagnostics_channel";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
-  const isPricingTable = pathname.startsWith("/stripe/pricing-table");
-  const isAdmin = pathname.startsWith("/admin");
-
-  const urlPayment = "/stripe/pricing-table/";
+  const urlPayment = "/admin/stripe/pricing-table/";
   const urlAdmin = "/admin/chatbots";
   const urlLogin = "/auth/login";
 
-  if (
-    pathname.startsWith("/chatbot-ui") ||
-    pathname.startsWith("/api/chatbot/integrate")
-  ) {
+  const isPricingTable = pathname.startsWith("/admin/stripe/pricing-table");
+  const isAdmin = pathname.startsWith("/admin");
+  const isLogin = pathname === urlLogin;
+  const isChatBotUI = pathname.startsWith("/chatbot-ui");
+  const isChatBotIntegrate = pathname.startsWith("/api/chatbot/integrate");
+
+  if (isChatBotUI || isChatBotIntegrate) {
     return NextResponse.next();
   }
 
@@ -26,6 +25,8 @@ export default async function middleware(req: NextRequest) {
     if (!session.userId) {
       return redirect(req, urlLogin);
     }
+
+    if (isLogin) return redirect(req, urlAdmin);
 
     const hasSubscription = await checkSubscription(session.userId, req);
     const email = await getEmail(session.userId, req);

@@ -1,4 +1,5 @@
 import { UserIdType } from "@/lib/db/types";
+import { isDevModeEnabled } from "@/lib/utils/dev-mode";
 import { SessionOptions, getIronSession } from "iron-session";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,15 +12,17 @@ const sessionOptions: SessionOptions = {
     "asdjasdasdknaaasdasdaszgdjhaklsmdlkynxcluybxcbyxciuyicuxasdkuahsdiuahsdiuhasdiuhasiudh",
   cookieName: "auth_session",
   cookieOptions: {
-    secure: process.env.NODE_ENV === "production",
-    httpOnly: true,
-    sameSite: "Strict",
+    secure: !isDevModeEnabled(),
     maxAge: 60 * 60 * 24 * 7, // 7 days
   },
 };
 
-export async function getSession(req: NextRequest) {
-  return getIronSession<SessionType>(req, new NextResponse(), sessionOptions);
+export async function getSession(req: NextRequest, res?: NextResponse) {
+  return getIronSession<SessionType>(
+    req,
+    res || new NextResponse(),
+    sessionOptions,
+  );
 }
 
 export async function setSession(
@@ -27,7 +30,7 @@ export async function setSession(
   res: NextResponse,
   userId: UserIdType,
 ) {
-  const session = await getSession(req);
+  const session = await getSession(req, res);
   session.userId = userId;
   await session.save();
   return res;
