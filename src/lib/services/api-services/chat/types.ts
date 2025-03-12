@@ -10,4 +10,5 @@ export type ChatRequestType = {
   sessionId?: string | null;
   token: string;
   userMessage: string;
+  parentDomain: string;
 };

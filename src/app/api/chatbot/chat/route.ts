@@ -26,6 +26,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     sessionId: providedSessionId,
     userMessage,
     token,
+    parentDomain,
   }: ChatRequestType = body;
 
   if (!chatBotId || !userMessage || !token) {
@@ -40,10 +41,10 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
       throw Forbidden("Invalid chatbot ID");
     }
 
-    // Validate that the request comes from an allowed domain
-    const referer = request.headers.get("referer") || "";
-    if (!decoded.allowedDomains.some((domain) => referer.includes(domain))) {
-      throw Forbidden("Unauthorized website");
+    if (!decoded.allowedDomains.includes(parentDomain)) {
+      throw Forbidden(
+        `Unauthorized referer: ${parentDomain}. Allowed are: ${decoded.allowedDomains.join(", ")}`,
+      );
     }
   } catch (e) {
     if (e instanceof TokenExpiredError) {
