@@ -1,5 +1,10 @@
 import { getIngestionStatus, setIngestionStatus } from "@/lib/db/chatbot";
-import { ChatBotIdType, IngestionStatusEnum, UserIdType } from "@/lib/db/types";
+import {
+  ChatBotIdType,
+  IngestionStatusEnum,
+  UsageType,
+  UserIdType,
+} from "@/lib/db/types";
 import {
   Quota,
   QuotaReachedException,
@@ -39,6 +44,7 @@ export abstract class IRAGService {
     chatBotId: ChatBotIdType,
     userId: UserIdType,
     ragFiles: RAGInsertType[],
+    updateUsage: () => Promise<UsageType>,
   ): Promise<{ count: number }>;
 
   private async embedRAGFile(ragFile: RAGFile): Promise<RAGInsertType> {
@@ -88,12 +94,6 @@ export abstract class IRAGService {
       insertableFiles = insertableFiles.slice(0, n);
     }
 
-    await this.quotaService.updateUserUsage(
-      userId,
-      Quota.MAX_FILES,
-      insertableFiles.length,
-    );
-
     const embeddedFiles = await Promise.all(
       insertableFiles.map((ragFile) => this.embedRAGFile(ragFile)),
     );
@@ -104,10 +104,20 @@ export abstract class IRAGService {
       }
     });
 
-    return this._insertFiles(chatBotId, userId, embeddedFiles).then((res) => ({
-      count: res.count,
-      limitReached,
-    }));
+    const updateUsage = async () =>
+      this.quotaService.updateUserUsage(
+        userId,
+        Quota.MAX_FILES,
+        insertableFiles.length,
+      );
+
+    const res = await this._insertFiles(
+      chatBotId,
+      userId,
+      embeddedFiles,
+      updateUsage,
+    );
+    return { count: res.count, limitReached };
   }
 
   private _splitContent(file: RAGFile): RAGFile[] {

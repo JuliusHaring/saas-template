@@ -1,4 +1,9 @@
-import { UserIdType, SubscriptionType, UpdateUsageType } from "@/lib/db/types";
+import {
+  UserIdType,
+  SubscriptionType,
+  UpdateUsageType,
+  UsageType,
+} from "@/lib/db/types";
 import { SubscriptionTier } from "@prisma/client";
 import { prisma } from ".";
 import Stripe from "stripe";
@@ -49,7 +54,7 @@ export async function getOrCreateUserUsage(userId: UserIdType) {
 export async function createOrUpdateUserUsage(
   userId: UserIdType,
   update: UpdateUsageType,
-) {
+): Promise<UsageType> {
   return await prisma.usage.upsert({
     where: { userId },
     update,

@@ -33,36 +33,38 @@ export async function getVectorForFile(
   return vectorArray;
 }
 
-export async function insertFile(
+export async function insertFiles(
   chatBotId: ChatBotIdType,
   userId: UserIdType,
-  ragFile: RAGInsertType,
+  ragFiles: RAGInsertType[],
+  tx: Prisma.TransactionClient,
 ) {
-  const { embedding, ...rest } = ragFile;
+  if (ragFiles.length === 0) {
+    return { count: 0 };
+  }
 
-  const data: Prisma.FileCreateInput = Object.assign({}, rest, {
-    ChatBot: { connect: { id: chatBotId, userId } },
+  const createPromises = ragFiles.map((ragFile) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { embedding, ...rest } = ragFile;
+    const data = Object.assign({}, rest, {
+      ChatBot: { connect: { id: chatBotId } },
+    });
+    return tx.file.create({ data });
   });
+  const createdFiles = await Promise.all(createPromises);
 
-  const files = await prisma.$transaction(
-    async (t) => {
-      const file = await t.file.create({
-        data,
-      });
-
-      const vectorString = `[${embedding.join(",")}]`; // Convert vector to PostgreSQL array format
-      await t.$queryRaw(Prisma.sql`
+  const updatePromises = createdFiles.map((file, index) => {
+    const vectorString = `[${ragFiles[index].embedding.join(",")}]`;
+    return tx.$queryRaw(Prisma.sql`
       UPDATE "File"
       SET vector = ${vectorString}::vector(1536)
-      WHERE id = ${file.id};
+      WHERE id = ${file.id} AND 'userId' = ${userId} AND 'chatBotId' = ${chatBotId};
     `);
+  });
 
-      return file;
-    },
-    { timeout: Number.MAX_SAFE_INTEGER, maxWait: Number.MAX_SAFE_INTEGER },
-  );
+  await Promise.all(updatePromises);
 
-  return files;
+  return { count: createdFiles.length };
 }
 
 export async function getFile(

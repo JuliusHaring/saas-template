@@ -1,10 +1,11 @@
+import { prisma } from "@/lib/db";
 import {
-  insertFile,
   findClosest,
   deleteFiles,
   deleteFilesFromSource,
+  insertFiles,
 } from "@/lib/db/pg-rag";
-import { ChatBotIdType, UserIdType } from "@/lib/db/types";
+import { ChatBotIdType, UsageType, UserIdType } from "@/lib/db/types";
 import { IRAGService } from "@/lib/services/api-services/rag/i-rag-service";
 import {
   RAGInsertType,
@@ -30,10 +31,17 @@ export class PostGresRAGService extends IRAGService {
     chatBotId: ChatBotIdType,
     userId: UserIdType,
     ragFiles: RAGInsertType[],
+    updateUsage: () => Promise<UsageType>,
   ): Promise<{ count: number }> {
-    return await Promise.all(
-      ragFiles.map((rF) => insertFile(chatBotId, userId, rF)),
-    ).then((r) => ({ count: r.length }));
+    return prisma.$transaction(
+      async (tx) => {
+        const res = insertFiles(chatBotId, userId, ragFiles, tx);
+
+        await updateUsage();
+        return res;
+      },
+      { timeout: Number.MAX_SAFE_INTEGER, maxWait: Number.MAX_SAFE_INTEGER },
+    );
   }
 
   _findClosest(
