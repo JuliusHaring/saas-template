@@ -49,7 +49,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <Card header={type === "login" ? "Login" : "Sign Up"} className="w-[500px]">
+      <Card
+        header={type === "login" ? "Login" : "Sign Up"}
+        className="w-[500px]"
+      >
         <form
           className="grid grid-cols-1 gap-y-4"
           onSubmit={handleSubmit(onSubmit)}

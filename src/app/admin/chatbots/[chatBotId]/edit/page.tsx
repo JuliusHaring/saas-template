@@ -14,6 +14,7 @@ import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import { FETokenService } from "@/lib/services/frontend-services/token-service";
 import { getImportScript } from "@/lib/utils/import-script";
 import { useParams } from "next/navigation";
+import Script from "next/script";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 

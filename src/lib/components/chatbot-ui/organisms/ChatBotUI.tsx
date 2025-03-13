@@ -113,7 +113,10 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
     }
   };
 
-  if (!chatBotPublic) return <LoadingSpinner />;
+  if (!chatBotPublic) {
+    if (!isExternal) return <LoadingSpinner />;
+    return <></>;
+  }
 
   return (
     <div
@@ -122,7 +125,7 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
       } ${isExternal && `fixed bottom-5 right-5`}`}
     >
       <div
-        className="bg-blue-500 p-3 flex items-center justify-between text-white"
+        className="bg-blue-500 p-3 flex items-center justify-between text-white cursor-pointer"
         onClick={() => setIsMinimized(!isMinimized)}
       >
         {isMinimized ? (

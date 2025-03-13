@@ -51,6 +51,14 @@ export async function GET(request: Request): Promise<Response> {
       chatbotContainer.src = \`\${apiUrl}/chatbot-ui?chatBotId=\${chatBotId}&token=\${token}&parentDomain=\${encodeURIComponent(parentDomain)}\`;
       document.body.appendChild(chatbotContainer);
     })();
+
+    iframe.onload = function() {
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+      const tailwind = iframeDoc.createElement("link");
+      tailwind.rel = "stylesheet";
+      tailwind.href = "https://cdn.jsdelivr.net/npm/tailwindcss@4.0.0/dist/tailwind.min.css";
+      iframeDoc.head.appendChild(tailwind);
+    };
 `;
 
   return new Response(scriptContent, {
