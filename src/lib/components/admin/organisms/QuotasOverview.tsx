@@ -82,7 +82,7 @@ const QuotaWarning: React.FC<QuotaWarningProps> = ({ quotaUsage }) => {
   ) {
     return (
       <div className="my-2">
-        <Banner variant="danger">
+        <Banner variant="warning">
           Sie haben ein Nutzungslimit erreicht. Erwägen Sie ein{" "}
           <Link
             href={``}

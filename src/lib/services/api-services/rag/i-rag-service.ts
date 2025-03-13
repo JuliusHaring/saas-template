@@ -31,7 +31,7 @@ export class InvalidRAGFileException extends Error {
 export abstract class IRAGService {
   protected embeddingService!: IEmbeddingService;
   protected quotaService!: QuotaService;
-  private MAX_TOKENS: number = 8192;
+  private MAX_TOKENS: number = 8000;
 
   protected constructor() {}
 
