@@ -17,7 +17,11 @@ export const MessageList: React.FC<MessageListProps> = ({
   <div className="break-words w-full overflow-hidden whitespace-pre-wrap flex-1 overflow-y-auto pb-4 px-2 space-y-2">
     <p className="text-gray-400 text-sm mt-1 text-center">
       ChatBot erstellt mit{" "}
-      <a href={baseUrl} target="_top">
+      <a
+        href={baseUrl}
+        target="_top"
+        className="font-extrabold text-large hover:text-blue-600"
+      >
         KnexAI
       </a>
     </p>
