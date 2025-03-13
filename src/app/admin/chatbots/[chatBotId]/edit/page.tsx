@@ -12,6 +12,7 @@ import { IngestionStatusEnum, UpdateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import { FETokenService } from "@/lib/services/frontend-services/token-service";
+import { baseUrl } from "@/lib/utils/base-url";
 import { getImportScript } from "@/lib/utils/import-script";
 import { urlPattern } from "@/lib/utils/patterns";
 import { useParams } from "next/navigation";
@@ -81,11 +82,10 @@ const ChatBotEdit: React.FC = () => {
 
   useEffect(() => {
     const signToken = async () => {
-      setToken(
-        await feTokenService.signToken(params.chatBotId, [
-          window.location.hostname,
-        ]),
-      );
+      const location = window.location.href;
+      console.log(`Signing token for location: ${location}`);
+
+      setToken(await feTokenService.signToken(params.chatBotId, [location]));
     };
     signToken();
   }, [params.chatBotId, token]);
@@ -204,7 +204,7 @@ const ChatBotEdit: React.FC = () => {
             <ChatBotUI
               chatBotId={params.chatBotId}
               token={token}
-              parentDomain={new URL(process.env.NEXT_PUBLIC_BASE_URL!).hostname}
+              parentDomain={new URL(baseUrl).hostname}
               isExternal={false}
             />
           </Card>
