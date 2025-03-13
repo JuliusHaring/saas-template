@@ -124,7 +124,7 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
         ...prev,
         {
           role: "Antwort",
-          html: "Es ist ein Fehler aufgetreten. Versuche es später nochmal!",
+          html: "Es ist ein Fehler aufgetreten. Bitte versuche es später erneut. Falls das Problem weiterhin besteht, kann ein Neuladen der Seite möglicherweise helfen.",
         },
       ]);
       console.error("Error communicating with chatbot:", error);
