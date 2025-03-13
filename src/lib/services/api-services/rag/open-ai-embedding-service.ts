@@ -18,7 +18,7 @@ export class OpenAIEmbeddingService extends IEmbeddingService {
     return this._instance || (this._instance = new this());
   }
 
-  public async embedText(text: EmbeddingQueryType): Promise<EmbeddingType> {
+  public async _embedText(text: EmbeddingQueryType): Promise<EmbeddingType> {
     return this.client.embeddings
       .create({
         input: text,

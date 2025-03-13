@@ -20,7 +20,7 @@ import {
   RAGQueryType,
   InsertionSourceType,
 } from "@/lib/services/api-services/rag/types";
-import { encoding_for_model, Tiktoken, TiktokenModel } from "tiktoken";
+import { decodeTokens, encodeTokens } from "@/lib/utils/tokens";
 
 export class InvalidRAGFileException extends Error {
   constructor(ragFile: RAGFile) {
@@ -31,7 +31,6 @@ export class InvalidRAGFileException extends Error {
 export abstract class IRAGService {
   protected embeddingService!: IEmbeddingService;
   protected quotaService!: QuotaService;
-  protected encoder!: Tiktoken;
   private MAX_TOKENS: number = 8192;
 
   protected constructor() {}
@@ -39,9 +38,6 @@ export abstract class IRAGService {
   protected async init() {
     this.quotaService = await QuotaService.getInstance();
     this.embeddingService = OpenAIEmbeddingService.Instance;
-    this.encoder = encoding_for_model(
-      process.env.NEXT_PUBLIC_OPENAI_EMBEDDING_MODEL! as TiktokenModel,
-    );
   }
 
   abstract _insertFiles(
@@ -52,12 +48,11 @@ export abstract class IRAGService {
   ): Promise<{ count: number }>;
 
   private async embedRAGFiles(ragFiles: RAGFile[]): Promise<RAGInsertType[]> {
-    return Promise.all(
-      ragFiles.map(async (ragFile) => {
-        return this.embeddingService
-          .embedText(ragFile.content)
-          .then((embedding) => Object.assign({}, ragFile, { embedding }));
-      }),
+    const embeddings = await this.embeddingService.embedTexts(
+      ragFiles.map((rF) => rF.content),
+    );
+    return ragFiles.map((rF, idx) =>
+      Object.assign({}, rF, { embedding: embeddings[idx] }),
     );
   }
 
@@ -129,13 +124,11 @@ export abstract class IRAGService {
 
   private _splitContent(file: RAGFile): RAGFile[] {
     const chunks: RAGFile[] = [];
-    const tokens = this.encoder.encode(file.content); // Tokenize content
-    const decoder = new TextDecoder("utf-8"); // Convert Uint8Array to string
+    const tokens = encodeTokens(file.content); // Tokenize content
 
     for (let i = 0; i < tokens.length; i += this.MAX_TOKENS) {
       const chunkTokens = tokens.slice(i, i + this.MAX_TOKENS);
-      const chunkBytes = this.encoder.decode(chunkTokens); // Returns Uint8Array
-      const chunkText = decoder.decode(chunkBytes); // Convert to string
+      const chunkText = decodeTokens(chunkTokens);
 
       chunks.push(
         new RAGFile(
