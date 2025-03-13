@@ -5,6 +5,7 @@ import InputError from "@/lib/components/admin/molecules/InputError";
 import Card from "@/lib/components/admin/organisms/Card";
 import { CreateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
+import { urlPattern } from "@/lib/utils/patterns";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -92,11 +93,7 @@ const ChatBotCreate: React.FC = () => {
               if (!value.trim()) return "Erlaubte Domains sind erforderlich";
               const domains = value.split(",").map((domain) => domain.trim());
               for (const domain of domains) {
-                if (
-                  !/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/.test(
-                    domain,
-                  )
-                ) {
+                if (urlPattern.test(domain)) {
                   return `Ungültige Domain: ${domain}`;
                 }
               }

@@ -41,7 +41,13 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
       throw Forbidden("Invalid chatbot ID");
     }
 
-    if (!decoded.allowedDomains.includes(parentDomain)) {
+    const allowedDomains = decoded.allowedDomains.map((allowedDomain) =>
+      allowedDomain === "localhost"
+        ? allowedDomain
+        : new URL(allowedDomain).hostname,
+    );
+
+    if (!allowedDomains.includes(parentDomain)) {
       throw Forbidden(
         `Unauthorized parentDomain: ${parentDomain}. Allowed are: ${decoded.allowedDomains.join(", ")}`,
       );

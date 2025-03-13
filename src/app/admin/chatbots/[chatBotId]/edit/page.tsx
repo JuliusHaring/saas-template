@@ -13,6 +13,7 @@ import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-servi
 import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import { FETokenService } from "@/lib/services/frontend-services/token-service";
 import { getImportScript } from "@/lib/utils/import-script";
+import { urlPattern } from "@/lib/utils/patterns";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -108,7 +109,7 @@ const ChatBotEdit: React.FC = () => {
       allowedDomains: data.allowedDomains
         .split(",")
         .map((domain) => domain.trim())
-        .filter((domain) => domain.length > 0), // Convert string back to an array and filter empty values
+        .filter((domain) => domain.length > 0),
     };
 
     const updatedChatBot = await feChatBotService.updateChatBot(
@@ -162,11 +163,7 @@ const ChatBotEdit: React.FC = () => {
                   .map((domain) => domain.trim())
                   .filter((domain) => domain.length > 0);
                 for (const domain of domains) {
-                  if (
-                    !/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/.test(
-                      domain,
-                    )
-                  ) {
+                  if (!urlPattern.test(domain)) {
                     return `Ungültige Domain: ${domain}`;
                   }
                 }

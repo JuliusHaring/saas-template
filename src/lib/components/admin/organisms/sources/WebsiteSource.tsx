@@ -2,6 +2,7 @@ import Button from "@/lib/components/admin/molecules/Button";
 import { Input } from "@/lib/components/admin/molecules/Input";
 import InputError from "@/lib/components/admin/molecules/InputError";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
+import { urlPattern } from "@/lib/utils/patterns";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
@@ -14,6 +15,7 @@ export const WebsiteSource: React.FC<{ chatBotId: string }> = ({
     register,
     handleSubmit,
     setValue,
+    getValues,
     formState: { errors, isValid },
   } = useForm<{ url?: string; url_exceptions?: string }>({
     mode: "onChange",
@@ -94,13 +96,11 @@ export const WebsiteSource: React.FC<{ chatBotId: string }> = ({
         {...register("url", {
           required: "Eine URL ist erforderlich",
           pattern: {
-            value: /^(https?:\/\/)[a-zA-Z0-9-_.]+\.[a-zA-Z]{2,}\/?/i,
-            message: "Die URL muss mit http:// oder https:// beginnen",
+            value: urlPattern,
+            message: `Ungültige Domain: ${getValues("url")}`,
           },
         })}
       />
-      <InputError errors={errors} name="url" />
-
       <InputError errors={errors} name="url" />
 
       <Input
