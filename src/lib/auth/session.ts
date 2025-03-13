@@ -8,8 +8,7 @@ export interface SessionType {
 }
 
 const sessionOptions: SessionOptions = {
-  password:
-    "asdjasdasdknaaasdasdaszgdjhaklsmdlkynxcluybxcbyxciuyicuxasdkuahsdiuahsdiuhasdiuhasiudh",
+  password: process.env.SESSION_SECRET!,
   cookieName: "auth_session",
   cookieOptions: {
     secure: !isDevModeEnabled(),

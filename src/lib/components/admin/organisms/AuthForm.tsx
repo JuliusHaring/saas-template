@@ -14,6 +14,7 @@ interface AuthFormProps {
 const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
   const [error, setError] = useState("");
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const {
     register,
@@ -29,6 +30,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
 
   const onSubmit = async (data: { email: string; password: string }) => {
     setError("");
+    setIsSubmitting(true);
 
     const res = await fetch(`/api/auth/${type}`, {
       method: "POST",
@@ -41,12 +43,13 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
     } else {
       const errorMessage = await res.text();
       setError(errorMessage);
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <Card header={type === "login" ? "Login" : "Sign Up"}>
+      <Card header={type === "login" ? "Login" : "Sign Up"} className="w-[500px]">
         <form
           className="grid grid-cols-1 gap-y-4"
           onSubmit={handleSubmit(onSubmit)}
@@ -79,7 +82,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
           />
           <InputError errors={errors} name="password" />
 
-          <Button type="submit" isDisabled={!isValid}>
+          <Button type="submit" isDisabled={!isValid || isSubmitting}>
             {type === "login" ? "Login" : "Registrieren"}
           </Button>
         </form>
