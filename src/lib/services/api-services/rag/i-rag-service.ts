@@ -47,9 +47,14 @@ export abstract class IRAGService {
     updateUsage: () => Promise<UsageType>,
   ): Promise<{ count: number }>;
 
-  private async embedRAGFile(ragFile: RAGFile): Promise<RAGInsertType> {
-    const embedding = await this.embeddingService.embedText(ragFile.content);
-    return Object.assign({}, ragFile, { embedding });
+  private async embedRAGFiles(ragFiles: RAGFile[]): Promise<RAGInsertType[]> {
+    return Promise.all(
+      ragFiles.map(async (ragFile) => {
+        return this.embeddingService
+          .embedText(ragFile.content)
+          .then((embedding) => Object.assign({}, ragFile, { embedding }));
+      }),
+    );
   }
 
   public async setIngestionStatus(
@@ -94,9 +99,7 @@ export abstract class IRAGService {
       insertableFiles = insertableFiles.slice(0, n);
     }
 
-    const embeddedFiles = await Promise.all(
-      insertableFiles.map((ragFile) => this.embedRAGFile(ragFile)),
-    );
+    const embeddedFiles = await this.embedRAGFiles(ragFiles);
 
     embeddedFiles.map((f) => {
       if (typeof f.insertionSource === "undefined") {
