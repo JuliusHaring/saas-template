@@ -1,20 +1,18 @@
-import { encoding_for_model, TiktokenModel } from "tiktoken";
+import { encodingForModel, TiktokenModel } from "js-tiktoken";
 
-const encoder = encoding_for_model(
+const encoder = encodingForModel(
   process.env.NEXT_PUBLIC_OPENAI_EMBEDDING_MODEL! as TiktokenModel,
 );
-
-const decoder = new TextDecoder("utf-8");
 
 export function encodeTokens(text: string) {
   return encoder.encode(text);
 }
 
-export function decodeTokens(tokens: Uint32Array) {
-  return decoder.decode(encoder.decode(tokens));
+export function decodeTokens(tokens: number[]) {
+  return encoder.decode(tokens);
 }
 
-export function countTokens(toCount: string | Uint32Array) {
+export function countTokens(toCount: string | number[]) {
   let tokens = toCount;
   if (typeof tokens === "string") {
     tokens = encodeTokens(tokens);

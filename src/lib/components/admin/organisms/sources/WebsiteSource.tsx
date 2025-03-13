@@ -105,7 +105,7 @@ export const WebsiteSource: React.FC<{ chatBotId: string }> = ({
 
       <Input
         type="text"
-        label="Ausgenommene URLs (durch Komma getrennt)"
+        label="Ausgenommene URLs (RegExp, durch Komma getrennt)"
         {...register("url_exceptions")}
       />
       <InputError errors={errors} name="url_exceptions" />
