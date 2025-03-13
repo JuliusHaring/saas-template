@@ -20,7 +20,7 @@ import {
   RAGQueryType,
   InsertionSourceType,
 } from "@/lib/services/api-services/rag/types";
-import { getFileExtension } from "@/lib/utils/frontend/files";
+import { encoding_for_model, Tiktoken, TiktokenModel } from "tiktoken";
 
 export class InvalidRAGFileException extends Error {
   constructor(ragFile: RAGFile) {
@@ -31,13 +31,17 @@ export class InvalidRAGFileException extends Error {
 export abstract class IRAGService {
   protected embeddingService!: IEmbeddingService;
   protected quotaService!: QuotaService;
-  private MAX_CHUNK_LENGTH: number = 6000;
+  protected encoder!: Tiktoken;
+  private MAX_TOKENS: number = 8192;
 
   protected constructor() {}
 
   protected async init() {
     this.quotaService = await QuotaService.getInstance();
     this.embeddingService = OpenAIEmbeddingService.Instance;
+    this.encoder = encoding_for_model(
+      process.env.NEXT_PUBLIC_OPENAI_EMBEDDING_MODEL! as TiktokenModel,
+    );
   }
 
   abstract _insertFiles(
@@ -99,7 +103,7 @@ export abstract class IRAGService {
       insertableFiles = insertableFiles.slice(0, n);
     }
 
-    const embeddedFiles = await this.embedRAGFiles(ragFiles);
+    const embeddedFiles = await this.embedRAGFiles(insertableFiles);
 
     embeddedFiles.map((f) => {
       if (typeof f.insertionSource === "undefined") {
@@ -125,21 +129,22 @@ export abstract class IRAGService {
 
   private _splitContent(file: RAGFile): RAGFile[] {
     const chunks: RAGFile[] = [];
-    const parts =
-      file.content.match(new RegExp(`.{1,${this.MAX_CHUNK_LENGTH}}`, "gs")) ||
-      [];
+    const tokens = this.encoder.encode(file.content); // Tokenize content
+    const decoder = new TextDecoder("utf-8"); // Convert Uint8Array to string
 
-    if (parts.length === 1) return [file];
+    for (let i = 0; i < tokens.length; i += this.MAX_TOKENS) {
+      const chunkTokens = tokens.slice(i, i + this.MAX_TOKENS);
+      const chunkBytes = this.encoder.decode(chunkTokens); // Returns Uint8Array
+      const chunkText = decoder.decode(chunkBytes); // Convert to string
 
-    parts.forEach((part, index) => {
       chunks.push(
         new RAGFile(
-          `${file.name}_chunk_${index + 1}.${getFileExtension(file.name)}`,
-          part,
+          `${file.name}_chunk_${chunks.length + 1}`,
+          chunkText,
           file.insertionSource,
         ),
       );
-    });
+    }
 
     return chunks;
   }
