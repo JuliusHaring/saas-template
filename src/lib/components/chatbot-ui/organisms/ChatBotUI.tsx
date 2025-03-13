@@ -1,15 +1,15 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { FEStyleService } from "@/lib/services/frontend-services/style-service";
-import { FEChatService } from "@/lib/services/frontend-services/chat-service";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
-import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { MessageList } from "@/lib/components/chatbot-ui/molecules/MessagesList";
 import { ChatInput } from "@/lib/components/chatbot-ui/molecules/ChatInput";
 import { MessageType } from "@/lib/components/chatbot-ui/types";
 import Headline from "@/lib/components/shared/molecules/Headline";
 import { ChatBotIdType, ChatBotPublicType } from "@/lib/db/types";
 import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
+import { FEChatService } from "@/lib/services/frontend-services/chat-service";
+import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
+import { FEStyleService } from "@/lib/services/frontend-services/style-service";
 
 const feStyleService = FEStyleService.Instance;
 const feChatService = FEChatService.Instance;
@@ -33,9 +33,29 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [isWaiting, setIsWaiting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const chatContainerRef = useRef<HTMLDivElement>(null);
   const [isUserScrolling, setIsUserScrolling] = useState<boolean>(false);
   const [isMinimized, setIsMinimized] = useState<boolean>(isExternal);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+
+  const updateSize = () => {
+    const chatbotDiv = document.getElementById("chatbot-root");
+    if (!chatbotDiv) return;
+
+    setIsMinimized((prev) => !prev);
+
+    if (isExternal) {
+      const newWidth = isMinimized ? "350px" : "50px";
+      const newHeight = isMinimized ? "500px" : "50px";
+
+      chatbotDiv.style.width = newWidth;
+      chatbotDiv.style.height = newHeight;
+
+      window.parent.postMessage(
+        { type: "resize", width: newWidth, height: newHeight },
+        "*",
+      );
+    }
+  };
 
   // Auto-scroll logic
   useEffect(() => {
@@ -120,13 +140,14 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
 
   return (
     <div
-      className={`z-999 flex flex-col bg-white transition-all duration-300 border border-gray-300 ${
-        !isMinimized && `${isExternal && "w-[350px]"} h-[500px]`
-      } ${isExternal && `fixed bottom-5 right-5`}`}
+      className={`z-999 flex flex-col bg-white transition-all duration-300 border border-gray-300 ${!isExternal && `${isMinimized ? "h-[50px]" : "h-[500px]"}`}`}
+      id="chatbot-root"
     >
       <div
-        className="bg-blue-500 p-3 flex items-center justify-between text-white cursor-pointer"
-        onClick={() => setIsMinimized(!isMinimized)}
+        className={`bg-blue-500 p-3 flex items-center text-white cursor-pointer ${isMinimized ? "justify-center h-full" : "justify-between"}`}
+        onClick={() => {
+          updateSize();
+        }}
       >
         {isMinimized ? (
           <ArrowUpIcon className="h-5 w-5 text-white" />

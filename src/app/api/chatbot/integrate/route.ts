@@ -33,32 +33,36 @@ export async function GET(request: Request): Promise<Response> {
       const token = "${token}";
       const parentDomain = window.location.hostname;
 
-      if (!chatBotId || !apiUrl) {
-        console.error("Missing required attributes");
-        return;
+    if (!chatBotId || !apiUrl) {
+      console.error("Missing required attributes");
+      return;
+    }
+
+    // Create chatbot iframe
+    const chatbotContainer = document.createElement("iframe");
+    chatbotContainer.style.position = "fixed";
+    chatbotContainer.style.bottom = "20px";
+    chatbotContainer.style.right = "20px";
+    chatbotContainer.style.width = "50px"; // Default minimized size
+    chatbotContainer.style.height = "50px"; // Default minimized size
+    chatbotContainer.style.border = "none";
+    chatbotContainer.style.zIndex = "9999";
+    chatbotContainer.style.overflow = "hidden"; // Prevent scrollbars
+    chatbotContainer.style.transition = "width 0.3s, height 0.3s";
+
+    chatbotContainer.src = \`\${apiUrl}/chatbot-ui?chatBotId=\${chatBotId}&token=\${token}&parentDomain=\${encodeURIComponent(parentDomain)}\`;
+    document.body.appendChild(chatbotContainer);
+
+    // Listen for chatbot resizing messages
+    window.addEventListener("message", (event) => {
+      if (event.origin !== apiUrl) return;
+      if (event.data.type === "resize") {
+        console.log(event.data)
+        chatbotContainer.style.width = event.data.width;
+        chatbotContainer.style.height = event.data.height;
       }
-
-      // Create chatbot container
-      const chatbotContainer = document.createElement("iframe");
-      chatbotContainer.style.top = 0;
-      chatbotContainer.style.bottom = 0;
-      chatbotContainer.style.right = 0;
-      chatbotContainer.style.left = 0;
-      chatbotContainer.style.width = "100%";
-      chatbotContainer.style.height = "100%";
-      chatbotContainer.style.overflow = "auto";
-      chatbotContainer.style.position = "fixed";
-      chatbotContainer.src = \`\${apiUrl}/chatbot-ui?chatBotId=\${chatBotId}&token=\${token}&parentDomain=\${encodeURIComponent(parentDomain)}\`;
-      document.body.appendChild(chatbotContainer);
-    })();
-
-    iframe.onload = function() {
-      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-      const tailwind = iframeDoc.createElement("link");
-      tailwind.rel = "stylesheet";
-      tailwind.href = "https://cdn.jsdelivr.net/npm/tailwindcss@4.0.0/dist/tailwind.min.css";
-      iframeDoc.head.appendChild(tailwind);
-    };
+    });
+  })();
 `;
 
   return new Response(scriptContent, {
