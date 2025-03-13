@@ -55,11 +55,12 @@ export async function insertFiles(
 
   const updatePromises = createdFiles.map((file, index) => {
     const vectorString = `[${ragFiles[index].embedding.join(",")}]`;
-    return tx.$queryRaw(Prisma.sql`
-      UPDATE "File"
-      SET vector = ${vectorString}::vector(1536)
-      WHERE id = ${file.id} AND 'userId' = ${userId} AND 'chatBotId' = ${chatBotId};
-    `);
+    const query = Prisma.sql`
+    UPDATE "File"
+    SET vector = ${vectorString}::vector(1536)
+    WHERE id = ${file.id} AND "chatBotId" = ${chatBotId};
+  `;
+    return tx.$queryRaw(query);
   });
 
   await Promise.all(updatePromises);
@@ -136,14 +137,15 @@ export async function findClosest(
   const vectorString = `[${queryVector.join(",")}]`; // Convert query vector to PostgreSQL vector format
 
   // Perform similarity search at the SQL level
-  const results = await prisma.$queryRaw<FileWithEmbeddingType[]>(Prisma.sql`
-    SELECT id, name, content, "createdAt", "chatBotId", "insertionSource", vector <-> ${vectorString}::vector(1536) AS distance
-    FROM "File"
-    WHERE vector IS NOT NULL
-    AND "chatBotId" = ${chatBotId}
-    ORDER BY distance ASC
-    LIMIT ${n};
-  `);
+  const query = Prisma.sql`
+  SELECT id, name, content, "createdAt", "chatBotId", "insertionSource", vector <-> ${vectorString}::vector(1536) AS distance
+  FROM "File"
+  WHERE vector IS NOT NULL
+  AND "chatBotId" = ${chatBotId}
+  ORDER BY distance ASC
+  LIMIT ${n};
+`;
+  const results = await prisma.$queryRaw<FileWithEmbeddingType[]>(query);
 
   return results.map((r) => ({
     name: r.name,
