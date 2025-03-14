@@ -1,4 +1,4 @@
-import { IconType } from "@/app/admin/constants";
+import { IconType } from "@/app/admin/types";
 import Link, { LinkProps } from "next/link";
 import React from "react";
 
