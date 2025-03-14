@@ -10,18 +10,26 @@ export default async function middleware(req: NextRequest) {
   const urlAdmin = "/admin/chatbots";
   const urlLogin = "/auth/login";
 
+  const isNext = pathname.startsWith("/_next/");
+  const isDefault = pathname === "/";
   const isPricingTable = pathname.startsWith("/admin/stripe/pricing-table");
   const isAdmin = pathname.startsWith("/admin");
   const isLogin = pathname === urlLogin;
   const isChatBotUI = pathname.startsWith("/chatbot-ui");
   const isChatBotIntegrate = pathname.startsWith("/api/chatbot/integrate");
+  const isAPI = pathname.startsWith("/api/");
 
-  if (isChatBotUI || isChatBotIntegrate) {
+  if ([isAPI || isNext, isChatBotUI, isChatBotIntegrate].some((val) => val)) {
     return NextResponse.next();
   }
 
+  const session = await getSession(req);
+
+  if (isDefault && !!session.userId) {
+    return redirect(req, urlAdmin);
+  }
+
   if (isAdmin || isPricingTable) {
-    const session = await getSession(req);
     if (!session.userId) {
       return redirect(req, urlLogin);
     }

@@ -14,6 +14,12 @@ export class StripeProductInitException extends Error {}
 export class SubscriptionTierNotFoundException extends Error {}
 export class StripeCustomerEmailMissingException extends Error {}
 
+export type ProductDescriptionType = {
+  name: string;
+  marketingFeatures: string[];
+  priceEUR: number;
+};
+
 export class StripeService {
   private static _instance: StripeService;
   private stripe: Stripe;
@@ -68,6 +74,22 @@ export class StripeService {
         return this.productEnterprise;
     }
     throw new SubscriptionTierNotFoundException();
+  }
+
+  public async getProductDescriptions(): Promise<ProductDescriptionType[]> {
+    return Promise.all(
+      [this.productBasic, this.productPremium, this.productEnterprise].map(
+        async (product) => {
+          const priceEUR = await this.stripe.prices
+            .retrieve(product!.default_price as string)
+            .then((price) => price.unit_amount! / 100);
+          const marketingFeatures = product!.marketing_features.map(
+            (mF) => mF.name!,
+          );
+          return { name: product!.name, marketingFeatures, priceEUR };
+        },
+      ),
+    );
   }
 
   async getTierBySubscription(
