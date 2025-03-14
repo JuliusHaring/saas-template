@@ -3,6 +3,7 @@
 import LandingPageItem from "@/lib/components/landingpage/molecules/LandingPageItem";
 import LandingNavBar from "@/lib/components/landingpage/organisms/LandingNavBar";
 import { EyeCatcher } from "@/lib/components/shared/organisms/EyeCatcher";
+import Footer from "@/lib/components/shared/organisms/Footer";
 import { HowTo } from "@/lib/components/shared/organisms/HowTo";
 import { Pricing } from "@/lib/components/shared/organisms/Pricing";
 import { SnippetExample } from "@/lib/components/shared/organisms/SnippetExample";
@@ -31,7 +32,7 @@ export default function LandingPage() {
           <HowTo />
         </LandingPageItem>
 
-        <LandingPageItem name="testimonies" headline="Was unsere Kunden sagen">
+        <LandingPageItem name="testimonials" headline="Was unsere Kunden sagen">
           <TestimonialCarousel />
         </LandingPageItem>
 
@@ -44,11 +45,12 @@ export default function LandingPage() {
 
         <Spacing />
       </div>
+      <Footer />
     </div>
   );
 }
 
-const Spacing: React.FC<{ amount?: number | string }> = ({ amount = 200 }) => {
+const Spacing: React.FC<{ amount?: number | string }> = ({ amount = 100 }) => {
   return (
     <div
       style={{ marginTop: typeof amount === "number" ? `${amount}px` : amount }}

@@ -16,17 +16,32 @@ const LandingNavBar = () => {
           </ScrollLink>
         </NavbarItem>
         <NavbarItem>
+          <ScrollLink to="pricing" duration={500}>
+            Preise
+          </ScrollLink>
+        </NavbarItem>
+        <NavbarItem>
           <ScrollLink to="howto" duration={500}>
             Anleitung
           </ScrollLink>
         </NavbarItem>
         <NavbarItem>
+          <ScrollLink to="testimonials" duration={500}>
+            Kundenbewertungen
+          </ScrollLink>
+        </NavbarItem>
+
+        <NavbarItem>
           <ScrollLink to="code-example" duration={500}>
             Code-Beispiel
           </ScrollLink>
         </NavbarItem>
-        <NavbarItem href="/admin">
+
+        <NavbarItem href="/auth/login">
           <Button>Anmelden</Button>
+        </NavbarItem>
+        <NavbarItem href="/auth/signup">
+          <Button>Registrieren</Button>
         </NavbarItem>
       </div>
     </NavBar>
