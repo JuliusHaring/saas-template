@@ -24,7 +24,7 @@ const AdminNavBar = () => {
 
   return (
     <NavBar className="md:justify-between">
-      <Link href="/admin/chatbots">
+      <Link href="/admin">
         <Headline level={1} className="hover:text-blue-600">
           <Typical steps={["", 100, "KnexAI", 500]} />
         </Headline>

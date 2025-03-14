@@ -39,7 +39,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ type }) => {
     });
 
     if (res.ok) {
-      router.push("/admin/chatbots");
+      router.push("/admin");
     } else {
       const errorMessage = await res.text();
       setError(errorMessage);

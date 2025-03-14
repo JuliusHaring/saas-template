@@ -7,13 +7,13 @@ export default async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   const urlPayment = "/admin/stripe/pricing-table/";
-  const urlAdmin = "/admin/chatbots";
+  const urlAdmin = "/admin";
   const urlLogin = "/auth/login";
 
   const isNext = pathname.startsWith("/_next/");
   const isDefault = pathname === "/";
   const isPricingTable = pathname.startsWith("/admin/stripe/pricing-table");
-  const isAdmin = pathname.startsWith("/admin");
+  const isAdmin = pathname.startsWith(urlAdmin);
   const isLogin = pathname === urlLogin;
   const isChatBotUI = pathname.startsWith("/chatbot-ui");
   const isChatBotIntegrate = pathname.startsWith("/api/chatbot/integrate");

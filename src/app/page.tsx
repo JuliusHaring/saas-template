@@ -4,6 +4,7 @@ import LandingPageItem from "@/lib/components/landingpage/molecules/LandingPageI
 import LandingNavBar from "@/lib/components/landingpage/organisms/LandingNavBar";
 import { EyeCatcher } from "@/lib/components/shared/organisms/EyeCatcher";
 import { HowTo } from "@/lib/components/shared/organisms/HowTo";
+import { Pricing } from "@/lib/components/shared/organisms/Pricing";
 import { SnippetExample } from "@/lib/components/shared/organisms/SnippetExample";
 import TestimonialCarousel from "@/lib/components/shared/organisms/Testimonies";
 import TutorialVideo from "@/lib/components/shared/organisms/TutorialVideo";
@@ -20,6 +21,10 @@ export default function LandingPage() {
 
         <LandingPageItem name="tutorial" spaceTop={10}>
           <TutorialVideo />
+        </LandingPageItem>
+
+        <LandingPageItem name="pricing" headline="Preise">
+          <Pricing />
         </LandingPageItem>
 
         <LandingPageItem name="howto" headline="Wie geht KnexAI?" spaceTop="10">

@@ -21,7 +21,7 @@ const LandingNavBar = () => {
           Code-Beispiel
         </ScrollLink>
       </NavbarItem>
-      <NavbarItem href="/admin/chatbots">
+      <NavbarItem href="/admin">
         <Button>Anmelden</Button>
       </NavbarItem>
     </NavBar>

@@ -13,11 +13,17 @@ import Stripe from "stripe";
 export class StripeProductInitException extends Error {}
 export class SubscriptionTierNotFoundException extends Error {}
 export class StripeCustomerEmailMissingException extends Error {}
+export class PriceNotFoundException extends Error {
+  constructor(product?: Stripe.Product) {
+    super(`The product ${product?.name} has no "default_price"`);
+  }
+}
 
 export type ProductDescriptionType = {
   name: string;
   marketingFeatures: string[];
   priceEUR: number;
+  hasTestPhase?: boolean;
 };
 
 export class StripeService {
@@ -80,13 +86,21 @@ export class StripeService {
     return Promise.all(
       [this.productBasic, this.productPremium, this.productEnterprise].map(
         async (product) => {
-          const priceEUR = await this.stripe.prices
-            .retrieve(product!.default_price as string)
-            .then((price) => price.unit_amount! / 100);
+          if (!product?.default_price) {
+            throw new PriceNotFoundException(product);
+          }
+          const price = await this.stripe.prices.retrieve(
+            product!.default_price as string,
+          );
           const marketingFeatures = product!.marketing_features.map(
             (mF) => mF.name!,
           );
-          return { name: product!.name, marketingFeatures, priceEUR };
+          return {
+            name: product!.name,
+            marketingFeatures,
+            priceEUR: price.unit_amount! / 100,
+            hasTestPhase: !product!.name.includes("Basic"),
+          };
         },
       ),
     );
