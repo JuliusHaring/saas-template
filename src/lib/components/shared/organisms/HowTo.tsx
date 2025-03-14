@@ -8,9 +8,9 @@ import Image from "next/image";
 
 export const HowTo: React.FC = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8 border border-gray-200 p-20">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8 border border-gray-200 p-20 items-center">
       {/* Text & Steps */}
-      <div>
+      <div className="flex flex-col justify-center">
         <ul className="space-y-6 text-lg">
           <li className="flex flex-col">
             <div className="flex items-center gap-3 text-xl font-semibold">
@@ -28,8 +28,7 @@ export const HowTo: React.FC = () => {
               Konfiguriere Quellen
             </div>
             <p className="text-gray-600 text-base mt-1">
-              Momentan werden das Hochladen von Dateien und Webscraping zur
-              automatisierten Analyse deiner Webseite unterstützt.
+              Speichere die Adresse deiner Webseite oder lade Dateien hoch.
             </p>
           </li>
 
@@ -39,9 +38,8 @@ export const HowTo: React.FC = () => {
               Importiere den ChatBot
             </div>
             <p className="text-gray-600 text-base mt-1">
-              KnexAI erstellt automatisch Skripte mit welchen du deine ChatBots
-              auf deiner Webseite importieren kannst. Dank moderner
-              Authentifizierung ist dies nur für dich möglich!
+              Füge eine von KnexAI vorgegebene Script-Zeile in deine Webseite
+              ein.
             </p>
           </li>
 
