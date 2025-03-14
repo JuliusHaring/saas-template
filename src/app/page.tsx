@@ -15,7 +15,7 @@ export default function LandingPage() {
     <div>
       <LandingNavBar />
 
-      <div className="text-xl lg:px-40 md:px-10 px-4 mt-8">
+      <div className="text-xl mt-8">
         <LandingPageItem name="eyecatcher">
           <EyeCatcher />
         </LandingPageItem>

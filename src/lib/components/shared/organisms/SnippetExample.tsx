@@ -8,7 +8,7 @@ export const SnippetExample: React.FC = () => {
     .replace("api/chatbot/integrate", "<INTEGRATION_URL>");
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 md:px-20 px-4">
       <p>
         Kopiere einfach das von KnexAI erstellte Skript und füge es in deiner
         Webseite ein. Dein ChatBot ist dann sofort einsatzbereit!

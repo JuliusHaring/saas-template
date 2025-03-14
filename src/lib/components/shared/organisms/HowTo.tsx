@@ -8,7 +8,7 @@ import Image from "next/image";
 
 export const HowTo: React.FC = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8 border border-gray-200 p-20 items-center">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8 border border-gray-200 p-20 md:mx-20 mx-4 items-center">
       {/* Text & Steps */}
       <div className="flex flex-col justify-center">
         <ul className="space-y-6 text-lg">
