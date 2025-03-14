@@ -40,7 +40,7 @@ export const Pricing: React.FC = () => {
             <p className="text-2xl font-bold text-blue-600 mt-2">
               {product.priceEUR.toFixed(2)}€
             </p>
-            <ul className="mt-4 text-gray-600 space-y-2 flex-grow">
+            <ul className="mt-6 text-gray-600 space-y-2 flex-grow">
               {product.marketingFeatures.map((feature, i) => (
                 <li key={i} className="text-sm flex items-center gap-2">
                   <CheckIcon className="h-3 w-3 text-blue-600" /> {feature}
@@ -48,7 +48,7 @@ export const Pricing: React.FC = () => {
               ))}
             </ul>
           </div>
-          <div className="mt-4 text-center">
+          <div className="mt-8 text-center">
             <Button href="/admin">
               {product.hasTestPhase ? "Testversion starten" : "Abonnieren"}
             </Button>
