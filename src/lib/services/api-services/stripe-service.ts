@@ -24,6 +24,7 @@ export type ProductDescriptionType = {
   marketingFeatures: string[];
   priceEUR: number;
   hasTestPhase?: boolean;
+  isHighlighted?: boolean;
 };
 
 export class StripeService {
@@ -99,7 +100,8 @@ export class StripeService {
             name: product!.name,
             marketingFeatures,
             priceEUR: price.unit_amount! / 100,
-            hasTestPhase: !product!.name.includes("Basic"),
+            hasTestPhase: !product!.name.toLowerCase().includes("basic"),
+            isHighlighted: product!.name.toLowerCase().includes("premium"),
           };
         },
       ),
