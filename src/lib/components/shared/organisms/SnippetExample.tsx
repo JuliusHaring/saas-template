@@ -9,7 +9,7 @@ export const SnippetExample: React.FC = () => {
     .replace("api/chatbot/integrate", "<INTEGRATION_URL>");
 
   return (
-    <div className="space-y-4 mt-6">
+    <div className="space-y-4 mt-20">
       <Headline level={2}>
         Integriere deinen ChatBot mit nur einer Zeile Code!
       </Headline>

@@ -4,6 +4,7 @@ import LandingNavBar from "@/lib/components/landingpage/organisms/LandingNavBar"
 import { EyeCatcher } from "@/lib/components/shared/organisms/EyeCatcher";
 import { HowTo } from "@/lib/components/shared/organisms/HowTo";
 import { SnippetExample } from "@/lib/components/shared/organisms/SnippetExample";
+import TestimonialCarousel from "@/lib/components/shared/organisms/Testimonies";
 import { Element } from "react-scroll";
 
 export default function LandingPage() {
@@ -21,10 +22,15 @@ export default function LandingPage() {
           <HowTo />
         </Element>
 
+        <Element name="testimonies">
+          <TestimonialCarousel />
+        </Element>
+
         <Element name="code-example">
           <SnippetExample />
         </Element>
-        <Spacing amount={40} />
+
+        <Spacing amount={200} />
       </div>
     </div>
   );
