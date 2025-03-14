@@ -1,5 +1,4 @@
 import Card from "@/lib/components/admin/organisms/Card";
-import Headline from "@/lib/components/shared/molecules/Headline";
 
 const TESTIMONIALS = [
   {
@@ -54,10 +53,7 @@ const TESTIMONIALS = [
 
 export default function TestimonialCarousel() {
   return (
-    <div className="mt-20 overflow-hidden w-full relative">
-      <Headline level={2} className="text-center text-gray-800">
-        Was unsere Kunden sagen
-      </Headline>
+    <div className="overflow-hidden w-full relative">
       <Carousel />
     </div>
   );

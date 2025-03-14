@@ -1,12 +1,12 @@
 "use client";
 
+import LandingPageItem from "@/lib/components/landingpage/molecules/LandingPageItem";
 import LandingNavBar from "@/lib/components/landingpage/organisms/LandingNavBar";
 import { EyeCatcher } from "@/lib/components/shared/organisms/EyeCatcher";
 import { HowTo } from "@/lib/components/shared/organisms/HowTo";
 import { SnippetExample } from "@/lib/components/shared/organisms/SnippetExample";
 import TestimonialCarousel from "@/lib/components/shared/organisms/Testimonies";
 import TutorialVideo from "@/lib/components/shared/organisms/TutorialVideo";
-import { Element } from "react-scroll";
 
 export default function LandingPage() {
   return (
@@ -14,34 +14,36 @@ export default function LandingPage() {
       <LandingNavBar />
 
       <div className="text-xl lg:px-40 md:px-10 px-4 mt-8">
-        <Element name="eyecatcher">
+        <LandingPageItem name="eyecatcher">
           <EyeCatcher />
-        </Element>
-        <Spacing />
+        </LandingPageItem>
 
-        <Element name="tutorial">
+        <LandingPageItem name="tutorial">
           <TutorialVideo />
-        </Element>
+        </LandingPageItem>
 
-        <Element name="howto">
+        <LandingPageItem name="howto" headline="Wie geht KnexAI?" spaceTop="10">
           <HowTo />
-        </Element>
+        </LandingPageItem>
 
-        <Element name="testimonies">
+        <LandingPageItem name="testimonies" headline="Was unsere Kunden sagen">
           <TestimonialCarousel />
-        </Element>
+        </LandingPageItem>
 
-        <Element name="code-example">
+        <LandingPageItem
+          name="code-example"
+          headline="Integriere deinen ChatBot mit nur einer Zeile Code!"
+        >
           <SnippetExample />
-        </Element>
+        </LandingPageItem>
 
-        <Spacing amount={200} />
+        <Spacing />
       </div>
     </div>
   );
 }
 
-const Spacing: React.FC<{ amount?: number | string }> = ({ amount = 20 }) => {
+const Spacing: React.FC<{ amount?: number | string }> = ({ amount = 200 }) => {
   return (
     <div
       style={{ marginTop: typeof amount === "number" ? `${amount}px` : amount }}
