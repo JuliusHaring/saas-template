@@ -43,7 +43,7 @@ export default function Button({
   return (
     <button
       type={type}
-      className={`${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${
+      className={`cursor-pointer ${baseClasses} ${sizeClasses[size]} ${variantClasses[variant]} ${
         isDisabled ? disabledClasses : ""
       } ${className}`}
       disabled={isDisabled}
