@@ -75,7 +75,7 @@ export class StripeService {
     switch (tier) {
       case "BASIC":
         return this.productBasic;
-      case "PRO":
+      case "PREMIUM":
         return this.productPremium;
       case "ENTERPRISE":
         return this.productEnterprise;
@@ -124,7 +124,7 @@ export class StripeService {
       case this.productBasic.id:
         return "BASIC";
       case this.productPremium.id:
-        return "PRO";
+        return "PREMIUM";
       case this.productEnterprise.id:
         return "ENTERPRISE";
     }

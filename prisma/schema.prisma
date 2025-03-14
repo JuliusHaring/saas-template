@@ -26,7 +26,7 @@ model User {
 
 enum SubscriptionTier {
   BASIC
-  PRO
+  PREMIUM
   ENTERPRISE
 }
 
