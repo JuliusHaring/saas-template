@@ -19,7 +19,7 @@ export default function LandingPage() {
           <EyeCatcher />
         </LandingPageItem>
 
-        <LandingPageItem name="tutorial" spaceTop={10}>
+        <LandingPageItem name="tutorial">
           <TutorialVideo />
         </LandingPageItem>
 
@@ -27,7 +27,7 @@ export default function LandingPage() {
           <Pricing />
         </LandingPageItem>
 
-        <LandingPageItem name="howto" headline="Wie geht KnexAI?" spaceTop="10">
+        <LandingPageItem name="howto" headline="Wie geht KnexAI?">
           <HowTo />
         </LandingPageItem>
 

@@ -26,7 +26,7 @@ export const Pricing: React.FC = () => {
       {productDescriptions.map((product, index) => (
         <div
           key={index}
-          className={`p-6 h-full flex flex-col justify-between relative ${product.isHighlighted ? 'bg-gray-100 border border-gray-300' : ''}`}
+          className={`p-6 h-full flex flex-col justify-between relative ${product.isHighlighted ? "bg-gray-100 border border-gray-300" : ""}`}
         >
           {product.isHighlighted && (
             <div className="absolute top-2 left-2 bg-gray-300 text-gray-800 text-xs font-semibold px-3 py-1 rounded">
