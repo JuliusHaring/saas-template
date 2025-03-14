@@ -1,55 +1,56 @@
 import Card from "@/lib/components/admin/organisms/Card";
+import { shuffleArray } from "@/lib/utils/arrays";
 
-const TESTIMONIALS = [
+const TESTIMONIALS = shuffleArray([
   {
-    text: "Dank KnexAI konnten wir unseren Kundenservice automatisieren, ohne an Qualität zu verlieren.",
-    subtext: "Restaurant in Aachen",
+    text: "Dank KnexAI wissen unsere Tanzschüler immer, wann die nächsten Kurse stattfinden – ohne dass wir jede Anfrage manuell beantworten müssen!",
+    subtext: "Tanzstudio in Aachen",
   },
   {
-    text: "Unser Support-Team spart täglich Stunden, weil häufige Anfragen jetzt automatisch beantwortet werden.",
+    text: "Unser Support-Team erhält jetzt weniger wiederholte Anfragen, da KnexAI alle wichtigen Informationen auf unserer Webseite bereitstellt!",
     subtext: "Café in Köln",
   },
   {
-    text: "Ich hätte nie gedacht, dass eine KI unsere Buchungsprozesse so verbessern könnte.",
-    subtext: "Bäckerei in Bonn",
+    text: "Unsere Yoga-Schüler können nun selbstständig Kurszeiten und verfügbare Plätze abrufen – das spart uns jede Menge Zeit!",
+    subtext: "Yoga-Studio in Aachen",
   },
   {
-    text: "Unsere Kunden lieben die schnellen und präzisen Antworten – als hätte man einen echten Mitarbeiter im Chat!",
+    text: "Wir müssen nicht mehr ständig E-Mails beantworten – KnexAI erklärt unsere Dienstleistungen, genau wie auf der Webseite!",
     subtext: "Modegeschäft in Düsseldorf",
   },
   {
-    text: "Wir integrieren KnexAI in unser bestehendes CRM – es funktioniert nahtlos!",
+    text: "Kunden erhalten alle Infos zu unseren Mitgliedschaften und Preisen sofort – keine ständigen Rückfragen mehr!",
+    subtext: "Fitnessstudio in Aachen",
+  },
+  {
+    text: "KnexAI hilft unseren Kunden, die richtigen Informationen zu finden, ohne dass wir jedes Mal manuell antworten müssen.",
     subtext: "IT-Agentur in Aachen",
   },
   {
-    text: "Vorher gingen viele Anfragen unter, jetzt bearbeiten wir alles effizient und zuverlässig.",
-    subtext: "Friseursalon in Aachen",
+    text: "Tanzschüler können jetzt direkt online nachsehen, welche Kurse für sie passen – und sich gezielt anmelden!",
+    subtext: "Tanzschule in Würselen",
   },
   {
-    text: "Unsere Social-Media-Anfragen werden jetzt blitzschnell beantwortet – ein Gamechanger!",
-    subtext: "Marketing-Agentur in Bonn",
+    text: "KnexAI informiert unsere Kunden rund um die Uhr über Lieferzeiten und Produktdetails – so sparen wir wertvolle Support-Zeit!",
+    subtext: "Online-Shop in Bonn",
   },
   {
-    text: "Dank KnexAI sind unsere Produktanfragen um 80% schneller beantwortet – die Kunden sind begeistert!",
-    subtext: "Elektronik-Shop in Köln",
+    text: "Unsere Kunden erhalten jetzt sofort Antworten auf gängige Fragen zu Preisen und Verfügbarkeiten.",
+    subtext: "Hotel in Köln",
   },
   {
-    text: "Wir haben endlich eine skalierbare Lösung für unseren Kundenservice gefunden!",
-    subtext: "IT-Agentur in DÜsseldorf",
+    text: "KnexAI gibt unseren Interessenten die wichtigsten Informationen zu unseren Dienstleistungen – das erleichtert den Erstkontakt enorm!",
+    subtext: "Beratungsunternehmen in Düsseldorf",
   },
   {
-    text: "Unsere FAQs sind endlich sinnvoll strukturiert und interaktiv – das spart uns täglich Arbeit.",
-    subtext: "Autohaus in Frankfurt",
+    text: "Unsere Kunden können jetzt direkt über KnexAI nachlesen, welche Automodelle wir aktuell auf Lager haben!",
+    subtext: "Autohaus in Aachen",
   },
   {
-    text: "Dank der KI-gestützten Chatbot-Lösung von KnexAI haben wir 30% mehr Abschlüsse erzielt!",
-    subtext: "Handwerksbetrieb in Düren",
+    text: "Unsere Yoga-Schüler finden alle Informationen zu Kurszeiten, Trainern und freien Plätzen ohne unser Zutun!",
+    subtext: "Yoga-Studio in Düsseldorf",
   },
-  {
-    text: "Unsere Kunden merken nicht einmal, dass sie mit einer KI sprechen – so gut sind die Antworten!",
-    subtext: "Startup in Würselen",
-  },
-];
+]);
 
 export default function TestimonialCarousel() {
   return (
