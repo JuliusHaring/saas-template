@@ -5,6 +5,7 @@ import { EyeCatcher } from "@/lib/components/shared/organisms/EyeCatcher";
 import { HowTo } from "@/lib/components/shared/organisms/HowTo";
 import { SnippetExample } from "@/lib/components/shared/organisms/SnippetExample";
 import TestimonialCarousel from "@/lib/components/shared/organisms/Testimonies";
+import TutorialVideo from "@/lib/components/shared/organisms/TutorialVideo";
 import { Element } from "react-scroll";
 
 export default function LandingPage() {
@@ -17,6 +18,10 @@ export default function LandingPage() {
           <EyeCatcher />
         </Element>
         <Spacing />
+
+        <Element name="tutorial">
+          <TutorialVideo />
+        </Element>
 
         <Element name="howto">
           <HowTo />

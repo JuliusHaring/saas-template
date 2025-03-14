@@ -93,7 +93,7 @@ const ChatBotCreate: React.FC = () => {
               if (!value.trim()) return "Erlaubte Domains sind erforderlich";
               const domains = value.split(",").map((domain) => domain.trim());
               for (const domain of domains) {
-                if (urlPattern.test(domain)) {
+                if (!urlPattern.test(domain)) {
                   return `Ungültige Domain: ${domain}`;
                 }
               }
