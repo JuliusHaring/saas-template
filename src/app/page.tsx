@@ -18,7 +18,7 @@ export default function LandingPage() {
           <EyeCatcher />
         </LandingPageItem>
 
-        <LandingPageItem name="tutorial">
+        <LandingPageItem name="tutorial" spaceTop={10}>
           <TutorialVideo />
         </LandingPageItem>
 
