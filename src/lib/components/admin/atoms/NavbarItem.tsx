@@ -16,7 +16,7 @@ export default function NavbarItem({
 }: React.PropsWithChildren<NavbarItemProps>) {
   const content = (
     <div
-      className="flex items-center cursor-pointer text-gray-700 font-bold hover:text-blue-600 transition-colors duration-200"
+      className="flex items-center cursor-pointer font-bold hover:text-blue-600 transition-colors duration-200"
       onClick={onClick}
     >
       {Icon && <Icon className="h-5 w-5 inline-block mr-2" />}
