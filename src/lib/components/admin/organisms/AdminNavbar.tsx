@@ -9,9 +9,8 @@ import NavbarItem from "@/lib/components/admin/atoms/NavbarItem";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
 import NavBar from "@/lib/components/shared/organisms/NavBar";
 import Link from "next/link";
-import Headline from "@/lib/components/shared/molecules/Headline";
 import { fetchJson } from "@/lib/utils/fetch";
-import Typical from "react-typical";
+import { Logo } from "@/lib/components/shared/atoms/Logo";
 
 const AdminNavBar = () => {
   const router = useRouter();
@@ -25,9 +24,7 @@ const AdminNavBar = () => {
   return (
     <NavBar className="md:justify-between">
       <Link href="/admin">
-        <Headline level={1} className="hover:text-blue-600">
-          <Typical steps={["", 100, "KnexAI", 500]} />
-        </Headline>
+        <Logo />
       </Link>
 
       <div className="flex space-x-6">
