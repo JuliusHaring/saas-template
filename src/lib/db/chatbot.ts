@@ -76,6 +76,9 @@ export async function createChatBot(
     data: {
       userId,
       ...createChatBot,
+      Style: {
+        create: {},
+      },
     },
     include: chatBotInclude,
   });
@@ -87,7 +90,7 @@ export async function updateChatBot(
   updateChatBot: UpdateChatBotType,
 ) {
   return prisma.chatBot.update({
-    where: { id: chatBotId },
+    where: { id: chatBotId, userId },
     data: updateChatBot,
     include: chatBotInclude,
   });
