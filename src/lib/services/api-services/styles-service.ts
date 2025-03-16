@@ -1,7 +1,7 @@
 import { createOrUpdateStyle, getStyle } from "@/lib/db/styles";
 import { ChatBotIdType, CreateStyleType, UserIdType } from "@/lib/db/types";
 
-class StylesService {
+export class StylesService {
   private static _instance: StylesService;
 
   private constructor() {}
@@ -25,5 +25,3 @@ class StylesService {
     return await createOrUpdateStyle(userId, chatBotId, createStyle);
   }
 }
-
-export const stylesService = StylesService.getInstance();

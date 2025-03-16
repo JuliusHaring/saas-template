@@ -1,13 +1,19 @@
 import Button from "@/lib/components/admin/molecules/Button";
 import { Input } from "@/lib/components/admin/molecules/Input";
+import { StyleType } from "@/lib/db/types";
 import { useState } from "react";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
   isWaiting: boolean;
+  style: StyleType;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isWaiting }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({
+  onSend,
+  isWaiting,
+  style,
+}) => {
   const [userInput, setUserInput] = useState("");
 
   const handleSend = () => {
@@ -24,7 +30,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isWaiting }) => {
   };
 
   return (
-    <div className="w-full border-t border-gray-300 p-4 flex bg-white">
+    <div
+      className={`w-full border-t border-gray-300 p-4 flex ${style.classBgSecondary}`}
+    >
       <Input
         type="text"
         value={userInput}
@@ -36,7 +44,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isWaiting }) => {
       />
       <Button
         onClick={handleSend}
-        className="ml-2 w-auto shrink-0"
+        className={`ml-2 w-auto shrink-0 ${style.classBgButton || style.classBgPrimary}`}
         isDisabled={isWaiting}
       >
         Senden

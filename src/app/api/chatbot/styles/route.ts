@@ -1,4 +1,4 @@
-import { stylesService } from "@/lib/services/api-services/styles-service";
+import { StylesService } from "@/lib/services/api-services/styles-service";
 import { ChatBotIdType, CreateStyleType } from "@/lib/db/types";
 import { getUserId } from "@/lib/utils/routes/auth";
 import {
@@ -7,6 +7,8 @@ import {
   withErrorHandling,
 } from "@/lib/utils/routes/http-errors";
 import { NextRequest } from "next/server";
+
+const stylesService = await StylesService.getInstance();
 
 export const GET = withErrorHandling(async (request: NextRequest) => {
   const url = new URL(request.url);

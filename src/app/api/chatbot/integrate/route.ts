@@ -1,8 +1,10 @@
 import { ChatBotService } from "@/lib/services/api-services/chatbot-service";
+import { StylesService } from "@/lib/services/api-services/styles-service";
 import { signToken } from "@/lib/utils/backend/token";
 import { isDevModeEnabled } from "@/lib/utils/dev-mode";
 
 const chatbotService = ChatBotService.Instance;
+const styleService = await StylesService.getInstance();
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
@@ -11,6 +13,8 @@ export async function GET(request: Request): Promise<Response> {
   if (!chatBotId) {
     return new Response("Missing chatbot ID", { status: 400 });
   }
+
+  const style = await styleService.getStyle(chatBotId);
 
   let allowedDomains =
     await chatbotService.getAllowedDomainsForChatBot(chatBotId);
@@ -41,10 +45,10 @@ export async function GET(request: Request): Promise<Response> {
     // Create chatbot iframe
     const chatbotContainer = document.createElement("iframe");
     chatbotContainer.style.position = "fixed";
-    chatbotContainer.style.bottom = "20px";
-    chatbotContainer.style.right = "20px";
-    chatbotContainer.style.width = "50px"; // Default minimized size
-    chatbotContainer.style.height = "50px"; // Default minimized size
+    chatbotContainer.style.bottom = "" + ${style.offsetYPx} + "px";
+    chatbotContainer.style.right = "" + ${style.offsetXPx} + "px";
+    chatbotContainer.style.width = "50px";
+    chatbotContainer.style.height = "50px";
     chatbotContainer.style.border = "none";
     chatbotContainer.style.zIndex = "9999";
     chatbotContainer.style.overflow = "hidden"; // Prevent scrollbars

@@ -1,11 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowDownIcon,
+  ChatBubbleOvalLeftEllipsisIcon,
+} from "@heroicons/react/24/outline";
 import { MessageList } from "@/lib/components/chatbot-ui/molecules/MessagesList";
 import { ChatInput } from "@/lib/components/chatbot-ui/molecules/ChatInput";
 import { MessageType } from "@/lib/components/chatbot-ui/types";
 import Headline from "@/lib/components/shared/molecules/Headline";
-import { ChatBotIdType, ChatBotPublicType } from "@/lib/db/types";
+import { ChatBotIdType, ChatBotPublicType, StyleType } from "@/lib/db/types";
 import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
 import { FEChatService } from "@/lib/services/frontend-services/chat-service";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
@@ -35,6 +38,7 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isUserScrolling, setIsUserScrolling] = useState<boolean>(false);
   const [isMinimized, setIsMinimized] = useState<boolean>(isExternal);
+  const [style, setStyle] = useState<StyleType>();
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   const updateSize = () => {
@@ -86,9 +90,7 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
     const loadStyles = async () => {
       try {
         const style = await feStyleService.getStyle(chatBotId);
-        const styleTag = document.createElement("style");
-        styleTag.innerHTML = style.css;
-        document.head.appendChild(styleTag);
+        setStyle(style);
       } catch (error) {
         console.error("Failed to load styles:", error);
       }
@@ -96,6 +98,7 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
 
     loadStyles();
   }, [chatBotId]);
+  if (!style) return;
 
   const sendMessage = async (userMessage: string) => {
     if (!chatBotId || !token || isWaiting) return;
@@ -144,13 +147,13 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
       id="chatbot-root"
     >
       <div
-        className={`bg-blue-500 p-3 flex items-center text-white cursor-pointer ${isMinimized ? "justify-center h-full" : "justify-between"}`}
+        className={`${style.classBgPrimary} p-3 flex items-center text-white cursor-pointer ${isMinimized ? "justify-center h-full" : "justify-between"}`}
         onClick={() => {
           updateSize();
         }}
       >
         {isMinimized ? (
-          <ArrowUpIcon className="h-5 w-5 text-white" />
+          <ChatBubbleOvalLeftEllipsisIcon className="h-5 w-5 text-white" />
         ) : (
           <>
             <Headline level={3}>{chatBotPublic.name}</Headline>
@@ -170,10 +173,11 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
               messages={messages}
               isTyping={isWaiting}
               initialMessage={chatBotPublic.initialMessage}
+              style={style}
             />
             <div ref={messagesEndRef} />
           </div>
-          <ChatInput onSend={sendMessage} isWaiting={isWaiting} />
+          <ChatInput onSend={sendMessage} isWaiting={isWaiting} style={style} />
         </>
       )}
     </div>

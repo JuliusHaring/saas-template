@@ -112,5 +112,13 @@ model Style {
   chatBotId String  @unique
   ChatBot   ChatBot @relation(fields: [chatBotId], references: [id], onDelete: Cascade)
 
-  css String
+  classBgPrimary   String  @default("bg-blue-500")
+  classBgSecondary String  @default("bg-white")
+  classBgUser      String  @default("bg-blue-500")
+  classBgBot       String  @default("bg-gray-500")
+  classBgButton    String?
+  classText        String  @default("text-white")
+
+  offsetXPx Int @default(20)
+  offsetYPx Int @default(20)
 }
