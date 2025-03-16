@@ -27,12 +27,12 @@ export class ChatBotService {
 
   public async getUserIdOfChatbot(
     chatBotId: ChatBotIdType,
-  ): Promise<UserIdType> {
+  ): Promise<UserIdType | null> {
     return getUserIdOfChatbot(chatBotId);
   }
 
-  public async getChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {
-    return getChatBot(userId, chatBotId);
+  public async getChatBot(chatBotId: ChatBotIdType) {
+    return getChatBot(chatBotId);
   }
 
   public async getChatBotPublic(chatBotId: ChatBotIdType) {

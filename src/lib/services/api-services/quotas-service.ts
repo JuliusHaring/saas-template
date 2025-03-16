@@ -5,7 +5,6 @@ import {
 } from "@/lib/db/stripe";
 import Stripe from "stripe";
 import {
-  ChatBotIdType,
   SubscriptionTier,
   SubscriptionTierValues,
   UserIdType,
@@ -191,19 +190,5 @@ export class QuotaService {
 
     const update = { [quota]: value + currentValue };
     return createOrUpdateUserUsage(userId, update);
-  }
-
-  async getChatBotQuotaRemainder(chatBotId: ChatBotIdType, quota: Quota) {
-    const userId = await this.chatbotService.getUserIdOfChatbot(chatBotId);
-    return this.getUserQuotaRemainder(userId, quota);
-  }
-
-  async updateChatbotUsage(
-    chatBotId: ChatBotIdType,
-    quota: Quota,
-    value: number,
-  ) {
-    const userId = await this.chatbotService.getUserIdOfChatbot(chatBotId);
-    return this.updateUserUsage(userId, quota, value);
   }
 }

@@ -43,22 +43,25 @@ export abstract class IChatService {
     sessionId: string,
     userMessage: string,
   ) {
-    await this.quotaService.getChatBotQuotaRemainder(
-      chatBotId,
-      Quota.MAX_CHAT_MESSAGES,
-    );
+    const userId = await this.chatbotService.getUserIdOfChatbot(chatBotId);
 
-    await this.quotaService.updateChatbotUsage(
-      chatBotId,
-      Quota.MAX_CHAT_MESSAGES,
-      1,
-    );
+    if (userId !== null) {
+      await this.quotaService.getUserQuotaRemainder(
+        userId,
+        Quota.MAX_CHAT_MESSAGES,
+      );
+
+      await this.quotaService.updateUserUsage(
+        userId,
+        Quota.MAX_CHAT_MESSAGES,
+        1,
+      );
+    }
 
     const sources = await this.ragService.findClosest(chatBotId, userMessage);
     const prompt = this.promptService.generateChatPrompt(sources, userMessage);
 
-    const userId = await this.chatbotService.getUserIdOfChatbot(chatBotId);
-    const chatbot = await this.chatbotService.getChatBot(userId, chatBotId);
+    const chatbot = await this.chatbotService.getChatBot(chatBotId);
 
     const systemPrompt = this.promptService.generateChatBotPrompt(
       chatbot.instructions,

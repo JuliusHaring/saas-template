@@ -18,9 +18,9 @@ export async function getUserIdOfChatbot(chatBotId: ChatBotIdType) {
     .then((chatbot) => chatbot.userId);
 }
 
-export async function getChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {
+export async function getChatBot(chatBotId: ChatBotIdType) {
   return prisma.chatBot.findFirstOrThrow({
-    where: { id: chatBotId, userId },
+    where: { id: chatBotId },
     include: chatBotInclude,
   });
 }

@@ -9,6 +9,8 @@ import { Pricing } from "@/lib/components/shared/organisms/Pricing";
 import { SnippetExample } from "@/lib/components/shared/organisms/SnippetExample";
 import TestimonialCarousel from "@/lib/components/shared/organisms/Testimonies";
 import TutorialVideo from "@/lib/components/shared/organisms/TutorialVideo";
+import { baseUrl } from "@/lib/utils/base-url";
+import Script from "next/script";
 
 export default function LandingPage() {
   return (
@@ -42,6 +44,11 @@ export default function LandingPage() {
         >
           <SnippetExample />
         </LandingPageItem>
+
+        <Script
+          src={`${baseUrl}/api/chatbot/integrate?chatbotId=${process.env.NEXT_PUBLIC_LANDINGPAGE_CHATBOT_ID}`}
+          api-url={baseUrl}
+        ></Script>
 
         <Spacing />
       </div>
