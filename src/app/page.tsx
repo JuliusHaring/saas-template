@@ -48,6 +48,7 @@ export default function LandingPage() {
         <Script
           src={`${baseUrl}/api/chatbot/integrate?chatbotId=${process.env.NEXT_PUBLIC_LANDINGPAGE_CHATBOT_ID}`}
           api-url={baseUrl}
+          show-on-pages="/"
         ></Script>
 
         <Spacing />
