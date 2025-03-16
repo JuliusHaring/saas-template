@@ -18,7 +18,7 @@ export const GET = withErrorHandling(
       throw NotFound(`ChatBot ${chatBotId} not found`);
     }
 
-    const chatBot = await chatbotService.getChatBot(userId, chatBotId);
+    const chatBot = await chatbotService.getChatBot(chatBotId, userId);
     return chatBot;
   },
 );

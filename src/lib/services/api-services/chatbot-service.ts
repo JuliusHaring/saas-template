@@ -31,8 +31,8 @@ export class ChatBotService {
     return getUserIdOfChatbot(chatBotId);
   }
 
-  public async getChatBot(chatBotId: ChatBotIdType) {
-    return getChatBot(chatBotId);
+  public async getChatBot(chatBotId: ChatBotIdType, userId?: UserIdType) {
+    return getChatBot(chatBotId, userId);
   }
 
   public async getChatBotPublic(chatBotId: ChatBotIdType) {

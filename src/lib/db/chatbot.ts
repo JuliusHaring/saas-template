@@ -9,6 +9,7 @@ import {
   IngestionStatusEnum,
   ChatBotPublicType,
 } from "@/lib/db/types";
+import { Prisma } from "@prisma/client";
 
 export async function getUserIdOfChatbot(chatBotId: ChatBotIdType) {
   return prisma.chatBot
@@ -18,9 +19,18 @@ export async function getUserIdOfChatbot(chatBotId: ChatBotIdType) {
     .then((chatbot) => chatbot.userId);
 }
 
-export async function getChatBot(chatBotId: ChatBotIdType) {
+export async function getChatBot(
+  chatBotId: ChatBotIdType,
+  userId?: UserIdType,
+) {
+  const findChatbot: Prisma.ChatBotFindFirstOrThrowArgs["where"] = {
+    id: chatBotId,
+  };
+  if (typeof userId !== "undefined") {
+    findChatbot.userId = userId;
+  }
   return prisma.chatBot.findFirstOrThrow({
-    where: { id: chatBotId },
+    where: findChatbot,
     include: chatBotInclude,
   });
 }
