@@ -21,6 +21,8 @@ export async function GET(request: Request): Promise<Response> {
   allowedDomains = isDevModeEnabled()
     ? [...allowedDomains, "localhost"]
     : allowedDomains;
+
+  console.log("Encoding allowed domains in token:", allowedDomains);
   if (!allowedDomains) {
     return new Response("Chatbot not found", { status: 404 });
   }
