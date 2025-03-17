@@ -45,11 +45,16 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
 
     let allowedDomains;
     try {
-      allowedDomains = decoded.allowedDomains.map((allowedDomain) =>
-        allowedDomain === "localhost"
-          ? allowedDomain
-          : new URL(allowedDomain).hostname,
-      );
+      allowedDomains = decoded.allowedDomains.map((allowedDomain) => {
+        if (allowedDomain.includes("localhost")) return allowedDomain;
+
+        if (!allowedDomain.includes("http"))
+          throw new Error(
+            `Domain ${allowedDomain} is missing protocol information`,
+          );
+
+        return new URL(allowedDomain).hostname;
+      });
     } catch (e) {
       console.error(
         `Error parsing urls for allowed domains: ${allowedDomains}`,
