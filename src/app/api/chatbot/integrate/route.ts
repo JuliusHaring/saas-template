@@ -78,6 +78,10 @@ export async function GET(request: Request): Promise<Response> {
 
         // Listen for chatbot resizing messages
         window.addEventListener("message", (event) => {
+          console.log("Received message from:", event.origin);
+          console.log("Expected API URL:", apiUrl);
+          console.log("Received message:", mevent.data)
+
           if (event.origin !== apiUrl) return;
           if (event.data.type === "resize") {
             chatbotContainer.style.width = event.data.width;
