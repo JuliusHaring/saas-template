@@ -46,7 +46,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
     let allowedDomains;
     try {
       allowedDomains = decoded.allowedDomains.map((allowedDomain) => {
-        if (allowedDomain.includes("localhost")) return allowedDomain;
+        if (allowedDomain.includes("localhost")) return "localhost";
 
         if (!allowedDomain.includes("http"))
           throw new Error(

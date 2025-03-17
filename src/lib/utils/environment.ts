@@ -1,4 +1,4 @@
-export const NEXT_PUBLIC_MODE = process.env.NEXT_PUBLIC_MODE!;
+export const NEXT_PUBLIC_MODE = process.env.NEXT_PUBLIC_MODE;
 
 export const JWT_SECRET = process.env.JWT_SECRET!;
 
