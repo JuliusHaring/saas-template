@@ -9,7 +9,7 @@ export const POST = withErrorHandling(async (request: NextRequest) => {
   const userId = await getUserId(request);
   const { ...createArgs } = await request.json();
 
-  const chatBot = await chatbotService.createChatBot(userId, createArgs);
+  const chatBot = await chatbotService.createChatBot(createArgs, userId);
   return chatBot;
 });
 

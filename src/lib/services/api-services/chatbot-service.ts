@@ -50,10 +50,10 @@ export class ChatBotService {
   }
 
   public async createChatBot(
-    userId: UserIdType,
     createChatbot: CreateChatBotType,
+    userId?: UserIdType,
   ): Promise<ChatBotType> {
-    return createChatBot(userId, createChatbot);
+    return createChatBot(createChatbot, userId);
   }
 
   public async deleteChatBot(userId: UserIdType, chatBotId: ChatBotIdType) {

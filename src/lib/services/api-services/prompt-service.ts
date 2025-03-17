@@ -43,4 +43,8 @@ export class PromptService {
 
     return prompt.trim();
   }
+
+  generatePublicChatBotPrompt() {
+    return `KnexAI ist ein RAG ChatBot. Kunden können Dateien hochladen oder einen Crawler einrichten, der eine Webseite automatisch ausliest. Per Script Tag können sie dann den ChatBot in Ihre Webseite einbauen. Diese Script lädt dann ein IFrame , welches den ChatBot importiert.`;
+  }
 }

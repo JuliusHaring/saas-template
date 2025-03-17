@@ -11,6 +11,8 @@ import {
 } from "@/lib/db/types";
 import { Prisma } from "@prisma/client";
 
+export class PublicChatBotExistsException extends Error {}
+
 export async function getUserIdOfChatbot(chatBotId: ChatBotIdType) {
   return prisma.chatBot
     .findFirstOrThrow({
@@ -69,9 +71,16 @@ export async function getChatBots(userId: UserIdType): Promise<ChatBotType[]> {
 }
 
 export async function createChatBot(
-  userId: UserIdType,
   createChatBot: CreateChatBotType,
+  userId?: UserIdType,
 ): Promise<ChatBotType> {
+  if (typeof userId === "undefined") {
+    const count = await prisma.chatBot.count({ where: { userId } });
+    if (count > 0) {
+      throw new PublicChatBotExistsException();
+    }
+  }
+
   return prisma.chatBot.create({
     data: {
       userId,
