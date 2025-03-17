@@ -1,5 +1,6 @@
 import { UserIdType } from "@/lib/db/types";
 import { isDevModeEnabled } from "@/lib/utils/dev-mode";
+import { SESSION_SECRET } from "@/lib/utils/environment";
 import { SessionOptions, getIronSession } from "iron-session";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -8,7 +9,7 @@ export interface SessionType {
 }
 
 const sessionOptions: SessionOptions = {
-  password: process.env.SESSION_SECRET!,
+  password: SESSION_SECRET,
   cookieName: "auth_session",
   cookieOptions: {
     secure: !isDevModeEnabled(),

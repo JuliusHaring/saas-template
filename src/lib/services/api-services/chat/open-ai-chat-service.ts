@@ -1,15 +1,18 @@
 import { IChatService } from "@/lib/services/api-services/chat/i-chat-service";
 import { ChatResponseType } from "@/lib/services/api-services/chat/types";
+import {
+  NEXT_PUBLIC_OPENAI_CHAT_COMPLETION_MODEL,
+  OPENAI_SECRET_KEY,
+} from "@/lib/utils/environment";
 import OpenAI from "openai";
 
 export class OpenAIChatService extends IChatService {
   private static _instance: OpenAIChatService;
   private openai: OpenAI;
-  private readonly maxHistoryLength = 5;
 
   private constructor() {
     super();
-    this.openai = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
+    this.openai = new OpenAI({ apiKey: OPENAI_SECRET_KEY });
   }
 
   public static async getInstance() {
@@ -37,7 +40,7 @@ export class OpenAIChatService extends IChatService {
       ];
 
       const response = await this.openai.chat.completions.create({
-        model: process.env.NEXT_PUBLIC_OPENAI_CHAT_COMPLETION_MODEL!,
+        model: NEXT_PUBLIC_OPENAI_CHAT_COMPLETION_MODEL,
         messages,
       });
 

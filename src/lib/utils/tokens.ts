@@ -1,7 +1,8 @@
+import { NEXT_PUBLIC_OPENAI_EMBEDDING_MODEL } from "@/lib/utils/environment";
 import { encodingForModel, TiktokenModel } from "js-tiktoken";
 
 const encoder = encodingForModel(
-  process.env.NEXT_PUBLIC_OPENAI_EMBEDDING_MODEL! as TiktokenModel,
+  NEXT_PUBLIC_OPENAI_EMBEDDING_MODEL as TiktokenModel,
 );
 
 export function encodeTokens(text: string) {

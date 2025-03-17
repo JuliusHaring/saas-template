@@ -6,6 +6,7 @@ import { WebsiteSource } from "@/lib/components/admin/organisms/sources/WebsiteS
 import Divider from "@/lib/components/shared/molecules/Divider";
 import { IngestionStatusEnum } from "@/lib/db/types";
 import { FERAGService } from "@/lib/services/frontend-services/rag-service";
+import { NEXT_PUBLIC_SOURCES_WEBSITE } from "@/lib/utils/environment";
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
 
 const feRagService = FERAGService.Instance;
@@ -51,7 +52,7 @@ const ChatBotSources: React.FC<{
         Crawlen
       </Button>
       <Divider />
-      {process.env.NEXT_PUBLIC_SOURCES_WEBSITE?.toLowerCase() === "true" ? (
+      {NEXT_PUBLIC_SOURCES_WEBSITE.toLowerCase() === "true" ? (
         <WebsiteSource chatBotId={chatBotId} />
       ) : (
         <></>

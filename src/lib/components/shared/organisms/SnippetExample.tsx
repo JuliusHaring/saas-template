@@ -1,10 +1,10 @@
 import CodeView from "@/lib/components/shared/organisms/CodeView";
-import { baseUrl } from "@/lib/utils/base-url";
+import { NEXT_PUBLIC_BASE_URL } from "@/lib/utils/environment";
 import { getImportScript } from "@/lib/utils/import-script";
 
 export const SnippetExample: React.FC = () => {
   const script = getImportScript("<ID>")
-    .replaceAll(baseUrl, "<URL>")
+    .replaceAll(NEXT_PUBLIC_BASE_URL, "<URL>")
     .replace("api/chatbot/integrate", "<INTEGRATION_URL>");
 
   return (

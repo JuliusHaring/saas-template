@@ -1,6 +1,10 @@
 // @ts-nocheck
 "use client";
 import { EyeCatcher } from "@/lib/components/shared/organisms/EyeCatcher";
+import {
+  NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID,
+  NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+} from "@/lib/utils/environment";
 import Script from "next/script";
 
 export default async function PricingTablePage({
@@ -23,8 +27,8 @@ export default async function PricingTablePage({
       ></Script>
 
       <stripe-pricing-table
-        pricing-table-id={process.env.NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
-        publishable-key={process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+        pricing-table-id={NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID}
+        publishable-key={NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY}
         customer-email={customerEmail}
       ></stripe-pricing-table>
     </div>

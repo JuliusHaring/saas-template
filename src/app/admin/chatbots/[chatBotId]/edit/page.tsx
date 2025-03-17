@@ -12,7 +12,7 @@ import { IngestionStatusEnum, UpdateChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import { FETokenService } from "@/lib/services/frontend-services/token-service";
-import { baseUrl } from "@/lib/utils/base-url";
+import { NEXT_PUBLIC_BASE_URL } from "@/lib/utils/environment";
 import { getImportScript } from "@/lib/utils/import-script";
 import { urlPattern } from "@/lib/utils/patterns";
 import { useParams } from "next/navigation";
@@ -204,7 +204,7 @@ const ChatBotEdit: React.FC = () => {
             <ChatBotUI
               chatBotId={params.chatBotId}
               token={token}
-              parentDomain={new URL(baseUrl).hostname}
+              parentDomain={new URL(NEXT_PUBLIC_BASE_URL).hostname}
               isExternal={false}
             />
           </Card>

@@ -3,6 +3,10 @@ import {
   EmbeddingQueryType,
   EmbeddingType,
 } from "@/lib/services/api-services/rag/types";
+import {
+  NEXT_PUBLIC_OPENAI_EMBEDDING_MODEL,
+  OPENAI_SECRET_KEY,
+} from "@/lib/utils/environment";
 import OpenAI from "openai";
 
 export class OpenAIEmbeddingService extends IEmbeddingService {
@@ -11,7 +15,7 @@ export class OpenAIEmbeddingService extends IEmbeddingService {
 
   private constructor() {
     super();
-    this.client = new OpenAI({ apiKey: process.env.OPENAI_SECRET_KEY });
+    this.client = new OpenAI({ apiKey: OPENAI_SECRET_KEY });
   }
 
   public static get Instance() {
@@ -22,7 +26,7 @@ export class OpenAIEmbeddingService extends IEmbeddingService {
     return this.client.embeddings
       .create({
         input: text,
-        model: process.env.NEXT_PUBLIC_OPENAI_EMBEDDING_MODEL!,
+        model: NEXT_PUBLIC_OPENAI_EMBEDDING_MODEL,
       })
       .then((r) => r.data.map((d) => d.embedding)[0]);
   }

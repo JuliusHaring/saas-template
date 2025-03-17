@@ -6,7 +6,13 @@ import {
 } from "@/lib/db/stripe";
 import { UserIdType, SubscriptionType } from "@/lib/db/types";
 import { GetUserType } from "@/lib/db/user";
-import { baseUrl } from "@/lib/utils/base-url";
+import {
+  NEXT_PUBLIC_BASE_URL,
+  STRIPE_PRODUCT_BASIC_ID,
+  STRIPE_PRODUCT_ENTERPRISE_ID,
+  STRIPE_PRODUCT_PREMIUM_ID,
+  STRIPE_SECRET_KEY,
+} from "@/lib/utils/environment";
 import { SubscriptionTier } from "@prisma/client";
 import Stripe from "stripe";
 
@@ -36,7 +42,7 @@ export class StripeService {
   private productEnterprise?: Stripe.Product;
 
   private constructor() {
-    this.stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+    this.stripe = new Stripe(STRIPE_SECRET_KEY);
   }
 
   public static async getInstance(): Promise<StripeService> {
@@ -55,11 +61,9 @@ export class StripeService {
     try {
       [this.productBasic, this.productPremium, this.productEnterprise] =
         await Promise.all([
-          this.stripe.products.retrieve(process.env.STRIPE_PRODUCT_BASIC_ID!),
-          this.stripe.products.retrieve(process.env.STRIPE_PRODUCT_PREMIUM_ID!),
-          this.stripe.products.retrieve(
-            process.env.STRIPE_PRODUCT_ENTERPRISE_ID!,
-          ),
+          this.stripe.products.retrieve(STRIPE_PRODUCT_BASIC_ID),
+          this.stripe.products.retrieve(STRIPE_PRODUCT_PREMIUM_ID),
+          this.stripe.products.retrieve(STRIPE_PRODUCT_ENTERPRISE_ID!),
         ]);
     } catch (err) {
       console.error("Error initializing Stripe products:", err);
@@ -183,7 +187,7 @@ export class StripeService {
   async createBillingSession(user: GetUserType) {
     return this.stripe.billingPortal.sessions.create({
       customer: user.Subscription!.customerId,
-      return_url: `${baseUrl}/admin`,
+      return_url: `${NEXT_PUBLIC_BASE_URL}/admin`,
     });
   }
 }

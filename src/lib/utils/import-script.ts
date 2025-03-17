@@ -1,11 +1,11 @@
 import { ChatBotIdType } from "@/lib/db/types";
-import { baseUrl } from "@/lib/utils/base-url";
+import { NEXT_PUBLIC_BASE_URL } from "@/lib/utils/environment";
 
 export function getImportScript(chatBotId: ChatBotIdType) {
   return `
   <script
-    src="${baseUrl}/api/chatbot/integrate?chatbotId=${chatBotId}" 
-    api-url="${baseUrl}"
+    src="${NEXT_PUBLIC_BASE_URL}/api/chatbot/integrate?chatbotId=${chatBotId}" 
+    api-url="${NEXT_PUBLIC_BASE_URL}"
 ></script>
   `.trim();
 }

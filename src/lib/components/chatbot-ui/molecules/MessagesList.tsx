@@ -1,7 +1,7 @@
 import { Message } from "@/lib/components/chatbot-ui/atoms/Message";
 import { MessageType } from "@/lib/components/chatbot-ui/types";
 import { StyleType } from "@/lib/db/types";
-import { baseUrl } from "@/lib/utils/base-url";
+import { NEXT_PUBLIC_BASE_URL } from "@/lib/utils/environment";
 import React from "react";
 
 interface MessageListProps {
@@ -21,7 +21,7 @@ export const MessageList: React.FC<MessageListProps> = ({
     <p className="text-gray-400 text-sm mt-1 text-center">
       ChatBot erstellt mit{" "}
       <a
-        href={baseUrl}
+        href={NEXT_PUBLIC_BASE_URL}
         target="_top"
         className="font-extrabold text-large hover:text-blue-600"
       >

@@ -1,13 +1,13 @@
 import { PublicChatBotExistsException } from "@/lib/db/chatbot";
 import { ChatBotService } from "@/lib/services/api-services/chatbot-service";
 import { PromptService } from "@/lib/services/api-services/prompt-service";
-import { baseUrl } from "@/lib/utils/base-url";
+import { NEXT_PUBLIC_BASE_URL } from "@/lib/utils/environment";
 
 const chatbotService = ChatBotService.Instance;
 const promptService = PromptService.Instance;
 
 async function main() {
-  if (baseUrl.includes("localhost")) {
+  if (NEXT_PUBLIC_BASE_URL.includes("localhost")) {
     throw Error(`Can not seed from localhost`);
   }
   try {
@@ -16,7 +16,7 @@ async function main() {
       name: "KnexAI Bot",
       initialMessage: "Wie kann ich helfen?",
       instructions: promptService.generatePublicChatBotPrompt(),
-      allowedDomains: [baseUrl],
+      allowedDomains: [NEXT_PUBLIC_BASE_URL],
       Style: { create: { offsetYPx: 70 } },
     });
   } catch (e) {

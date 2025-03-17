@@ -9,7 +9,10 @@ import { Pricing } from "@/lib/components/shared/organisms/Pricing";
 import { SnippetExample } from "@/lib/components/shared/organisms/SnippetExample";
 import TestimonialCarousel from "@/lib/components/shared/organisms/Testimonies";
 import TutorialVideo from "@/lib/components/shared/organisms/TutorialVideo";
-import { baseUrl } from "@/lib/utils/base-url";
+import {
+  NEXT_PUBLIC_BASE_URL,
+  NEXT_PUBLIC_LANDINGPAGE_CHATBOT_ID,
+} from "@/lib/utils/environment";
 import Script from "next/script";
 
 export default function LandingPage() {
@@ -46,8 +49,8 @@ export default function LandingPage() {
         </LandingPageItem>
 
         <Script
-          src={`${baseUrl}/api/chatbot/integrate?chatbotId=${process.env.NEXT_PUBLIC_LANDINGPAGE_CHATBOT_ID}`}
-          api-url={baseUrl}
+          src={`${NEXT_PUBLIC_BASE_URL}/api/chatbot/integrate?chatbotId=${NEXT_PUBLIC_LANDINGPAGE_CHATBOT_ID}`}
+          api-url={NEXT_PUBLIC_BASE_URL}
           show-on-pages="/"
         ></Script>
 

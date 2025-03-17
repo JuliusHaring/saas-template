@@ -1,4 +1,8 @@
 import {
+  NEXT_PUBLIC_SOURCES_FILES_SIZE_MB,
+  NEXT_PUBLIC_SOURCES_FILES_TYPES,
+} from "@/lib/utils/environment";
+import {
   DocumentIcon,
   DocumentTextIcon,
   GlobeAltIcon,
@@ -9,12 +13,11 @@ import {
 import { JSX } from "react";
 
 const FILE_TYPES =
-  process.env.NEXT_PUBLIC_SOURCES_FILES_TYPES?.split(",").map((t) =>
+  NEXT_PUBLIC_SOURCES_FILES_TYPES.split(",").map((t) =>
     t.trim().toLowerCase(),
   ) || [];
 
-const MAX_FILE_SIZE_MB =
-  Number(process.env.NEXT_PUBLIC_SOURCES_FILES_SIZE_MB) || 5;
+const MAX_FILE_SIZE_MB = Number(NEXT_PUBLIC_SOURCES_FILES_SIZE_MB) || 5;
 
 export class FileExtensionException extends Error {
   constructor(file: File, extension?: string) {
