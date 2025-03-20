@@ -54,8 +54,8 @@ export const Pricing: React.FC = () => {
             </ul>
           </div>
           <div className="mt-8 text-center">
-            <Button href="/admin">
-              {product.hasTestPhase ? "Testversion starten" : "Abonnieren"}
+            <Button href="/auth/signup">
+              {product.hasTestPhase ? "Testversion starten" : "Direkt starten"}
             </Button>
           </div>
         </div>
