@@ -7,10 +7,12 @@ export default function Layout({
   children: React.ReactNode;
 }>) {
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <AdminNavbar />
-      <div className="lg:px-[15em] px-[2em] py-[2em] mb-[72px]">{children}</div>
-      <Footer />
+      <div className="flex-grow lg:px-[15em] px-[2em] py-[2em]">{children}</div>
+      <div className="mt-auto w-full">
+        <Footer className="w-full" />
+      </div>
     </div>
   );
 }
