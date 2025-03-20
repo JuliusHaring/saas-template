@@ -1,6 +1,5 @@
 // @ts-nocheck
 "use client";
-import { EyeCatcher } from "@/lib/components/landingpage/organisms/EyeCatcher";
 import {
   NEXT_PUBLIC_STRIPE_PRICING_TABLE_ID,
   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
@@ -17,10 +16,6 @@ export default async function PricingTablePage({
 
   return (
     <div className="w-full">
-      <div className="text-xl my-8">
-        <EyeCatcher />
-      </div>
-
       <Script
         strategy="lazyOnload"
         src="https://js.stripe.com/v3/pricing-table.js"
