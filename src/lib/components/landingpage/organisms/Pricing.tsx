@@ -22,7 +22,7 @@ export const Pricing: React.FC = () => {
   if (!productDescriptions) return <LoadingSpinner />;
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 px-4">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-4">
       {productDescriptions.map((product, index) => (
         <div
           key={index}

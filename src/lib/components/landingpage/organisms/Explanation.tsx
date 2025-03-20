@@ -3,7 +3,7 @@ import { CloudUpload, MessageCircle, Globe } from "lucide-react";
 
 export const Explanation: React.FC = () => {
   return (
-    <div className="relative flex flex-col items-center justify-center text-center mt-10 md:px-20 px-4">
+    <div className="relative flex flex-col items-center justify-center text-center md:px-20 px-4">
       <p className="text-lg mt-2">
         Integriere einen Chatbot in deine Website – trainiert mit deinen eigenen
         Inhalten.

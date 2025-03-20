@@ -62,7 +62,7 @@ export default function TestimonialCarousel() {
 
 const Carousel = () => {
   return (
-    <div className="overflow-hidden mt-20 relative">
+    <div className="overflow-hidden relative">
       {/* <div className="absolute inset-y-0 left-0 w-30 bg-gradient-to-r from-white to-transparent pointer-events-none z-10"></div>
       <div className="absolute inset-y-0 right-0 w-30 bg-gradient-to-l from-white to-transparent pointer-events-none z-10"></div> */}
       <div className="flex w-max animate-marquee gap-4 transition-transform ease-in-out duration-700">
