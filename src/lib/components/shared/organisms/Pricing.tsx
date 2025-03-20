@@ -38,7 +38,9 @@ export const Pricing: React.FC = () => {
               {product.name}
             </h2>
             <p className="text-2xl font-bold text-blue-600 mt-2">
-              {product.priceEUR.toFixed(2)}€
+              {product.priceEUR === 0
+                ? "Kostenlos"
+                : product.priceEUR.toFixed(2) + "€"}
             </p>
             <ul className="mt-6 text-gray-600 space-y-2 flex-grow">
               {product.marketingFeatures.map((feature, i) => (
