@@ -2,13 +2,13 @@
 
 import LandingPageItem from "@/lib/components/landingpage/molecules/LandingPageItem";
 import LandingNavBar from "@/lib/components/landingpage/organisms/LandingNavBar";
-import { EyeCatcher } from "@/lib/components/shared/organisms/EyeCatcher";
+import { EyeCatcher } from "@/lib/components/landingpage/organisms/EyeCatcher";
 import Footer from "@/lib/components/shared/organisms/Footer";
-import { HowTo } from "@/lib/components/shared/organisms/HowTo";
-import { Pricing } from "@/lib/components/shared/organisms/Pricing";
-import { SnippetExample } from "@/lib/components/shared/organisms/SnippetExample";
-import TestimonialCarousel from "@/lib/components/shared/organisms/Testimonies";
-import TutorialVideo from "@/lib/components/shared/organisms/TutorialVideo";
+import { HowTo } from "@/lib/components/landingpage/organisms/HowTo";
+import { Pricing } from "@/lib/components/landingpage/organisms/Pricing";
+import { SnippetExample } from "@/lib/components/landingpage/organisms/SnippetExample";
+import TestimonialCarousel from "@/lib/components/landingpage/organisms/Testimonies";
+import TutorialVideo from "@/lib/components/landingpage/organisms/TutorialVideo";
 import {
   NEXT_PUBLIC_BASE_URL,
   NEXT_PUBLIC_LANDINGPAGE_CHATBOT_ID,
