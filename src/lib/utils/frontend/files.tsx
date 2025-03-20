@@ -3,13 +3,14 @@ import {
   NEXT_PUBLIC_SOURCES_FILES_TYPES,
 } from "@/lib/utils/environment";
 import {
-  DocumentIcon,
-  DocumentTextIcon,
-  GlobeAltIcon,
-  PresentationChartLineIcon,
-  QuestionMarkCircleIcon,
-  TableCellsIcon,
-} from "@heroicons/react/24/outline";
+  File,
+  FileQuestion,
+  FileText,
+  FileUser,
+  Globe,
+  Presentation,
+  Sheet,
+} from "lucide-react";
 import { JSX } from "react";
 
 const FILE_TYPES =
@@ -45,26 +46,24 @@ export function getFileIconType(source: string, filename?: string) {
   switch (source) {
     case "FilesService": {
       const iconMap: { [key: string]: JSX.Element } = {
-        pdf: <DocumentIcon className="w-full h-full" />,
-        docx: <DocumentTextIcon className="w-full h-full" />,
-        txt: <DocumentTextIcon className="w-full h-full" />,
-        pptx: <PresentationChartLineIcon className="w-full h-full" />,
-        xlsx: <TableCellsIcon className="w-full h-full" />,
-        csv: <TableCellsIcon className="w-full h-full" />,
+        pdf: <FileUser className="w-full h-full" />,
+        docx: <FileText className="w-full h-full" />,
+        txt: <FileText className="w-full h-full" />,
+        pptx: <Presentation className="w-full h-full" />,
+        xlsx: <Sheet className="w-full h-full" />,
+        csv: <Sheet className="w-full h-full" />,
       };
 
       return (
-        iconMap[extension] || (
-          <DocumentIcon className="w-full h-full text-gray-400" />
-        )
+        iconMap[extension] || <File className="w-full h-full text-gray-400" />
       );
     }
 
     case "WebsiteSourceCrawler":
-      return <GlobeAltIcon className="w-full h-full" />;
+      return <Globe className="w-full h-full" />;
 
     default:
-      return <QuestionMarkCircleIcon className="w-full h-full text-gray-400" />;
+      return <FileQuestion className="w-full h-full text-gray-400" />;
   }
 }
 

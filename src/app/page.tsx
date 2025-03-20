@@ -3,7 +3,6 @@
 import LandingPageItem from "@/lib/components/landingpage/molecules/LandingPageItem";
 import LandingNavBar from "@/lib/components/landingpage/organisms/LandingNavBar";
 import Footer from "@/lib/components/shared/organisms/Footer";
-import { HowTo } from "@/lib/components/landingpage/organisms/HowTo";
 import { Pricing } from "@/lib/components/landingpage/organisms/Pricing";
 import { SnippetExample } from "@/lib/components/landingpage/organisms/SnippetExample";
 import TestimonialCarousel from "@/lib/components/landingpage/organisms/Testimonies";
@@ -22,8 +21,8 @@ export default function LandingPage() {
 
       <div className="text-xl mt-8">
         <LandingPageItem
-          name="eyecatcher"
-          headline="So funktioniert KnexAI"
+          name="explanation"
+          headline="Dein Chatbot. Dein Wissen. Sofort verfügbar."
           spaceTop={10}
         >
           <Explanation />
@@ -37,9 +36,9 @@ export default function LandingPage() {
           <Pricing />
         </LandingPageItem>
 
-        <LandingPageItem name="howto" headline="Wie geht KnexAI?">
+        {/* <LandingPageItem name="howto" headline="Wie geht KnexAI?">
           <HowTo />
-        </LandingPageItem>
+        </LandingPageItem> */}
 
         <LandingPageItem name="testimonials" headline="Was unsere Kunden sagen">
           <TestimonialCarousel />

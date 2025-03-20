@@ -4,7 +4,7 @@ import Button from "@/lib/components/admin/molecules/Button";
 import NavBar from "@/lib/components/shared/organisms/NavBar";
 import { Logo } from "@/lib/components/shared/atoms/Logo";
 import { useState } from "react";
-import { Bars3Icon } from "@heroicons/react/24/outline";
+import { Menu } from "lucide-react";
 
 const LandingNavBar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -17,7 +17,7 @@ const LandingNavBar = () => {
         className="lg:hidden absolute right-4 top-4 text-gray-800 focus:outline-none"
         onClick={() => setMenuOpen(!menuOpen)}
       >
-        <Bars3Icon className="h-6 w-6" />
+        <Menu className="h-6 w-6" />
       </button>
 
       {/* Menu Items */}
@@ -29,7 +29,7 @@ const LandingNavBar = () => {
         <div className="flex flex-col lg:flex-row lg:space-x-6 space-y-2 lg:space-y-0 w-full lg:w-auto text-center">
           <NavbarItem>
             <ScrollLink
-              to="eyecatcher"
+              to="explanation"
               duration={500}
               onClick={() => setMenuOpen(false)}
             >
@@ -45,7 +45,7 @@ const LandingNavBar = () => {
               Preise
             </ScrollLink>
           </NavbarItem>
-          <NavbarItem>
+          {/* <NavbarItem>
             <ScrollLink
               to="howto"
               duration={500}
@@ -53,7 +53,7 @@ const LandingNavBar = () => {
             >
               Anleitung
             </ScrollLink>
-          </NavbarItem>
+          </NavbarItem> */}
           <NavbarItem>
             <ScrollLink
               to="testimonials"

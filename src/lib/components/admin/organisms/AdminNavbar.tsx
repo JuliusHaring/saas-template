@@ -1,16 +1,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import {
-  ArrowRightStartOnRectangleIcon,
-  UserCircleIcon,
-} from "@heroicons/react/24/outline";
 import NavbarItem from "@/lib/components/admin/atoms/NavbarItem";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
 import NavBar from "@/lib/components/shared/organisms/NavBar";
 import Link from "next/link";
 import { fetchJson } from "@/lib/utils/fetch";
 import { Logo } from "@/lib/components/shared/atoms/Logo";
+import { LogOut, User } from "lucide-react";
 
 const AdminNavBar = () => {
   const router = useRouter();
@@ -28,14 +25,10 @@ const AdminNavBar = () => {
       </Link>
 
       <div className="flex space-x-6">
-        <NavbarItem href="#" onClick={openBillingPortal} icon={UserCircleIcon}>
+        <NavbarItem href="#" onClick={openBillingPortal} icon={User}>
           Kundenportal
         </NavbarItem>
-        <NavbarItem
-          href="#"
-          icon={ArrowRightStartOnRectangleIcon}
-          onClick={handleLogOut}
-        >
+        <NavbarItem href="#" icon={LogOut} onClick={handleLogOut}>
           Ausloggen
         </NavbarItem>
       </div>

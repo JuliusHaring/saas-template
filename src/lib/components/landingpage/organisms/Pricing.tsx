@@ -3,7 +3,7 @@ import { ProductDescriptionType } from "@/lib/services/api-services/stripe-servi
 import { FEStripeService } from "@/lib/services/frontend-services/stripe-service";
 import { useState, useEffect } from "react";
 import Button from "@/lib/components/admin/molecules/Button";
-import { CheckIcon } from "@heroicons/react/24/outline";
+import { CheckCircle } from "lucide-react";
 
 const feStripeService = FEStripeService.Instance;
 
@@ -44,8 +44,11 @@ export const Pricing: React.FC = () => {
             </p>
             <ul className="mt-6 text-gray-600 space-y-2 flex-grow">
               {product.marketingFeatures.map((feature, i) => (
-                <li key={i} className="text-sm flex items-center gap-2">
-                  <CheckIcon className="h-3 w-3 text-blue-600" /> {feature}
+                <li
+                  key={i}
+                  className="text-md flex items-center justify-center gap-2"
+                >
+                  <CheckCircle className="h-3 w-3 text-blue-600" /> {feature}
                 </li>
               ))}
             </ul>

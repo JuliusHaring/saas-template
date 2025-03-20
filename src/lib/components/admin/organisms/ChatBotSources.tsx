@@ -7,7 +7,7 @@ import Divider from "@/lib/components/shared/molecules/Divider";
 import { IngestionStatusEnum } from "@/lib/db/types";
 import { FERAGService } from "@/lib/services/frontend-services/rag-service";
 import { NEXT_PUBLIC_SOURCES_WEBSITE } from "@/lib/utils/environment";
-import { GlobeAltIcon } from "@heroicons/react/24/outline";
+import { Globe } from "lucide-react";
 
 const feRagService = FERAGService.Instance;
 
@@ -48,7 +48,7 @@ const ChatBotSources: React.FC<{
       {getIngestionErrorBanner()}
 
       <Button onClick={handleIngest} className="flex items-center gap-2 w-full">
-        <GlobeAltIcon className="h-5 w-5" />
+        <Globe className="h-5 w-5" />
         Crawlen
       </Button>
       <Divider />

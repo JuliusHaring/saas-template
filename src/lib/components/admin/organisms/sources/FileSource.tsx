@@ -8,14 +8,8 @@ import {
   getFileIconType,
 } from "@/lib/utils/frontend/files";
 import { useEffect, useState, useRef } from "react";
-import {
-  TrashIcon,
-  PlusIcon,
-  ArrowPathIcon,
-  FolderMinusIcon,
-  BookOpenIcon,
-} from "@heroicons/react/24/outline";
 import { TextService } from "@/lib/services/text-service";
+import { BookOpen, FolderMinus, Plus, Trash2, Upload } from "lucide-react";
 
 const feRagService = FERAGService.Instance;
 const textService = TextService.Instance;
@@ -131,7 +125,7 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
                     className="h-6 w-6 px-1! py-1!"
                     onClick={() => handlePreview(file.content)}
                   >
-                    <BookOpenIcon className="h-4 w-4" />
+                    <BookOpen className="h-4 w-4" />
                   </Button>
                   &nbsp;
                   <Button
@@ -139,7 +133,7 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
                     variant="danger"
                     onClick={() => handleDelete(file.id)}
                   >
-                    <TrashIcon className="h-4 w-4" />
+                    <Trash2 className="h-4 w-4" />
                   </Button>
                   &nbsp;
                   <Button
@@ -147,7 +141,7 @@ export const FileSource: React.FC<{ chatBotId: string }> = ({ chatBotId }) => {
                     variant="danger"
                     onClick={() => handleDeleteInsetionSource(file.id)}
                   >
-                    <FolderMinusIcon className="h-4 w-4" />
+                    <FolderMinus className="h-4 w-4" />
                   </Button>
                 </div>
 
@@ -198,7 +192,7 @@ const UploadFooter = (
         className="flex items-center gap-2"
         isDisabled={isUploading}
       >
-        <PlusIcon className="w-5 h-5" />
+        <Plus className="w-5 h-5" />
         Dateien auswählen
       </Button>
       <span className="text-gray-700">
@@ -211,7 +205,7 @@ const UploadFooter = (
         isDisabled={selectedFiles.length === 0 || isUploading}
         className="flex items-center gap-2"
       >
-        <ArrowPathIcon className="w-5 h-5" />
+        <Upload className="w-5 h-5" />
         Hochladen
       </Button>
     </div>

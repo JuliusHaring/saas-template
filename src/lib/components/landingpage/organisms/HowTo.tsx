@@ -1,9 +1,4 @@
-import {
-  PlusIcon,
-  Cog6ToothIcon,
-  ComputerDesktopIcon,
-  ChatBubbleBottomCenterIcon,
-} from "@heroicons/react/24/outline";
+import { CogIcon, MessageCircle, Plus, ScrollText } from "lucide-react";
 import Image from "next/image";
 
 export const HowTo: React.FC = () => {
@@ -14,7 +9,7 @@ export const HowTo: React.FC = () => {
         <ul className="space-y-6 text-lg">
           <li className="flex flex-col">
             <div className="flex items-center gap-3 text-xl font-semibold">
-              <PlusIcon className="h-6 w-6 text-white bg-blue-500" />
+              <Plus className="h-6 w-6 text-white bg-blue-500 p-1" />
               Erstelle ChatBots
             </div>
             <p className="text-gray-600 text-base mt-1">
@@ -24,7 +19,7 @@ export const HowTo: React.FC = () => {
 
           <li className="flex flex-col">
             <div className="flex items-center gap-3 text-xl font-semibold">
-              <Cog6ToothIcon className="h-6 w-6 text-white bg-blue-500" />
+              <CogIcon className="h-6 w-6 text-white bg-blue-500 p-1" />
               Konfiguriere Quellen
             </div>
             <p className="text-gray-600 text-base mt-1">
@@ -34,7 +29,7 @@ export const HowTo: React.FC = () => {
 
           <li className="flex flex-col">
             <div className="flex items-center gap-3 text-xl font-semibold">
-              <ComputerDesktopIcon className="h-6 w-6 text-white bg-blue-500" />
+              <ScrollText className="h-6 w-6 text-white bg-blue-500 p-1" />
               Importiere den ChatBot
             </div>
             <p className="text-gray-600 text-base mt-1">
@@ -45,7 +40,7 @@ export const HowTo: React.FC = () => {
 
           <li className="flex flex-col">
             <div className="flex items-center gap-3 text-xl font-semibold">
-              <ChatBubbleBottomCenterIcon className="h-6 w-6 text-white bg-blue-500" />
+              <MessageCircle className="h-6 w-6 text-white bg-blue-500 p-1" />
               Chatte los!
             </div>
             <p className="text-gray-600 text-base mt-1">

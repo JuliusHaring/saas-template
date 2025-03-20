@@ -1,9 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import {
-  ArrowDownIcon,
-  ChatBubbleOvalLeftEllipsisIcon,
-} from "@heroicons/react/24/outline";
 import { MessageList } from "@/lib/components/chatbot-ui/molecules/MessagesList";
 import { ChatInput } from "@/lib/components/chatbot-ui/molecules/ChatInput";
 import { MessageType } from "@/lib/components/chatbot-ui/types";
@@ -13,6 +9,7 @@ import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
 import { FEChatService } from "@/lib/services/frontend-services/chat-service";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { FEStyleService } from "@/lib/services/frontend-services/style-service";
+import { ArrowDown, MessageCircle } from "lucide-react";
 
 const feStyleService = FEStyleService.Instance;
 const feChatService = FEChatService.Instance;
@@ -153,11 +150,11 @@ export const ChatBotUI: React.FC<ChatBotUIProps> = ({
         }}
       >
         {isMinimized ? (
-          <ChatBubbleOvalLeftEllipsisIcon className="h-5 w-5 text-white" />
+          <MessageCircle className="h-5 w-5 text-white" />
         ) : (
           <>
             <Headline level={3}>{chatBotPublic.name}</Headline>
-            <ArrowDownIcon className="h-5 w-5 text-white" />
+            <ArrowDown className="h-5 w-5 text-white" />
           </>
         )}
       </div>

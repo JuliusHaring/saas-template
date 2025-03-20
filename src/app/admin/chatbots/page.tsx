@@ -3,12 +3,7 @@ import { QuotaUsageType } from "@/lib/services/api-services/quotas-service";
 import { ChatBotType } from "@/lib/db/types";
 import { FEChatBotService } from "@/lib/services/frontend-services/chatbot-service";
 import { FEQutoaService } from "@/lib/services/frontend-services/quota-service";
-import {
-  CodeBracketSquareIcon,
-  TrashIcon,
-  PencilSquareIcon,
-  PlusIcon,
-} from "@heroicons/react/24/outline";
+import { CodeSquare, Trash2, Pencil, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
 import LoadingSpinner from "@/lib/components/admin/atoms/LoadingSpinner";
 import Button from "@/lib/components/admin/molecules/Button";
@@ -53,7 +48,7 @@ export default function Chatbots() {
     <div>
       <QuotasOverview />
       <Button className="my-2" href="/admin/chatbots/create">
-        <PlusIcon className="h-5 w-5 text-white" />
+        <Plus className="h-5 w-5 text-white" />
         ChatBot Erstellen
       </Button>
       <ChatBotGrid chatbots={chatbots} handleDelete={handleDelete} />
@@ -142,18 +137,18 @@ function ChatBotCardFooter({
   return (
     <div className="flex items-center justify-end gap-2">
       <Button onClick={handleCopyToClipboard} className="flex items-center">
-        <CodeBracketSquareIcon className="h-5 w-5 text-white" />
+        <CodeSquare className="h-5 w-5 text-white" />
       </Button>
 
       <Button href={`/admin/chatbots/${chatbot.id}/edit`}>
-        <PencilSquareIcon className="h-5 w-5 text-white" />
+        <Pencil className="h-5 w-5 text-white" />
       </Button>
       <Button
         variant="danger"
         onClick={handleDelete}
         className="flex items-center"
       >
-        <TrashIcon className="h-5 w-5 text-white" />
+        <Trash2 className="h-5 w-5 text-white" />
       </Button>
     </div>
   );
