@@ -18,20 +18,8 @@ export async function getUserSubscription(
   });
 }
 
-export async function getOrCreateUserUsage(userId: UserIdType) {
-  const usage = await prisma.usage.findUnique({ where: { userId } });
-
-  if (!usage) {
-    return prisma.usage.create({
-      data: { userId, chatMessages: 0, fileCount: 0 },
-    });
-  }
-
-  const subscription = await prisma.subscription.findUnique({
-    where: { userId },
-  });
-
-  if (!subscription) return usage;
+export async function getUsage(userId: UserIdType) {
+  const usage = await prisma.usage.findFirstOrThrow({ where: { userId } });
 
   const lastReset = usage.lastResetAt;
   const now = new Date();

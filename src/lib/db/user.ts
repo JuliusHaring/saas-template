@@ -34,5 +34,7 @@ export async function getUserByEmail(email: string, raise: boolean = true) {
 }
 
 export async function createUser(email: string, passwordHash: string) {
-  return prisma.user.create({ data: { email, password: passwordHash } });
+  return prisma.user.create({
+    data: { email, password: passwordHash, Usage: { create: {} } },
+  });
 }

@@ -1,7 +1,7 @@
 import {
   createOrUpdateUserUsage,
   getUserSubscription,
-  getOrCreateUserUsage,
+  getUsage,
 } from "@/lib/db/stripe";
 import Stripe from "stripe";
 import {
@@ -99,12 +99,12 @@ export class QuotaService {
     const allQuotas = Object.values(Quota);
     const tierQuotas = await this._getAllTierQuotas();
 
-    const getUsage = async (quota: Quota) =>
-      getOrCreateUserUsage(userId).then((uQ) => uQ[quota]);
+    const getUsageForUserId = async (quota: Quota) =>
+      getUsage(userId).then((uQ) => uQ[quota]);
 
     await Promise.all(
       allQuotas.map(async (quota) => {
-        const usage = await getUsage(quota);
+        const usage = await getUsageForUserId(quota);
         quotasTierLimits.push({
           quota,
           usage,
@@ -133,7 +133,7 @@ export class QuotaService {
 
   public async getUserQuotasWithRemainder(userId: UserIdType) {
     const quotas = await this.getUserQuotas(userId);
-    const usage = (await getOrCreateUserUsage(userId))!;
+    const usage = (await getUsage(userId))!;
 
     const quotaUsage: QuotaUsageType = {
       lastResetAt: usage.lastResetAt,
@@ -164,7 +164,7 @@ export class QuotaService {
     const userQuotas = await this.getUserQuotas(userId);
     const userQuotaValue = userQuotas[quota];
 
-    const userUsage = await getOrCreateUserUsage(userId);
+    const userUsage = await getUsage(userId);
     const userUsageValue = userUsage![quota];
     const res = userQuotaValue - userUsageValue;
 
@@ -182,7 +182,7 @@ export class QuotaService {
   ) {
     let currentValue = 0;
 
-    const currentUsage = await getOrCreateUserUsage(userId);
+    const currentUsage = await getUsage(userId);
 
     if (currentUsage !== null) {
       currentValue = currentUsage[quota];
