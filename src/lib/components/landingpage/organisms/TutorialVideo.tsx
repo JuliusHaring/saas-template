@@ -1,6 +1,6 @@
 export default function TutorialVideo() {
   return (
-    <div className="relative flex justify-center items-center overflow-hidden">
+    <div className="md:block hidden relative justify-center items-center overflow-hidden hidden md:flex">
       <video
         className="w-full h-full object-cover h-full md:w-4/5 sm:w-full"
         autoPlay
