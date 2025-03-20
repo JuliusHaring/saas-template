@@ -1,5 +1,6 @@
 import {
   createChatBot,
+  createPublicChatBot,
   deleteChatBot,
   getAllowedDomainsForChatBot,
   getChatBot,
@@ -49,9 +50,15 @@ export class ChatBotService {
     return getChatBots(userId);
   }
 
+  public async createPublicChatBot(
+    createChatbot: CreateChatBotType,
+  ): Promise<ChatBotType> {
+    return createPublicChatBot(createChatbot);
+  }
+
   public async createChatBot(
     createChatbot: CreateChatBotType,
-    userId?: UserIdType,
+    userId: UserIdType,
   ): Promise<ChatBotType> {
     return createChatBot(createChatbot, userId);
   }

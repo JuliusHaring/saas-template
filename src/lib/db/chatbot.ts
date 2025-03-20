@@ -72,18 +72,29 @@ export async function getChatBots(userId: UserIdType): Promise<ChatBotType[]> {
 
 export async function createChatBot(
   createChatBot: CreateChatBotType,
-  userId?: UserIdType,
+  userId: UserIdType,
 ): Promise<ChatBotType> {
-  if (typeof userId === "undefined") {
-    const count = await prisma.chatBot.count({ where: { userId } });
-    if (count > 0) {
-      throw new PublicChatBotExistsException();
-    }
-  }
-
   return prisma.chatBot.create({
     data: {
       userId,
+      ...createChatBot,
+      Style: {
+        create: {},
+      },
+    },
+    include: chatBotInclude,
+  });
+}
+
+export async function createPublicChatBot(
+  createChatBot: CreateChatBotType,
+): Promise<ChatBotType> {
+  const count = await prisma.chatBot.count({ where: { userId: undefined } });
+
+  if (count > 0) throw new PublicChatBotExistsException();
+
+  return prisma.chatBot.create({
+    data: {
       ...createChatBot,
       Style: {
         create: {},

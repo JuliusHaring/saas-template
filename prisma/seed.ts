@@ -11,7 +11,7 @@ async function main() {
     throw Error(`Can not seed from localhost`);
   }
   try {
-    await chatbotService.createChatBot({
+    await chatbotService.createPublicChatBot({
       id: "efe5f5bb-df4b-49b8-916c-e3072be52583",
       name: "KnexAI Bot",
       initialMessage: "Wie kann ich helfen?",
