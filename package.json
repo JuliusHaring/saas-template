@@ -25,6 +25,7 @@
     "iron-session": "^8.0.4",
     "js-tiktoken": "^1.0.19",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.483.0",
     "marked": "^15.0.7",
     "next": "15.1.5",
     "office-text-extractor": "^3.0.3",

@@ -2,7 +2,6 @@
 
 import LandingPageItem from "@/lib/components/landingpage/molecules/LandingPageItem";
 import LandingNavBar from "@/lib/components/landingpage/organisms/LandingNavBar";
-import { EyeCatcher } from "@/lib/components/landingpage/organisms/EyeCatcher";
 import Footer from "@/lib/components/shared/organisms/Footer";
 import { HowTo } from "@/lib/components/landingpage/organisms/HowTo";
 import { Pricing } from "@/lib/components/landingpage/organisms/Pricing";
@@ -14,6 +13,7 @@ import {
   NEXT_PUBLIC_LANDINGPAGE_CHATBOT_ID,
 } from "@/lib/utils/environment";
 import Script from "next/script";
+import { Explanation } from "@/lib/components/landingpage/organisms/Explanation";
 
 export default function LandingPage() {
   return (
@@ -21,8 +21,12 @@ export default function LandingPage() {
       <LandingNavBar />
 
       <div className="text-xl mt-8">
-        <LandingPageItem name="eyecatcher">
-          <EyeCatcher />
+        <LandingPageItem
+          name="eyecatcher"
+          headline="So funktioniert KnexAI"
+          spaceTop={10}
+        >
+          <Explanation />
         </LandingPageItem>
 
         <LandingPageItem name="tutorial">
