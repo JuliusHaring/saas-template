@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { User } from "lucide-react";
+import { Rss, User } from "lucide-react";
 
 import NavBar from "@/lib/components/shared/organisms/NavBar";
 import NavbarItem from "@/lib/components/shared/atoms/NavbarItem";
@@ -42,6 +42,9 @@ const DefaultNavBar: React.FC<Props> = ({ children }) => {
 
         {loggedIn === null ? null : loggedIn ? (
           <>
+            <NavbarItem icon={Rss} href={"/blog"}>
+              Blog
+            </NavbarItem>
             <NavbarItem href="#" onClick={openBillingPortal} icon={User}>
               Kundenportal
             </NavbarItem>
@@ -51,6 +54,7 @@ const DefaultNavBar: React.FC<Props> = ({ children }) => {
           </>
         ) : (
           <>
+            <NavbarItem href={"/blog"}>Blog</NavbarItem>
             <NavbarItem href="/auth/login">
               <Button>Anmelden</Button>
             </NavbarItem>
