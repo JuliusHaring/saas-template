@@ -38,9 +38,9 @@ export const metadata: Metadata = {
     "max-video-preview": -1,
     googleBot: "index, follow",
   },
-  applicationName: "Menju",
+  applicationName: "KnexAI",
   appleWebApp: {
-    title: "Menju",
+    title: "KnexAI",
     statusBarStyle: "default",
     capable: true,
   },
