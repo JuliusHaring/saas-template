@@ -15,7 +15,7 @@ const LandingPageItem: React.FC<LandingPageItemProps> = ({
   spaceTop,
 }) => {
   return (
-    <Element name={name} className={`mt-${spaceTop || 20}`}>
+    <Element name={name} className={`mt-${spaceTop || 10}`}>
       {headline && (
         <div className="text-center mb-8">
           <Headline level={2} className="text-blue-600">

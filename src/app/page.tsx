@@ -23,7 +23,6 @@ export default function LandingPage() {
         <LandingPageItem
           name="explanation"
           headline="Dein Chatbot. Dein Wissen. Sofort verfügbar."
-          spaceTop={10}
         >
           <Explanation />
         </LandingPageItem>
