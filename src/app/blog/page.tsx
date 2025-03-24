@@ -40,7 +40,7 @@ export default async function BlogPage() {
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-12 text-gray-800">
-      <Headline>Blog</Headline>
+      <Headline className="text-blue-600">Blog</Headline>
       <ul className="space-y-8 mt-10">
         {posts
           .sort(

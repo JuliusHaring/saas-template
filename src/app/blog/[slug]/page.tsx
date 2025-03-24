@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { getBlogPostBySlug } from "@/lib/utils/frontend/blog";
 import type { Metadata } from "next";
 import { NEXT_PUBLIC_BASE_URL } from "@/lib/utils/environment";
+import Headline from "@/lib/components/shared/molecules/Headline";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -41,7 +42,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <main className="max-w-3xl mx-auto px-4 py-12 text-gray-800">
-      <h1 className="text-3xl font-bold mb-2">{post.title}</h1>
+      <Headline className="text-blue-600">{post.title}</Headline>
       <p className="text-sm text-gray-500 mb-8">
         {new Date(post.date).toLocaleDateString("de-DE")} · {post.author}
       </p>
