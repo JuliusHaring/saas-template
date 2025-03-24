@@ -2,7 +2,7 @@
 
 import NavbarItem from "@/lib/components/shared/atoms/NavbarItem";
 import SocialIcon from "@/lib/components/shared/atoms/SocialIcon";
-import { Instagram, Mail } from "lucide-react";
+import { Instagram, Linkedin, Mail } from "lucide-react";
 
 interface FooterProps {
   className?: string;
@@ -20,6 +20,11 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
             href="https://www.instagram.com/knexai.app"
             icon={Instagram}
             label="Instagram"
+          />
+          <SocialIcon
+            href="https://www.linkedin.com/in/juliusharing"
+            label="LinkedIn"
+            icon={Linkedin}
           />
           <SocialIcon
             href="mailto:info@juliusharing.com"
