@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
+import { NEXT_PUBLIC_GOOGLE_ANALYTICS_ID } from "@/lib/utils/environment";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -77,6 +79,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="de">
+      {NEXT_PUBLIC_GOOGLE_ANALYTICS_ID && (
+        <GoogleAnalytics gaId={NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />
+      )}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
