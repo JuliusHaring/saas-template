@@ -35,6 +35,7 @@ const LandingNavBar = () => {
               <ScrollLink
                 to={target}
                 duration={500}
+                smooth={true}
                 onClick={() => setMenuOpen(false)}
               >
                 {label}
