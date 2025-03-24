@@ -1,5 +1,5 @@
 "use client";
-import NavbarItem from "@/lib/components/admin/atoms/NavbarItem";
+import NavbarItem from "@/lib/components/shared/atoms/NavbarItem";
 import { Logo } from "@/lib/components/shared/atoms/Logo";
 import NavBar from "@/lib/components/shared/organisms/NavBar";
 

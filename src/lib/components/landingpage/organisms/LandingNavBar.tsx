@@ -1,5 +1,5 @@
 import { Link as ScrollLink } from "react-scroll";
-import NavbarItem from "@/lib/components/admin/atoms/NavbarItem";
+import NavbarItem from "@/lib/components/shared/atoms/NavbarItem";
 import Button from "@/lib/components/admin/molecules/Button";
 import NavBar from "@/lib/components/shared/organisms/NavBar";
 import { Logo } from "@/lib/components/shared/atoms/Logo";

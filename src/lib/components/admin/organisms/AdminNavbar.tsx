@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import NavbarItem from "@/lib/components/admin/atoms/NavbarItem";
+import NavbarItem from "@/lib/components/shared/atoms/NavbarItem";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
 import NavBar from "@/lib/components/shared/organisms/NavBar";
 import Link from "next/link";
