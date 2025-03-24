@@ -1,7 +1,6 @@
 "use client";
 
 import LandingPageItem from "@/lib/components/landingpage/molecules/LandingPageItem";
-import LandingNavBar from "@/lib/components/landingpage/organisms/LandingNavBar";
 import Footer from "@/lib/components/shared/organisms/Footer";
 import { Pricing } from "@/lib/components/landingpage/organisms/Pricing";
 import { SnippetExample } from "@/lib/components/landingpage/organisms/SnippetExample";
@@ -13,12 +12,12 @@ import {
 } from "@/lib/utils/environment";
 import Script from "next/script";
 import { Explanation } from "@/lib/components/landingpage/organisms/Explanation";
+import DefaultNavBar from "@/lib/components/shared/organisms/DefaultNavBar";
 
 export default function LandingPage() {
   return (
     <div>
-      <LandingNavBar />
-
+      <DefaultNavBar />
       <div className="text-xl mt-8">
         <LandingPageItem
           name="explanation"
