@@ -42,17 +42,23 @@ export default async function BlogPage() {
     <main className="max-w-3xl mx-auto px-4 py-12 text-gray-800">
       <Headline>Blog</Headline>
       <ul className="space-y-8 mt-10">
-        {posts.map((post) => (
-          <li key={post.slug} className="border-b pb-6 mt-2">
-            <Headline level={2} className="hover:text-blue-600">
-              <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-            </Headline>
-            <p className="text-sm text-gray-500 mt-1">
-              {new Date(post.date).toLocaleDateString("de-DE")} · {post.author}
-            </p>
-            <p className="mt-2 text-gray-700">{post.description}</p>
-          </li>
-        ))}
+        {posts
+          .sort(
+            (a, b) =>
+              new Date(b.date).getUTCDate() - new Date(a.date).getUTCDate(),
+          )
+          .map((post) => (
+            <li key={post.slug} className="border-b pb-6 mt-2">
+              <Headline level={2} className="hover:text-blue-600">
+                <Link href={`/blog/${post.slug}`}>{post.title}</Link>
+              </Headline>
+              <p className="text-sm text-gray-500 mt-1">
+                {new Date(post.date).toLocaleDateString("de-DE")} ·{" "}
+                {post.author}
+              </p>
+              <p className="mt-2 text-gray-700">{post.description}</p>
+            </li>
+          ))}
       </ul>
     </main>
   );
