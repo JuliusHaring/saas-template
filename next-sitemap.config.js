@@ -9,6 +9,10 @@ module.exports = {
   exclude: ["/api/*", "/stripe/*"],
   robotsTxtOptions: {
     policies: [{ userAgent: "*", disallow: "/api", allow: "/" }],
+    additionalSitemaps: [
+      "https://www.knex-ai.de/sitemap.xml",
+      "https://www.knex-ai.de/sitemap-0.xml",
+    ],
   },
   async additionalPaths(config) {
     const now = new Date().toISOString();
