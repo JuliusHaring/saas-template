@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import "./globals.css";
 import {
+  NEXT_PUBLIC_BASE_URL,
   NEXT_PUBLIC_GOOGLE_ANALYTICS_ID,
   NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID,
 } from "@/lib/utils/environment";
@@ -17,18 +18,50 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const description =
+  "KnexAI analysiert deine Website oder Dokumente und erstellt daraus in wenigen Minuten einen intelligenten Chatbot.";
+
 export const metadata: Metadata = {
-  title: "KnexAI",
-  description: "ChatBots für KMU",
-  metadataBase: new URL("https://www.knex-ai.de"),
+  title: "KnexAI – Chatbots für deine Inhalte",
+  description,
+  metadataBase: new URL(NEXT_PUBLIC_BASE_URL),
   alternates: {
-    canonical: "https://www.knex-ai.de",
+    canonical: NEXT_PUBLIC_BASE_URL,
   },
-  keywords: "chatbot, rag, ai, llm, chat, support",
+  keywords: [
+    "chatbot",
+    "rag",
+    "ai",
+    "llm",
+    "chat",
+    "support",
+    "website chatbot",
+    "kundenservice",
+  ],
   openGraph: {
-    siteName: "KnexAI",
     type: "website",
     locale: "de_DE",
+    url: NEXT_PUBLIC_BASE_URL,
+    siteName: "KnexAI",
+    title: "KnexAI – Chatbots für deine Inhalte",
+    description:
+      "KnexAI analysiert deine Website oder Dokumente und erstellt daraus in wenigen Minuten einen intelligenten Chatbot.",
+    images: [
+      {
+        url: `${NEXT_PUBLIC_BASE_URL}/images/logo.jpg`,
+        width: 1080,
+        height: 1080,
+        alt: "KnexAI Logo",
+        type: "image/jpeg",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "KnexAI – Chatbots für deine Inhalte",
+    description:
+      "KnexAI verwandelt deine Website oder Dokumente in einen intelligenten Chatbot.",
+    images: [`${NEXT_PUBLIC_BASE_URL}/images/logo.jpg`],
   },
   robots: {
     index: true,
@@ -45,19 +78,8 @@ export const metadata: Metadata = {
     capable: true,
   },
   icons: {
-    icon: [
-      { url: "/favicon.ico", type: "image/x-icon" },
-      //   { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      //   { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      //   { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-      //   { url: "/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-      //   { url: "/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
-    ],
+    icon: [{ url: "/favicon.ico", type: "image/x-icon" }],
     shortcut: [{ url: "/favicon.ico", type: "image/x-icon" }],
-    // apple: [
-    //   { url: "/apple-icon-57x57.png", sizes: "57x57", type: "image/png" },
-    //   { url: "/apple-icon-60x60.png", sizes: "60x60", type: "image/png" },
-    // ],
   },
 };
 
@@ -71,9 +93,9 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "KnexAI",
-  url: "https://www.knex-ai.de",
-  logo: "https://www.knex-ai.de/logo.png",
-  description: "ChatBots für KMU",
+  url: NEXT_PUBLIC_BASE_URL,
+  logo: `${NEXT_PUBLIC_BASE_URL}/images/logo.jpg`,
+  description,
   sameAs: [],
 };
 
