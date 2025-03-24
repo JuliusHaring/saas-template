@@ -62,11 +62,25 @@ export const viewport: Viewport = {
   themeColor: "#ffffff",
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "KnexAI",
+  url: "https://www.knex-ai.de",
+  logo: "https://www.knex-ai.de/logo.png",
+  description: "ChatBots für KMU",
+  sameAs: [],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="de">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
