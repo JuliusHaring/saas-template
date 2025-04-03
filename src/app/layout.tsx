@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 const description =
   "";
 
-const title = "REPLACE_ME";
+const title = "REPLACE_TITLE";
 
 export const metadata: Metadata = {
   title: title,

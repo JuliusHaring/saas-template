@@ -4,14 +4,14 @@ const { globby } = require("globby");
 
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: "https://www.REPLACE_ME.de",
+  siteUrl: "REPLACE_URL",
   generateRobotsTxt: true,
   exclude: ["/api/*", "/stripe/*"],
   robotsTxtOptions: {
     policies: [{ userAgent: "*", disallow: "/api", allow: "/" }],
     additionalSitemaps: [
-      "https://www.REPLACE_ME.de/sitemap.xml",
-      "https://www.REPLACE_ME.de/sitemap-0.xml",
+      "REPLACE_URL/sitemap.xml",
+      "REPLACE_URL/sitemap-0.xml",
     ],
   },
   async additionalPaths(config) {
