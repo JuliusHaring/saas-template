@@ -22,8 +22,7 @@ const geistMono = Geist_Mono({
 const description =
   "";
 
-// TODO: add title
-const title = "";
+const title = "REPLACE_ME";
 
 export const metadata: Metadata = {
   title: title,

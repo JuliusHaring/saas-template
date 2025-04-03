@@ -7,7 +7,7 @@ import Headline from "@/lib/components/shared/molecules/Headline";
 
 // TODO: Edit metadata for blog
 export const metadata: Metadata = {
-  title: "",
+  title: `Blog - REPLACE_ME`,
   description: "",
 };
 
