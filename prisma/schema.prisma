@@ -16,12 +16,9 @@ model User {
 
   subscriptionId String?       @unique
   Subscription   Subscription?
-  usageId        String?       @unique
-  Usage          Usage?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  ChatBot   ChatBot[]
 }
 
 enum SubscriptionTier {
@@ -38,87 +35,4 @@ model Subscription {
   createdAt      DateTime         @default(now())
   expiresAt      DateTime?
   User           User             @relation(fields: [userId], references: [id], onDelete: Cascade) // Cascade here
-}
-
-model Usage {
-  userId       String   @id @unique
-  chatMessages Int      @default(0)
-  fileCount    Int      @default(0)
-  lastResetAt  DateTime @default(now())
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  User         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-enum IngestionStatus {
-  READY
-  RUNNING
-  ABORTED
-  LIMITED
-}
-
-model ChatBot {
-  userId String?
-  User   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  id             String         @id @default(dbgenerated("gen_random_uuid()"))
-  allowedDomains String[]       @default([])
-  GDriveSource   GDriveSource?
-  WebsiteSource  WebsiteSource?
-  Files          File[]
-  Style          Style?
-
-  instructions   String?
-  initialMessage String
-  name           String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  ingestionStatus IngestionStatus @default(READY)
-}
-
-model GDriveSource {
-  id        String  @id @default(dbgenerated("gen_random_uuid()"))
-  chatBotId String  @unique
-  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id], onDelete: Cascade)
-
-  apiKey String
-}
-
-model WebsiteSource {
-  id        String  @id @default(dbgenerated("gen_random_uuid()"))
-  chatBotId String  @unique
-  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id], onDelete: Cascade)
-
-  url            String
-  url_exceptions String[]
-}
-
-model File {
-  id        String  @id @default(dbgenerated("gen_random_uuid()"))
-  chatBotId String
-  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id], onDelete: Cascade)
-
-  name            String
-  content         String
-  vector          Unsupported("vector(1536)")?
-  createdAt       DateTime                     @default(now())
-  insertionSource String
-}
-
-model Style {
-  id        String  @id @default(dbgenerated("gen_random_uuid()"))
-  chatBotId String  @unique
-  ChatBot   ChatBot @relation(fields: [chatBotId], references: [id], onDelete: Cascade)
-
-  classBgPrimary   String  @default("bg-blue-500")
-  classBgSecondary String  @default("bg-white")
-  classBgUser      String  @default("bg-blue-500")
-  classBgBot       String  @default("bg-gray-500")
-  classBgButton    String?
-  classText        String  @default("text-white")
-
-  offsetXPx Int @default(20)
-  offsetYPx Int @default(20)
 }

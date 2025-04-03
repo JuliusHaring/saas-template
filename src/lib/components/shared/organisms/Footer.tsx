@@ -8,6 +8,8 @@ interface FooterProps {
   className?: string;
 }
 
+// TODO: Replace replace_me
+
 const Footer: React.FC<FooterProps> = ({ className }) => {
   return (
     <footer
@@ -15,7 +17,7 @@ const Footer: React.FC<FooterProps> = ({ className }) => {
     >
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:justify-between md:items-center text-gray-600 gap-4">
         {/* Row 1: Copyright */}
-        <p>© {new Date().getFullYear()} KnexAI</p>
+        <p>© {new Date().getFullYear()} REPLACE_ME</p>
 
         {/* Row 2–3 grouped */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-end gap-y-2 gap-x-6">

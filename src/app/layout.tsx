@@ -18,49 +18,42 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// TODO: add description
 const description =
-  "KnexAI analysiert deine Website oder Dokumente und erstellt daraus in wenigen Minuten einen intelligenten Chatbot.";
+  "";
+
+// TODO: add title
+const title = "";
 
 export const metadata: Metadata = {
-  title: "KnexAI – Chatbots für deine Inhalte",
+  title: title,
   description,
   metadataBase: new URL(NEXT_PUBLIC_BASE_URL),
   alternates: {
     canonical: NEXT_PUBLIC_BASE_URL,
   },
-  keywords: [
-    "chatbot",
-    "rag",
-    "ai",
-    "llm",
-    "chat",
-    "support",
-    "website chatbot",
-    "kundenservice",
-  ],
+  keywords: [  ],
   openGraph: {
     type: "website",
     locale: "de_DE",
     url: NEXT_PUBLIC_BASE_URL,
-    siteName: "KnexAI",
-    title: "KnexAI – Chatbots für deine Inhalte",
-    description:
-      "KnexAI analysiert deine Website oder Dokumente und erstellt daraus in wenigen Minuten einen intelligenten Chatbot.",
+    siteName: title,
+    title,
+    description,
     images: [
       {
         url: `${NEXT_PUBLIC_BASE_URL}/images/logo.jpg`,
         width: 1080,
         height: 1080,
-        alt: "KnexAI Logo",
+        alt: "Logo",
         type: "image/jpeg",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "KnexAI – Chatbots für deine Inhalte",
-    description:
-      "KnexAI verwandelt deine Website oder Dokumente in einen intelligenten Chatbot.",
+    title,
+    description,
     images: [`${NEXT_PUBLIC_BASE_URL}/images/logo.jpg`],
   },
   robots: {
@@ -71,9 +64,9 @@ export const metadata: Metadata = {
     "max-video-preview": -1,
     googleBot: "index, follow",
   },
-  applicationName: "KnexAI",
+  applicationName: title,
   appleWebApp: {
-    title: "KnexAI",
+    title: title,
     statusBarStyle: "default",
     capable: true,
   },
@@ -92,7 +85,7 @@ export const viewport: Viewport = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "KnexAI",
+  name: title,
   url: NEXT_PUBLIC_BASE_URL,
   logo: `${NEXT_PUBLIC_BASE_URL}/images/logo.jpg`,
   description,

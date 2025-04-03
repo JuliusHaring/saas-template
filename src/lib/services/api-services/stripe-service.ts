@@ -187,7 +187,7 @@ export class StripeService {
   async createBillingSession(user: GetUserType) {
     return this.stripe.billingPortal.sessions.create({
       customer: user.Subscription!.customerId,
-      return_url: `${NEXT_PUBLIC_BASE_URL}/admin`,
+      return_url: `${NEXT_PUBLIC_BASE_URL}/dashboard`,
     });
   }
 }

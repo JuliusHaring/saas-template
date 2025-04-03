@@ -1,8 +1,3 @@
-import {
-  QuotaException,
-  QuotaNotFoundException,
-  QuotaReachedException,
-} from "@/lib/services/api-services/quotas-service";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -72,15 +67,6 @@ const _handleError = (error: unknown): Response => {
     }
 
     return _handleError(errType(errMsg));
-  }
-
-  if (error instanceof QuotaException) {
-    switch (error.constructor) {
-      case QuotaReachedException:
-        return _handleHttpError(TooManyRequests());
-      case QuotaNotFoundException:
-        return _handleHttpError(NotFound());
-    }
   }
 
   // Fallback for unexpected errors

@@ -8,8 +8,7 @@ import Link from "next/link";
 
 import NavBar from "@/lib/components/shared/organisms/NavBar";
 import NavbarItem from "@/lib/components/shared/atoms/NavbarItem";
-import { Logo } from "@/lib/components/shared/atoms/Logo";
-import Button from "@/lib/components/admin/molecules/Button";
+import Button from "@/lib/components/shared/molecules/Button";
 import { fetchJson } from "@/lib/utils/fetch";
 import { openBillingPortal } from "@/lib/utils/frontend/open-billing-portal";
 
@@ -42,7 +41,7 @@ const DefaultNavBar: React.FC = () => {
   return (
     <NavBar className="lg:justify-between flex flex-col lg:flex-row items-center w-full px-4">
       <Link href="/">
-        <Logo className="cursor-pointer" />
+        <>LOGO</>
       </Link>
 
       <button

@@ -8,3 +8,5 @@ export interface BlogPost {
   author: string;
   content: ReactElement<unknown, string | JSXElementConstructor<object>>;
 }
+
+export type IconType = React.ComponentType<React.SVGProps<SVGSVGElement>>;

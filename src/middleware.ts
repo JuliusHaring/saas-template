@@ -6,20 +6,18 @@ import { NextRequest, NextResponse } from "next/server";
 export default async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
-  const urlPayment = "/admin/stripe/pricing-table/";
-  const urlAdmin = "/admin";
+  const urlPayment = "/stripe/pricing-table/";
+  const urlAdmin = "/dashboard";
   const urlLogin = "/auth/login";
 
   const isNext = pathname.startsWith("/_next/");
   const isDefault = pathname === "/";
-  const isPricingTable = pathname.startsWith("/admin/stripe/pricing-table");
+  const isPricingTable = pathname.startsWith("/stripe/pricing-table");
   const isAdmin = pathname.startsWith(urlAdmin);
   const isLogin = pathname === urlLogin;
-  const isChatBotUI = pathname.startsWith("/chatbot-ui");
-  const isChatBotIntegrate = pathname.startsWith("/api/chatbot/integrate");
   const isAPI = pathname.startsWith("/api/");
 
-  if ([isAPI || isNext, isChatBotUI, isChatBotIntegrate].some((val) => val)) {
+  if ([isAPI || isNext].some((val) => val)) {
     return NextResponse.next();
   }
 

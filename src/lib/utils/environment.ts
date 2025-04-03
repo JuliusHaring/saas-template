@@ -3,8 +3,6 @@ export const NEXT_PUBLIC_MODE = process.env.NEXT_PUBLIC_MODE;
 export const JWT_SECRET = process.env.JWT_SECRET!;
 
 export const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL!;
-export const NEXT_PUBLIC_LANDINGPAGE_CHATBOT_ID =
-  process.env.NEXT_PUBLIC_LANDINGPAGE_CHATBOT_ID!;
 
 export const OPENAI_SECRET_KEY = process.env.OPENAI_SECRET_KEY!;
 export const NEXT_PUBLIC_OPENAI_CHAT_COMPLETION_MODEL =

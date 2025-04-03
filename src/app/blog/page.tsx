@@ -5,9 +5,10 @@ import { getBlogPostBySlug } from "@/lib/utils/frontend/blog";
 import type { BlogPost } from "@/app/types";
 import Headline from "@/lib/components/shared/molecules/Headline";
 
+// TODO: Edit metadata for blog
 export const metadata: Metadata = {
-  title: "Blog – KnexAI",
-  description: "Alle Beiträge rund um Chatbots, KI und KnexAI.",
+  title: "",
+  description: "",
 };
 
 const SITEMAP_URL = `${process.env.NEXT_PUBLIC_BASE_URL}/sitemap-0.xml`;
